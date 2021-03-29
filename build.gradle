@@ -292,7 +292,7 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.14.0'
 
   //azure components
-  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.10.1'
+  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.10.2'
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.1'
