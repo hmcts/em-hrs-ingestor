@@ -304,7 +304,7 @@ def withoutStuff = {
 
 dependencies {
   compileOnly group: 'javax.inject', name: 'javax.inject', version: '1'
-  annotationProcessor 'org.projectlombok:lombok:1.18.18'
+  annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
