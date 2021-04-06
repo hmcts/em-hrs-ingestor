@@ -9,7 +9,7 @@ plugins {
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.1.1'
   id 'uk.gov.hmcts.java' version '0.12.8'
-  id 'au.com.dius.pact' version '4.0.10'
+  id 'au.com.dius.pact' version '4.2.3'
 }
 
 group = 'uk.gov.hmcts.reform.em.hrs'
