@@ -1,10 +1,9 @@
 plugins {
   id 'application'
   id 'checkstyle'
-  id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-  id 'org.springframework.boot' version '2.3.4.RELEASE'
+  id 'org.springframework.boot' version '2.4.5'
   id 'com.github.ben-manes.versions' version '0.36.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.1.1'
@@ -144,16 +143,6 @@ checkstyle {
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
-pmd {
-  toolVersion = "6.30.0"
-  ignoreFailures = true
-  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
-  reportsDir = file("$project.buildDir/reports/pmd")
-  // https://github.com/pmd/pmd/issues/876
-  ruleSets = []
-  ruleSetFiles = files("config/pmd/ruleset.xml")
-}
-
 def coverageExclusionList = [
   '**uk/gov/hmcts/reform/em/hrs/ingestor/Application*',
   '**uk/gov/hmcts/reform/em/hrs/ingestor/listener/**',
@@ -239,35 +228,6 @@ dependencyManagement {
       entry 'kotlin-stdlib-jdk8'
     }
 
-    //CVE-2021-21295
-    dependencySet(group: 'io.netty', version: '4.1.63.Final') {
-      entry 'netty-buffer'
-      entry 'netty-codec'
-      entry 'netty-common'
-      entry 'netty-handler'
-      entry 'netty-resolver'
-      entry 'netty-transport'
-      entry 'netty-codec-http'
-      entry 'netty-codec-http2'
-      entry 'netty-transport-native-epoll'
-      entry 'netty-transport-native-kqueue'
-      entry 'netty-transport-native-unix-common'
-      entry 'netty-codec-socks'
-      entry 'netty-handler-proxy'
-    }
-
-    //CVE-2021-22112
-    dependencySet(group: 'org.springframework.security', version: '5.3.8.RELEASE') {
-      entry 'spring-security-config'
-      entry 'spring-security-core'
-      entry 'spring-security-crypto'
-      entry 'spring-security-oauth2-client'
-      entry 'spring-security-oauth2-core'
-      entry 'spring-security-oauth2-jose'
-      entry 'spring-security-oauth2-resource-server'
-      entry 'spring-security-web'
-    }
-
     //CVE-2021-29425
     dependencySet(group: 'commons-io', version: '2.8.0') {
       entry 'commons-io'
@@ -286,8 +246,7 @@ repositories {
 def versions = [
   junit              : '5.7.1',
   junitPlatform      : '1.7.1',
-  reformLogging      : '5.1.5',
-  springBoot         : springBoot.class.package.implementationVersion,
+  reformLogging      : '5.1.7',
   springfoxSwagger   : '2.9.2',
   pact_version       : '3.6.15',
   restAssured        : '4.2.0',
@@ -324,7 +283,7 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
 
-  implementation group: "uk.gov.hmcts.reform", name: "service-auth-provider-client", version: "3.1.4"
+  implementation group: "uk.gov.hmcts.reform", name: "service-auth-provider-client", version: "4.0.0"
 
   implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
 
@@ -338,7 +297,7 @@ dependencies {
 
   implementation group: 'com.opencsv', name: 'opencsv', version: '5.4'
 
-  compileOnly 'org.projectlombok:lombok:1.18.18'
+  compileOnly 'org.projectlombok:lombok:1.18.20'
   implementation "ch.qos.logback:logback-classic:1.2.3"
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.14.1'
@@ -360,14 +319,14 @@ dependencies {
   implementation group: 'net.sf.jsignature.io-tools', name: 'easystream', version: '1.2.15'
 
   //test implementation
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.18'
-  testCompileOnly 'org.projectlombok:lombok:1.18.18'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+  testCompileOnly 'org.projectlombok:lombok:1.18.20'
   testImplementation "ch.qos.logback:logback-classic:1.2.3"
   testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
   testImplementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.14.0'
 
 
-  testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.3.2'
+  testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.4.1'
 
   testImplementation libraries.junit5
 
@@ -387,12 +346,6 @@ dependencies {
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
   testImplementation group: 'org.pitest', name: 'pitest', version: '1.6.4'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
-
-
-  //smokeTest implementation
-
-  //TODO TBD remove logback-classic
-  //smokeTestImplementation "ch.qos.logback:logback-classic:1.2.3"
 
   smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity, withoutStuff
   smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
@@ -419,9 +372,6 @@ dependencies {
   contractTestCompile("org.junit.jupiter:junit-jupiter-api:5.6.2")
   contractTestRuntime("org.junit.jupiter:junit-jupiter-engine:5.6.2")
   contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.2.0'
-
-  /*contractTestCompileOnly 'org.projectlombok:lombok:1.18.12'
-  contractTestImplementation "ch.qos.logback:logback-classic:1.2.3"*/
 
   contractTestImplementation sourceSets.main.runtimeClasspath
   contractTestImplementation sourceSets.test.runtimeClasspath
