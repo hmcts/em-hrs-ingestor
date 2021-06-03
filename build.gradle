@@ -128,8 +128,8 @@ task smoke(type: Test) {
   group = 'Delivery pipeline'
   testClassesDirs = sourceSets.smokeTest.output.classesDirs
   classpath = sourceSets.smokeTest.runtimeClasspath
-//TODO do we need to sepcify paths if tags are used? include "uk/gov/hmcts/reform/em/hrs/ingestor/smoke/**"
   environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+  include "uk/gov/hmcts/reform/em/hrs/ingestor/smoke/**"
   failFast = true
 }
 
