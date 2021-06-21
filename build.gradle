@@ -257,7 +257,7 @@ dependencyManagement {
     }
 
     //CVE-2021-29425
-    dependencySet(group: 'commons-io', version: '2.9.0') {
+    dependencySet(group: 'commons-io', version: '2.10.0') {
       entry 'commons-io'
     }
 
@@ -351,7 +351,7 @@ dependencies {
 
   //azure components
   implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.10.2'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.2.3'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.3.1'
 
 
   //rest clients
