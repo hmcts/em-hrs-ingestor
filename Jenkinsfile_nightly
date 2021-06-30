@@ -13,4 +13,5 @@ def component = "hrs-ingestor"
 
 withNightlyPipeline(type, product, component) {
   enableMutationTest()
+  enableSecurityScan()
 }

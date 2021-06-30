@@ -81,10 +81,11 @@ withPipeline(type, product, component) {
     }
   }
 
-  onMaster()
-    {
+//  onMaster()
+//    {
+      enableSecurityScan()
       enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
-    }
+  //  }
 
   after('test') {
       publishHTML target: [
