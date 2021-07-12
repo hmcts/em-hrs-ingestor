@@ -16,7 +16,7 @@ plugins {
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.2.0'
   id 'uk.gov.hmcts.java' version '0.12.9'
-  id 'au.com.dius.pact' version '4.0.10'
+  id 'au.com.dius.pact' version '4.2.7'
   id "info.solidsoft.pitest" version '1.6.0'
 }
 
