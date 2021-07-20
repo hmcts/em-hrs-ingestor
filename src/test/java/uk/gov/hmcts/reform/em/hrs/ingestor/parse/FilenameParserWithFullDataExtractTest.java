@@ -89,8 +89,6 @@ class FilenameParserWithFullDataExtractTest {
             log.debug("The Only Case ID Scenario");
             assertNull(parsedFilenameDto.getJurisdiction());
             assertNull(parsedFilenameDto.getLocationCode());
-            assertNull(parsedFilenameDto.getRecordingDateTime());
-            assertNull(parsedFilenameDto.getSegment());
             assertTrue(caseReference.equalsIgnoreCase(parsedFilenameDto.getCaseID()));
         }
         log.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
