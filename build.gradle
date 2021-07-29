@@ -1,7 +1,7 @@
 buildscript {
   dependencies {
     classpath("net.serenity-bdd:serenity-gradle-plugin:2.3.13")
-    classpath("net.serenity-bdd:serenity-single-page-report:2.4.24")
+    classpath("net.serenity-bdd:serenity-single-page-report:2.4.51")
   }
 }
 
@@ -394,7 +394,7 @@ dependencies {
   }
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.15.2'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.16.0'
   testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.4', {
     exclude group: 'com.google.guava', module: 'guava'
   }
