@@ -295,7 +295,7 @@ repositories {
 
 def versions = [
   junit              : '5.7.1',
-  junitPlatform      : '1.7.1',
+  junitPlatform      : '1.8.0',
   reformLogging      : '5.1.7',
   springBoot         : springBoot.class.package.implementationVersion,
   springfoxSwagger   : '2.9.2',
@@ -434,7 +434,7 @@ dependencies {
   contractTestImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
   contractTestImplementation "org.junit.vintage:junit-vintage-engine:5.6.2"
   contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.2.0'
+  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.8.1'
 
   /*contractTestCompileOnly 'org.projectlombok:lombok:1.18.12'
   contractTestImplementation "ch.qos.logback:logback-classic:1.2.3"*/
