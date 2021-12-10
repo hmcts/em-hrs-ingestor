@@ -219,7 +219,7 @@ dependencyManagement {
     }
 
     // CVE-2021-37136, CVE-2021-37137
-    dependencySet(group: 'io.netty', version: '4.1.70.Final') {
+    dependencySet(group: 'io.netty', version: '4.1.71.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-common'
@@ -430,7 +430,7 @@ dependencies {
   contractTestImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
   contractTestImplementation "org.junit.vintage:junit-vintage-engine:5.8.2"
   contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.2.0'
+  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.8.2'
 
   /*contractTestCompileOnly 'org.projectlombok:lombok:1.18.12'
   contractTestImplementation "ch.qos.logback:logback-classic:1.2.3"*/
