@@ -15,7 +15,7 @@ plugins {
   id 'com.github.ben-manes.versions' version '0.36.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.2.0'
-  id 'uk.gov.hmcts.java' version '0.12.9'
+  id 'uk.gov.hmcts.java' version '0.12.17'
   id 'au.com.dius.pact' version '4.2.11'
   id "info.solidsoft.pitest" version '1.6.0'
 }
@@ -297,7 +297,7 @@ def versions = [
   junit              : '5.7.1',
   junitPlatform      : '1.8.1',
   reformLogging      : '5.1.7',
-  log4JVersion       : "2.16.0",
+  log4JVersion       : "2.17.0",
   springBoot         : springBoot.class.package.implementationVersion,
   springfoxSwagger   : '2.9.2',
   pact_version       : '3.6.15',
