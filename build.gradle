@@ -233,6 +233,9 @@ dependencyManagement {
       entry 'netty-transport-native-unix-common'
       entry 'netty-codec-socks'
       entry 'netty-handler-proxy'
+      entry 'netty-resolver-dns-native-macos'
+      entry 'netty-resolver-dns'
+      entry 'netty-codec-dns'
     }
 
     //CVE-2021-22112
