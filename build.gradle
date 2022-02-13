@@ -207,7 +207,7 @@ dependencyManagement {
     }
 
     // CVE-2021-37136, CVE-2021-37137
-    dependencySet(group: 'io.netty', version: '4.1.70.Final') {
+    dependencySet(group: 'io.netty', version: '4.1.74.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-common'
@@ -263,12 +263,6 @@ dependencyManagement {
       entry 'json-smart'
     }
 
-    //CVE-2021-42340
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.54') {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-websocket'
-    }
-
     //CVE-2021-28170
     dependency group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
 
@@ -277,6 +271,12 @@ dependencyManagement {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
+    }
+
+    // CVE-2021-42550
+    dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
+      entry 'logback-classic'
+      entry 'logback-core'
     }
   }
 }
