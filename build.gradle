@@ -206,8 +206,8 @@ dependencyManagement {
       entry 'kotlin-stdlib-jdk8'
     }
 
-    // CVE-2021-37136, CVE-2021-37137
-    dependencySet(group: 'io.netty', version: '4.1.70.Final') {
+    // CVE-2021-37136, CVE-2021-37137, CVE-2021-43797
+    dependencySet(group: 'io.netty', version: '4.1.74.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-common'
@@ -221,6 +221,12 @@ dependencyManagement {
       entry 'netty-transport-native-unix-common'
       entry 'netty-codec-socks'
       entry 'netty-handler-proxy'
+    }
+
+    //CVE-2021-42550
+    dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
+      entry 'logback-classic'
+      entry 'logback-core'
     }
 
     //CVE-2021-22112
