@@ -8,7 +8,6 @@ buildscript {
 plugins {
   id 'application'
   id 'checkstyle'
-  id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'org.springframework.boot' version '2.4.5'
@@ -126,19 +125,8 @@ task smoke(type: Test) {
  **********************************************************************************************************************/
 
 checkstyle {
-  maxWarnings = 10
   toolVersion = '8.29'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
-}
-
-pmd {
-  toolVersion = "6.30.0"
-  ignoreFailures = true
-  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
-  reportsDir = file("$project.buildDir/reports/pmd")
-  // https://github.com/pmd/pmd/issues/876
-  ruleSets = []
-  ruleSetFiles = files("config/pmd/ruleset.xml")
 }
 
 def coverageExclusionList = [
@@ -218,13 +206,16 @@ dependencyManagement {
       entry 'kotlin-stdlib-jdk8'
     }
 
-    // CVE-2021-37136, CVE-2021-37137
-    dependencySet(group: 'io.netty', version: '4.1.70.Final') {
+    // CVE-2021-37136, CVE-2021-37137, CVE-2021-43797
+    dependencySet(group: 'io.netty', version: '4.1.74.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
+      entry 'netty-codec-dns'
       entry 'netty-common'
       entry 'netty-handler'
       entry 'netty-resolver'
+      entry 'netty-resolver-dns'
+      entry 'netty-resolver-dns-native-macos'
       entry 'netty-transport'
       entry 'netty-codec-http'
       entry 'netty-codec-http2'
@@ -257,7 +248,7 @@ dependencyManagement {
 
 
     //CVE-2021-22118, CVE-2021-22096
-    dependencySet(group: 'org.springframework', version: '5.3.12') {
+    dependencySet(group: 'org.springframework', version: '5.3.15') {
       entry 'spring-aop'
       entry 'spring-aspects'
       entry 'spring-beans'
@@ -278,14 +269,20 @@ dependencyManagement {
       entry 'json-smart'
     }
 
-    //CVE-2021-42340
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.54') {
+    //CVE-2021-42340, CVE-2022-23181
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.58') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-websocket'
     }
 
     //CVE-2021-28170
     dependency group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
+
+    //CVE-2021-42550
+    dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
+      entry 'logback-classic'
+      entry 'logback-core'
+    }
 
   }
 }
@@ -300,7 +297,7 @@ def versions = [
   junit              : '5.7.1',
   junitPlatform      : '1.8.1',
   reformLogging      : '5.1.7',
-  log4JVersion       : "2.17.0",
+  log4JVersion       : "2.17.1",
   springBoot         : springBoot.class.package.implementationVersion,
   springfoxSwagger   : '2.9.2',
   pact_version       : '3.6.15',
@@ -351,7 +348,7 @@ dependencies {
   implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
 
   implementation 'org.projectlombok:lombok:1.18.18'
-  implementation "ch.qos.logback:logback-classic:1.2.5"
+
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4JVersion
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
 
@@ -362,7 +359,7 @@ dependencies {
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.1'
-  implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.9.1'
+  implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.9.3'
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
 
@@ -374,7 +371,7 @@ dependencies {
 
 
 
-  testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.4.1'
+  testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.5.0'
 
   testImplementation libraries.junit5
 
@@ -384,7 +381,7 @@ dependencies {
     exclude group: 'com.vaadin.external.google', module: 'android-json'
   }
 
-  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
+  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.15.2'
   testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.4', {
     exclude group: 'com.google.guava', module: 'guava'
@@ -402,9 +399,6 @@ dependencies {
   }
 
   //smokeTest implementation
-
-  //TODO TBD remove logback-classic
-  //smokeTestImplementation "ch.qos.logback:logback-classic:1.2.3"
 
   smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity, withoutStuff
   smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
@@ -431,9 +425,6 @@ dependencies {
   contractTestImplementation "org.junit.vintage:junit-vintage-engine:5.8.2"
   contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
   contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.8.2'
-
-  /*contractTestCompileOnly 'org.projectlombok:lombok:1.18.12'
-  contractTestImplementation "ch.qos.logback:logback-classic:1.2.3"*/
 
   contractTestImplementation sourceSets.main.runtimeClasspath
   contractTestImplementation sourceSets.test.runtimeClasspath

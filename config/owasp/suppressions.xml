@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-  <suppress>
+  <suppress until="2022-05-08">
     <notes>
       Spring Security 5.4.x prior to 5.4.4, 5.3.x prior to 5.3.8.RELEASE, 5.2.x prior to 5.2.9.RELEASE,
       and older unsupported versions can fail to save the SecurityContext
@@ -12,7 +12,7 @@
     <cve>CVE-2021-22112</cve>
   </suppress>
 
-  <suppress>
+  <suppress until="2022-05-08">
     <notes>
       https://nvd.nist.gov/vuln/detail/CVE-2017-1000190
       SimpleXML (latest version 2.7.1) is vulnerable to an XXE vulnerability resulting SSRF, information disclosure,
@@ -30,24 +30,27 @@
 
   <!-- TO REVIEW: -->
 
-  <suppress>
-    <notes>SHORT TERM FIX TO GET BUILDS WORKING - address in ticket https://tools.hmcts.net/jira/browse/EM-4234</notes>
-    <cve>CVE-2021-44832</cve>
+  <suppress until="2022-05-08">
+    <notes>
+      https://nvd.nist.gov/vuln/detail/CVE-2020-23171
+      caused by azure-identity -> com.nimbusds:lang-tag:1.4.4
+      the latest version com.nimbusds:lang-tag:1.5 does not fix the vulnerability
+    </notes>
+    <cve>CVE-2020-23171</cve>
   </suppress>
 
+  <!-- Suppressed till we have version above current : netty-tcnative-classes-2.0.48.Final.jar -->
   <suppress>
-    <notes>SHORT TERM FIX TO GET BUILDS WORKING - address in ticket https://tools.hmcts.net/jira/browse/EM-4234</notes>
-    <cve>CVE-2021-42550</cve>
-  </suppress>
-
-  <suppress>
-    <notes>SHORT TERM FIX TO GET BUILDS WORKING - address in ticket https://tools.hmcts.net/jira/browse/EM-4234</notes>
+    <cve>CVE-2014-3488</cve>
+    <cve>CVE-2015-2156</cve>
+    <cve>CVE-2019-16869</cve>
+    <cve>CVE-2019-20444</cve>
+    <cve>CVE-2019-20445</cve>
+    <cve>CVE-2021-21290</cve>
+    <cve>CVE-2021-21295</cve>
+    <cve>CVE-2021-21409</cve>
+    <cve>CVE-2021-37136</cve>
+    <cve>CVE-2021-37137</cve>
     <cve>CVE-2021-43797</cve>
   </suppress>
-  <suppress>
-    <notes>SHORT TERM FIX TO GET BUILDS WORKING - address in ticket https://tools.hmcts.net/jira/browse/EM-4234</notes>
-    <cve>CVE-2021-22060</cve>
-  </suppress>
-
-
 </suppressions>

@@ -6,7 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Base64;
 
-class BlobHelper {
+public class BlobHelper {
+
+    private BlobHelper() {
+    }
+
     public static final String NULLMD_5 = "NULLMD5";
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobHelper.class);
 

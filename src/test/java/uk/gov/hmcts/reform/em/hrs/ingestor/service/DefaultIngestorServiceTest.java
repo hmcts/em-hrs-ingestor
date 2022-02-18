@@ -182,13 +182,14 @@ class DefaultIngestorServiceTest {
 
     @Test
     void testShouldStopIngestingWhenBatchProcessingLimitReached() throws Exception {
+        underTest.setMaxFilesToProcess(2);
         doReturn(Set.of(FOLDER_ONE)).when(cvpBlobstoreClient).getFolders();
         doReturn(CVP_ITEMSET_OF_3_FILES).when(cvpBlobstoreClient).findByFolder(FOLDER_ONE);
         doReturn(HRS_FILESET_OF_0_FILES).when(hrsApiClient).getIngestedFiles(FOLDER_ONE);
         doReturn(CVP_FILES_1_2_3_AS_SET).when(ingestionFilterer).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_0_FILES);
         doReturn(METADATA).when(metadataResolver).resolve(any(CvpItem.class));
 
-        underTest.ingest(2);
+        underTest.ingest();
 
         verify(cvpBlobstoreClient, times(1)).getFolders();
         verify(cvpBlobstoreClient, times(1)).findByFolder(FOLDER_ONE);

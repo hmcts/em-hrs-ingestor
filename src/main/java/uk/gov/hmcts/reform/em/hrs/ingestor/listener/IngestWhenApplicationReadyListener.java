@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.exception.IngestorExecutionException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.service.DefaultIngestorService;
 
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class IngestWhenApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
@@ -28,12 +29,14 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
     @Autowired
     private TelemetryClient client;
 
-    static int secondsToAllowFlushingOfLogs = 10;
+    static int secondsToAllowFlushingOfLogs = 200;
 
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
 
+        client.trackEvent("HRS Ingestor invoked");
+        LOGGER.info("HRS Ingestor invoked");
         LOGGER.info("Enable Cronjob is set to {}", enableCronjob);
         LOGGER.info("defaultIngestorService.maxFilesToProcess: {}", defaultIngestorService.getMaxFilesToProcess());
 
@@ -75,9 +78,8 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
 
     private void flushLogs() {
         client.flush();
-        long millisToSleepForClientToFlush = 1000 * secondsToAllowFlushingOfLogs;
         try {
-            Thread.sleep(millisToSleepForClientToFlush);
+            TimeUnit.SECONDS.sleep(secondsToAllowFlushingOfLogs);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

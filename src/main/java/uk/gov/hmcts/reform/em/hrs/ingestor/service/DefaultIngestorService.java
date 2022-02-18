@@ -19,7 +19,9 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.storage.CvpBlobstoreClient;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class DefaultIngestorService implements IngestorService {
@@ -88,11 +90,13 @@ public class DefaultIngestorService implements IngestorService {
         ingest(maxFilesToProcess);
     }
 
-    @Override
-    public void ingest(Integer maxNumberOfFiles) {
+    private void ingest(Integer maxNumberOfFiles) {
         resetCounters();
         LOGGER.info("Ingestion Started with BATCH PROCESSING LIMIT of {}", maxNumberOfFiles);
-        final Set<String> folders = cvpBlobstoreClient.getFolders();
+        final Set<String> foldersSet = cvpBlobstoreClient.getFolders();
+        List<String> folders = foldersSet.stream().collect(Collectors.toList());
+        Collections.shuffle(folders);
+
         LOGGER.info("Folders found in CVP {} ", folders.size());
         folders.forEach(folder -> {
 
@@ -106,7 +110,7 @@ public class DefaultIngestorService implements IngestorService {
                     resolveMetaDataAndPostFileToHrs(file);
                 }
             });
-            LOGGER.debug("Running Total of Files Attempted: {}", itemsAttempted);
+            LOGGER.info("Running Total of Files Attempted: {}", itemsAttempted);
 
         });
         LOGGER.info("Ingestion Complete");
@@ -176,7 +180,7 @@ public class DefaultIngestorService implements IngestorService {
             int hrsFileCount = hrsFileSet.getHrsFiles().size();
             int filesToIngestCount = filesToIngest.size();
 
-            tallyCVPFilesCountTotal(cvpFilesCount);
+            tallyCvpFilesCountTotal(cvpFilesCount);
             tallyHrsFilesCountTotal(hrsFileCount);
             tallyFilesToIngestCount(filesToIngestCount);
 
@@ -206,7 +210,7 @@ public class DefaultIngestorService implements IngestorService {
         hrsFileCountTotal += hrsFileCount;
     }
 
-    private static void tallyCVPFilesCountTotal(int cvpFilesCount) {
+    private static void tallyCvpFilesCountTotal(int cvpFilesCount) {
         cvpFilesCountTotal += cvpFilesCount;
     }
 

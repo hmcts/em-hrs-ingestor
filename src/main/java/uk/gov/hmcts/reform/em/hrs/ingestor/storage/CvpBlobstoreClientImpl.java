@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
@@ -18,6 +19,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import java.io.File;
 import java.io.OutputStream;
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,9 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
 
     private static final int BLOB_LIST_TIMEOUT = 30;
     private final BlobContainerClient blobContainerClient;
+
+    @Value("${ingestion.only-process-old-files}")
+    private boolean onlyProcessOldFiles;
 
     @Autowired
     public CvpBlobstoreClientImpl(final BlobContainerClient blobContainerClient) {
@@ -48,6 +53,7 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
         return blobItems.streamByPage()
             .flatMap(pagedResponse -> pagedResponse.getValue().stream()
                 .filter(blobItem -> blobItem.getName().contains("/"))
+                .filter(blobItem -> isOldFolder(blobItem))
                 .map(blobItem -> {
                     LOGGER.debug("Processing blobItem");
                     String filePath = blobItem.getName();
@@ -56,6 +62,14 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
                     return folder;
                 }))
             .collect(Collectors.toUnmodifiableSet());
+    }
+
+    private boolean isOldFolder(BlobItem blobItem) {
+        if (onlyProcessOldFiles) {
+            return OffsetDateTime.now().minusDays(8).isAfter(blobItem.getProperties().getCreationTime());
+        } else {
+            return true;
+        }
     }
 
     @Override

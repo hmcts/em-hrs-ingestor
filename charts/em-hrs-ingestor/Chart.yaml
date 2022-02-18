@@ -8,5 +8,5 @@ maintainers:
   - name: HMCTS Evidence Management team
 dependencies:
   - name: job
-    version: 0.7.1
+    version: 0.7.3
     repository: '@hmctspublic'
