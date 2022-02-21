@@ -353,7 +353,7 @@ dependencies {
 
   //azure components
   implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.10.2'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.2.3'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.4.4'
 
 
   //rest clients
