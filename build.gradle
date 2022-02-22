@@ -10,7 +10,7 @@ plugins {
   id 'checkstyle'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-  id 'org.springframework.boot' version '2.3.4.RELEASE'
+  id 'org.springframework.boot' version '2.6.3'
   id 'com.github.ben-manes.versions' version '0.36.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.2.0'
@@ -227,7 +227,7 @@ dependencyManagement {
     }
 
     //CVE-2021-22112
-    dependencySet(group: 'org.springframework.security', version: '5.3.8.RELEASE') {
+    dependencySet(group: 'org.springframework.security', version: '5.6.2') {
       entry 'spring-security-config'
       entry 'spring-security-core'
       entry 'spring-security-crypto'
