@@ -11,11 +11,11 @@ plugins {
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'org.springframework.boot' version '2.3.4.RELEASE'
-  id 'com.github.ben-manes.versions' version '0.36.0'// NOTE version 0.38 is suspected to be the cause of
+  id 'com.github.ben-manes.versions' version '0.42.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.2.0'
-  id 'uk.gov.hmcts.java' version '0.12.9'
-  id 'au.com.dius.pact' version '4.2.11'
+  id 'uk.gov.hmcts.java' version '0.12.18'
+  id 'au.com.dius.pact' version '4.3.5'
   id "info.solidsoft.pitest" version '1.6.0'
 }
 
@@ -227,7 +227,7 @@ dependencyManagement {
     }
 
     //CVE-2021-22112
-    dependencySet(group: 'org.springframework.security', version: '5.3.8.RELEASE') {
+    dependencySet(group: 'org.springframework.security', version: '5.6.2') {
       entry 'spring-security-config'
       entry 'spring-security-core'
       entry 'spring-security-crypto'
@@ -243,9 +243,8 @@ dependencyManagement {
       entry 'commons-io'
     }
 
-
     //CVE-2021-22118, CVE-2021-22096
-    dependencySet(group: 'org.springframework', version: '5.3.15') {
+    dependencySet(group: 'org.springframework', version: '5.3.16') {
       entry 'spring-aop'
       entry 'spring-aspects'
       entry 'spring-beans'
@@ -262,7 +261,7 @@ dependencyManagement {
     }
 
     //CVE-2021-27568
-    dependencySet(group: 'net.minidev', version: '2.4.7') {
+    dependencySet(group: 'net.minidev', version: '2.4.8') {
       entry 'json-smart'
     }
 
@@ -281,6 +280,18 @@ dependencyManagement {
       entry 'logback-core'
     }
 
+    // CVE-2020-15522
+    dependencySet(group: 'org.bouncycastle', version: '1.70') {
+      entry 'bcprov-jdk15on'
+    }
+
+    // CVE-2020-15522, CVE-2021-22044
+    dependencySet(group: 'org.springframework.cloud', version: '2.2.10.RELEASE') {
+      entry 'spring-cloud-netflix-archaius'
+      entry 'spring-cloud-netflix-ribbon'
+      entry 'spring-cloud-openfeign-core'
+      entry 'spring-cloud-starter-openfeign'
+    }
   }
 }
 
@@ -292,7 +303,7 @@ repositories {
 
 def versions = [
   junit              : '5.7.1',
-  junitPlatform      : '1.8.1',
+  junitPlatform      : '1.8.2',
   reformLogging      : '5.1.7',
   log4JVersion       : "2.17.1",
   springBoot         : springBoot.class.package.implementationVersion,
@@ -344,7 +355,7 @@ dependencies {
 
   implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-  implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
+  implementation group: 'com.opencsv', name: 'opencsv', version: '5.6'
 
   implementation 'org.projectlombok:lombok:1.18.22'
 
@@ -357,7 +368,7 @@ dependencies {
 
 
   //rest clients
-  implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.1'
+  implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
   implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.9.3'
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
@@ -381,14 +392,14 @@ dependencies {
   }
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.15.2'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.16.3'
   testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.4', {
     exclude group: 'com.google.guava', module: 'guava'
   }
-  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.31.0'
-  testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.0.3'
+  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.32.0'
+  testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.1.1'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
-  testImplementation group: 'org.pitest', name: 'pitest', version: '1.7.0'
+  testImplementation group: 'org.pitest', name: 'pitest', version: '1.7.4'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
 
   functionalTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
