@@ -15,7 +15,7 @@ job:
           alias: APPINSIGHTS_INSTRUMENTATIONKEY
     em-hrs-ingestor:
       secrets:
-        - name: microservicekey-em-hrs-ingestor
+        - name: microservicekey-em-hrs-ingestorx
           alias: S2S_KEY
     em-hrs-api:
       secrets:
