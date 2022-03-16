@@ -14,8 +14,6 @@ management:
 spring:
   application:
     name: Hearing Recordings CVP Ingestor
-  config:
-    import: "optional:/mnt/secrets/em-hrs-ingestor/,optional:configtree:/mnt/secrets/em-hrs-api/,optional:configtree:/mnt/secrets/rpa/"
 
 ingestion:
   max-files-to-process: ${MAX_FILES_TO_PROCESS:50}
