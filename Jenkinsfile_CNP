@@ -48,6 +48,28 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   ]
 }
 
+sourceSets {
+  smokeTest {
+    java {
+      compileClasspath += main.output
+      runtimeClasspath += main.output
+    }
+  }
+}
+
+task smoke(type: Test) {
+  failFast = true
+  group = 'Delivery pipeline'
+  description = "Runs Smoke Tests"
+  testClassesDirs = sourceSets.smokeTest.output.classesDirs
+  classpath = sourceSets.smokeTest.runtimeClasspath
+
+  environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+
+}
+
+
+
 // Vars for Kubernetes
 env.IDAM_API_BASE_URI = 'https://idam-api.aat.platform.hmcts.net'
 env.OPEN_ID_API_BASE_URI = 'https://idam-web-public.aat.platform.hmcts.net/o'
