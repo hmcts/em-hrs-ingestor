@@ -71,6 +71,15 @@ withPipeline(type, product, component) {
   enableAksStagingDeployment()
   disableLegacyDeployment()
   nonServiceApp()
+
+  before('akschartsinstall') {
+    try {
+      builder.gradle('smoke')
+    } finally {
+      junit '**/test-results/**/*.xml'
+    }
+  }
+
   onMaster {
     after('test') {
       sh '''
