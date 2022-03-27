@@ -32,6 +32,9 @@ def secrets = [
     secret('storage-account-primary-connection-string', 'AAT_HRS_STORAGEACCOUNT_CONNECTION_STRING'),
     secret('cvp-storage-container-name', 'AAT_CVP_STORAGE_CONTAINER_NAME'),
     secret('hrs-storage-container-name', 'AAT_HRS_STORAGE_CONTAINER_NAME')
+  ],
+  'em-hrs-ingestor-${env}': [
+    secret('microservicekey-em-hrs-ingestor', 'S2S_KEY')
   ]
 ]
 
