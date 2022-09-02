@@ -273,6 +273,7 @@ def withoutStuff = {
 dependencies {
   annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
+  implementation group: 'org.yaml', name: 'snakeyaml', version: '1.31'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
