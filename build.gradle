@@ -313,7 +313,7 @@ dependencies {
   implementation group: 'com.azure', name: 'azure-identity', version: '1.5.1'
 
   //rest clients
-  implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
+  implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
   implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.9.3'
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
