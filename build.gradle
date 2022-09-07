@@ -14,7 +14,7 @@ plugins {
   id 'com.github.ben-manes.versions' version '0.42.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.2.0'
-  id 'uk.gov.hmcts.java' version '0.12.28'
+  id 'uk.gov.hmcts.java' version '0.12.29'
   id 'au.com.dius.pact' version '4.3.5'
   id "info.solidsoft.pitest" version '1.6.0'
 }
@@ -285,7 +285,7 @@ dependencies {
 
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
 
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.2'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.4'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.2'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
