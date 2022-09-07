@@ -14,7 +14,7 @@ plugins {
   id 'com.github.ben-manes.versions' version '0.42.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.2.0'
-  id 'uk.gov.hmcts.java' version '0.12.28'
+  id 'uk.gov.hmcts.java' version '0.12.29'
   id 'au.com.dius.pact' version '4.3.5'
   id "info.solidsoft.pitest" version '1.6.0'
 }
@@ -303,7 +303,7 @@ dependencies {
 
   implementation 'org.projectlombok:lombok:1.18.22'
 
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4JVersion
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
