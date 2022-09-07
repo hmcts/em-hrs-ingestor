@@ -380,7 +380,7 @@ dependencies {
   contractTestImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
   contractTestImplementation "org.junit.vintage:junit-vintage-engine:5.9.0"
   contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.8.2'
+  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.0'
 
   contractTestImplementation sourceSets.main.runtimeClasspath
   contractTestImplementation sourceSets.test.runtimeClasspath
@@ -393,7 +393,7 @@ dependencies {
 
   functionalTestImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
   functionalTestImplementation "org.junit.vintage:junit-vintage-engine:5.9.0"
-  functionalTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.2.0'
+  functionalTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.0'
   functionalTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
 
 /***********************************************************************************************************************
