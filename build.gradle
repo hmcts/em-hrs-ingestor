@@ -286,7 +286,7 @@ dependencies {
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
 
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.4'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.2'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.4'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
@@ -310,7 +310,7 @@ dependencies {
 
   //azure components
   implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.19.0'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.5.1'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.5.5'
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
