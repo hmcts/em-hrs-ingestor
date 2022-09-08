@@ -25,9 +25,10 @@ public class AzureStorageConfiguration {
 
     @Bean
     BlobContainerClient provideBlobContainerClient() {
-        LOGGER.info("****************************");
-        LOGGER.info("Starting Up");
-        LOGGER.info("****************************");
+        LOGGER.info("""
+        ****************************
+                 Starting Up
+        ****************************""");
         LOGGER.info("cvp connection string(60): {}", StringUtils.left(connectionString, 60));
         LOGGER.info("cvp container name: {}", containerReference);
 
