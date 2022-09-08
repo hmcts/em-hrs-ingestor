@@ -79,7 +79,8 @@ public class MetadataResolverImpl implements MetadataResolver {
             parsedDataDto.getCaseID(),
             fragments.getRoomNumber(),
             parsedDataDto.getJurisdiction(),
-            parsedDataDto.getLocationCode()
+            parsedDataDto.getLocationCode(),
+            parsedDataDto.getServiceCode()
         );
         return metadata;
 

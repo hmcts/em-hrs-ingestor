@@ -22,4 +22,5 @@ public class Metadata {
     private final int hearingRoomRef;
     private final String jurisdictionCode;
     private final String courtLocationCode;
+    private final String serviceCode;
 }

@@ -17,4 +17,5 @@ public class ParsedFilenameDto {
     private final String segment;
     private final String uniqueIdentifier;
     private final String roomRef;
+    private final String serviceCode;
 }

@@ -17,13 +17,13 @@ public final class FilenameParser {
     private static final Logger log = LoggerFactory.getLogger(FilenameParser.class);
 
     private static final String ROYAL_COURTS_OF_JUSTICE_FILE_WITH_LOCATION_FORMAT_REGEX
-        = "^(CV)-(0372|0266)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
+        = "^([A-Z][A-Z][A-Z]\\d)-(0372|0266)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
     private static final String CIVIL_AND_FAMILY_FILE_FORMAT_REGEX
-        = "^(CV|FM|CP)-([0-9]{3,4})-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
+        = "^([A-Z][A-Z][A-Z]\\d)-([0-9]{3,4})-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
     private static final String TRIBUNALS_FILE_FORMAT_REGEX
-        = "^(EE|ES|GR|HE|IA|PC|SE|TC|WP|EA|AU|IU|LU|TU)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
+        = "^([A-Z][A-Z][A-Z]\\d)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
     private static final String ROYAL_COURTS_OF_JUSTICE_FILE_WITHOUT_LOCATION_FORMAT_REGEX
-        = "^(CI|QB|HF|CF|BP|SC|CR|CV)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
+        = "^([A-Z][A-Z][A-Z]\\d)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
 
     private static final String MINIMAL_FORMAT_REGEX
         = "^(.*?)_([0-9-.]*)-([A-Z]{3})_([0-9]+)$";
@@ -106,7 +106,7 @@ public final class FilenameParser {
     private static ParsedFilenameDto processLocationMatcher(final Matcher matcher) {
         return ParsedFilenameDto
             .builder()
-            .jurisdiction(matcher.group(1))
+            .serviceCode(matcher.group(1))
             .locationCode(
                 matcher.group(2).trim().length() == 4
                 ? matcher.group(2).replaceFirst("^0*", "")
@@ -127,7 +127,7 @@ public final class FilenameParser {
         final Matcher matcher) {
         return ParsedFilenameDto
             .builder()
-            .jurisdiction(matcher.group(1))
+            .serviceCode(matcher.group(1))
             .caseID(matcher.group(2))
             .recordingDateTime(processRawDatePart(matcher.group(3), matcher.group(4)))
             .segment(matcher.group(5))

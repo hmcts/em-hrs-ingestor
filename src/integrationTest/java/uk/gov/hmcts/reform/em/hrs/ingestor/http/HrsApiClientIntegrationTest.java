@@ -51,7 +51,8 @@ class HrsApiClientIntegrationTest {
         "xyz",
         222,
         "AB",
-        "C3"
+        "C3",
+        "AAA1"
     );
 
     @Autowired

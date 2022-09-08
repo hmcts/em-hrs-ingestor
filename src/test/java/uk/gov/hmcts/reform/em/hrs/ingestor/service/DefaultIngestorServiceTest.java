@@ -63,6 +63,7 @@ class DefaultIngestorServiceTest {
         "xyz",
         222,
         "AB",
+        null,
         null
     );
     @Mock

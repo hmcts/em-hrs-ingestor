@@ -10,10 +10,8 @@ variable "env" {}
 
 variable "subscription" {}
 
-variable "deployment_namespace" {}
-
-variable "common_tags" {
-  type = "map"
+variable common_tags {
+  type = map(string)
 }
 
 variable "tenant_id" {}
