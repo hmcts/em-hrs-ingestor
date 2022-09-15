@@ -347,7 +347,7 @@ dependencies {
   testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.5', {
     exclude group: 'com.google.guava', module: 'guava'
   }
-  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.33.2'
+  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.34.0'
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
