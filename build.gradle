@@ -10,7 +10,7 @@ plugins {
   id 'checkstyle'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-  id 'org.springframework.boot' version '2.7.3'
+  id 'org.springframework.boot' version '2.7.4'
   id 'com.github.ben-manes.versions' version '0.42.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.4.0.2513'
