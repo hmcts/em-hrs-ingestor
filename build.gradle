@@ -312,8 +312,6 @@ dependencies {
 
   implementation 'org.projectlombok:lombok:1.18.22'
 
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
-
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4JVersion
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
 
