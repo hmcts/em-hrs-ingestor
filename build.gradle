@@ -239,12 +239,6 @@ dependencyManagement {
     dependencySet(group: 'org.yaml', version: '1.33') {
       entry 'snakeyaml'
     }
-    
-    //CVE-2022-42003
-    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.14.0-rc1') {
-      entry 'jackson-databind'
-    }
-
   }
 }
 
