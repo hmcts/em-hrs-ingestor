@@ -141,7 +141,6 @@ def coverageExclusionList = [
   '**uk/gov/hmcts/reform/em/hrs/ingestor/config/**',
   '**uk/gov/hmcts/reform/em/hrs/ingestor/model/**',
   '**uk/gov/hmcts/reform/em/hrs/ingestor/exception/**',
-  '**uk/gov/hmcts/reform/em/hrs/ingestor/appinsights/*',
 ]
 
 jacocoTestReport {
@@ -299,8 +298,6 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.4'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
-  implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
-  implementation group: 'com.github.hmcts.java-logging', name: 'logging-spring', version: versions.reformLogging
 
   //CVE-2020-13956
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
