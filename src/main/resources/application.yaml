@@ -51,3 +51,7 @@ idam:
 toggle:
   shutdown: ${ENABLE_SHUTDOWN:true}
   cronjob: ${ENABLE_CRONJOB:true}
+
+logging:
+  level:
+    uk.gov.hmcts.reform.authorisation.filters: DEBUG
