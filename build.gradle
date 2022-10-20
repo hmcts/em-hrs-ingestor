@@ -9,9 +9,9 @@ plugins {
   id 'application'
   id 'checkstyle'
   id 'jacoco'
-  id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+  id 'io.spring.dependency-management' version '1.1.0'
   id 'org.springframework.boot' version '2.7.4'
-  id 'com.github.ben-manes.versions' version '0.42.0'// NOTE version 0.38 is suspected to be the cause of
+  id 'com.github.ben-manes.versions' version '0.43.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '3.4.0.2513'
   id 'uk.gov.hmcts.java' version '0.12.31'
@@ -141,7 +141,6 @@ def coverageExclusionList = [
   '**uk/gov/hmcts/reform/em/hrs/ingestor/config/**',
   '**uk/gov/hmcts/reform/em/hrs/ingestor/model/**',
   '**uk/gov/hmcts/reform/em/hrs/ingestor/exception/**',
-  '**uk/gov/hmcts/reform/em/hrs/ingestor/appinsights/*',
 ]
 
 jacocoTestReport {
@@ -212,8 +211,13 @@ dependencyManagement {
       entry 'commons-io'
     }
 
+    //CVE-2022-42889
+    dependencySet(group: 'org.apache.commons', version: '1.10.0') {
+      entry 'commons-text'
+    }
+
     //CVE-2022-24823
-    dependencySet(group: 'io.netty', version: '4.1.82.Final') {
+    dependencySet(group: 'io.netty', version: '4.1.84.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-codec-dns'
@@ -251,7 +255,7 @@ repositories {
 def versions = [
   junit              : '5.7.1',
   junitPlatform      : '1.9.1',
-  reformLogging      : '5.1.7',
+  reformLogging      : '5.1.9',
   log4JVersion       : "2.17.1",
   springBoot         : springBoot.class.package.implementationVersion,
   pact_version       : '3.6.15',
@@ -288,14 +292,13 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
 
-  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.0'
+  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.1'
 
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.4'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.4'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
-  implementation group: 'com.github.hmcts.java-logging', name: 'logging-spring', version: versions.reformLogging
 
   //CVE-2020-13956
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
@@ -310,7 +313,7 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
 
   //azure components
-  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.19.1'
+  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.20.0'
   implementation group: 'com.azure', name: 'azure-identity', version: '1.6.1'
 
   //rest clients
@@ -346,7 +349,7 @@ dependencies {
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
-  testImplementation group: 'org.pitest', name: 'pitest', version: '1.9.5'
+  testImplementation group: 'org.pitest', name: 'pitest', version: '1.9.8'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
 
   functionalTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
