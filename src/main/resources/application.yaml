@@ -20,10 +20,6 @@ ingestion:
   max-files-to-process: ${MAX_FILES_TO_PROCESS:50}
   process-back-to-day: ${PROCESS_BACK_TO_DAY:2}
 
-logging:
-  level:
-    root: INFO
-
 azure:
   app_insights_key: ${APPINSIGHTS_INSTRUMENTATIONKEY:true}
   application-insights:
