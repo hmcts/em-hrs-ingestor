@@ -7,6 +7,12 @@
       <cve>CVE-2016-1000027</cve>
       <cve>CVE-2021-37533</cve>
   </suppress>
+  <suppress until="2023-03-14">
+    <notes>
+      False positive - https://github.com/jeremylong/DependencyCheck/issues/5213
+    </notes>
+    <cve>CVE-2021-4277</cve>
+  </suppress>
   <suppress until="2023-03-04">
     <notes><![CDATA[ file name: jackson-databind-2.13.4.jar]]></notes>
     <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
