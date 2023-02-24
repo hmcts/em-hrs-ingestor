@@ -308,7 +308,7 @@ dependencies {
   implementation group: 'net.sf.jsignature.io-tools', name: 'easystream', version: '1.2.15'
 
   //test implementation
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
   testImplementation 'org.projectlombok:lombok:1.18.26'
 
 
