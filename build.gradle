@@ -364,9 +364,9 @@ dependencies {
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-junit5', version: '4.0.10'
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-gradle', version: '4.0.10'
 
-  contractTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+  contractTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
   contractTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.2'
-  contractTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.2')
+  contractTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.1')
   contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.2'
 
   contractTestImplementation sourceSets.main.runtimeClasspath
@@ -378,10 +378,10 @@ dependencies {
   functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
   functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
-  functionalTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+  functionalTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
   functionalTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.1'
   functionalTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.1'
-  functionalTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.2')
+  functionalTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.1')
 
 /***********************************************************************************************************************
  * TEST SOURCE SETS
