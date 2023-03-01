@@ -332,7 +332,7 @@ dependencies {
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
-  testImplementation group: 'org.pitest', name: 'pitest', version: '1.11.0'
+  testImplementation group: 'org.pitest', name: 'pitest', version: '1.11.3'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
 
   functionalTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
@@ -379,7 +379,7 @@ dependencies {
   functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
   functionalTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-  functionalTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.1'
+  functionalTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.2'
   functionalTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.1'
   functionalTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.1')
 
