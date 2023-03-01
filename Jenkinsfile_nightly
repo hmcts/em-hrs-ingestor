@@ -13,4 +13,11 @@ def component = "hrs-ingestor"
 
 withNightlyPipeline(type, product, component) {
   enableMutationTest()
+  enableFortifyScan('em-hrs-ingestor-aat')
+  afterAlways('fortify-scan') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+  }
 }
+
+
+
