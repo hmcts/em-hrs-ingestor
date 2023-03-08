@@ -263,6 +263,7 @@ def withoutStuff = {
 
 dependencies {
   annotationProcessor 'org.projectlombok:lombok:1.18.26'
+  implementation group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
