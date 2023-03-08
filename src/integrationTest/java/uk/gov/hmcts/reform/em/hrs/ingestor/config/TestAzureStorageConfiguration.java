@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.config;
 
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +12,6 @@ import org.springframework.context.annotation.Primary;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 @Configuration
 public class TestAzureStorageConfiguration {

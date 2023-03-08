@@ -1,16 +1,11 @@
-buildscript {
-  dependencies {
-    classpath("net.serenity-bdd:serenity-gradle-plugin:2.3.13")
-    classpath("net.serenity-bdd:serenity-single-page-report:3.2.0")
-  }
-}
+
 
 plugins {
   id 'application'
   id 'checkstyle'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.0'
-  id 'org.springframework.boot' version '2.7.5'
+  id 'org.springframework.boot' version '3.0.4'
   id 'com.github.ben-manes.versions' version '0.46.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '4.0.0.2929'
@@ -22,7 +17,6 @@ plugins {
 
 group = 'uk.gov.hmcts.reform.em.hrs'
 version = '0.0.1'
-apply plugin: 'net.serenity-bdd.aggregator'
 
 java {
   toolchain {
@@ -104,9 +98,6 @@ task functionalPostDeploy(type: Test) {
   include "uk/gov/hmcts/reform/em/hrs/ingestor/functional/**"
   environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 }
-
-// Serenity Reporting
-functional.finalizedBy(aggregate)
 
 task integration(type: Test) {
   description = "Runs integration tests"
@@ -196,6 +187,9 @@ dependencyCheck {
 
 configurations.all {
   exclude group: 'org.springframework.security', module: 'spring-security-rsa'
+  exclude group: 'org.apache.groovy', module: 'groovy-json'
+  exclude group: 'org.apache.groovy', module: 'groovy'
+  exclude group: 'org.apache.groovy', module: 'groovy-xml'
 }
 
 dependencyManagement {
@@ -247,10 +241,6 @@ def versions = [
   log4JVersion       : "2.17.1",
   springBoot         : springBoot.class.package.implementationVersion,
   pact_version       : '3.6.15',
-  restAssured        : '4.2.0',
-  serenity           : '2.3.13',
-  serenityRestAssured: '2.3.4',
-  serenityreporter   : '2.3.13',
 ]
 
 ext.libraries = [
@@ -346,13 +336,8 @@ dependencies {
     exclude group: 'com.vaadin.external.google', module: 'android-json'
   }
 
-  //smokeTest implementation
 
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity, withoutStuff
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenityRestAssured, withoutStuff
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
 
   contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
     exclude group: 'junit', module: 'junit'
@@ -360,10 +345,7 @@ dependencies {
     exclude group: 'com.vaadin.external.google', module: 'android-json'
   }
 
-  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
-  contractTestImplementation group: 'io.rest-assured', name: 'json-schema-validator', version: versions.restAssured
-  contractTestImplementation group: 'io.rest-assured', name: 'xml-path', version: versions.restAssured
-  contractTestImplementation group: 'io.rest-assured', name: 'json-path', version: versions.restAssured
+  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-junit5', version: '4.0.10'
@@ -376,17 +358,6 @@ dependencies {
 
   contractTestImplementation sourceSets.main.runtimeClasspath
   contractTestImplementation sourceSets.test.runtimeClasspath
-
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity, withoutStuff
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenityRestAssured, withoutStuff
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-
-  functionalTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-  functionalTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.2'
-  functionalTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.1'
-  functionalTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.1')
 
 /***********************************************************************************************************************
  * TEST SOURCE SETS
@@ -460,9 +431,6 @@ static def getCheckedOutGitCommitHash() {
   'git rev-parse --verify --short HEAD'.execute().text.trim()
 }
 
-serenity {
-  reports = ["single-page-html"]
-}
 
 pact {
   publish {

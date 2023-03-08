@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.smoke;
 
-import net.serenitybdd.rest.SerenityRest;
-import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.WithTags;
+import io.restassured.RestAssured;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @TestPropertySource("classpath:application.yml")
-@WithTags({@WithTag("testType:Smoke")})
 public class SmokeTest {
 
     private static final String MESSAGE = "Welcome to Hearing Recordings Ingestor";
@@ -23,10 +20,10 @@ public class SmokeTest {
     @Test
     public void testHealthEndpoint() {
 
-        SerenityRest.useRelaxedHTTPSValidation();
+        RestAssured.useRelaxedHTTPSValidation();
 
         String response =
-            SerenityRest
+            RestAssured
                 .given()
                 .baseUri(testUrl)
                 .when()
