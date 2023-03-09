@@ -290,17 +290,11 @@ dependencies {
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
   testImplementation 'org.projectlombok:lombok:1.18.26'
 
-
-
   testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.5.0'
 
   testImplementation libraries.junit5
 
-  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-    exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    exclude group: 'com.vaadin.external.google', module: 'android-json'
-  }
+  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.6'
@@ -312,20 +306,9 @@ dependencies {
   testImplementation group: 'org.pitest', name: 'pitest', version: '1.11.4'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
 
-  functionalTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-    exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    exclude group: 'com.vaadin.external.google', module: 'android-json'
-  }
-
-
   smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
 
-  contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-    exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    exclude group: 'com.vaadin.external.google', module: 'android-json'
-  }
+  contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
   contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
