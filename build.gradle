@@ -269,9 +269,6 @@ dependencies {
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.4.10'
 
-  //CVE-2020-13956
-  implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
-
   implementation 'org.projectlombok:lombok:1.18.26'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4JVersion
@@ -287,7 +284,7 @@ dependencies {
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
 
-  implementation group: 'net.sf.jsignature.io-tools', name: 'easystream', version: '1.2.15'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
   //test implementation
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
