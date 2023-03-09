@@ -186,8 +186,7 @@ dependencyCheck {
 }
 
 configurations.all {
-  exclude group: 'org.' +
-    'framework.security', module: 'spring-security-rsa'
+  exclude group: 'org.framework.security', module: 'spring-security-rsa'
   exclude group: 'org.apache.groovy', module: 'groovy-json'
   exclude group: 'org.apache.groovy', module: 'groovy'
   exclude group: 'org.apache.groovy', module: 'groovy-xml'
