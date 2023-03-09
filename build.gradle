@@ -231,7 +231,7 @@ repositories {
 def versions = [
   junit              : '5.7.1',
   junitPlatform      : '1.9.2',
-  reformLogging      : '5.1.9',
+  reformLogging      : '6.0.1',
   log4JVersion       : "2.20.0",
   pact_version       : '3.6.15',
 ]
@@ -260,8 +260,6 @@ dependencies {
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
 
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.1'
 
