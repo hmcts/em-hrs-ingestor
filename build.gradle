@@ -168,25 +168,12 @@ sonarqube {
  * Dependency Management
  **********************************************************************************************************************/
 
-// before committing a change, make sure task still works
-dependencyUpdates {
-  def isNonStable = { String version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { qualifier -> version.toUpperCase().contains(qualifier) }
-    def regex = /^[0-9,.v-]+$/
-    return !stableKeyword && !(version ==~ regex)
-  }
-  rejectVersionIf { selection -> // <---- notice how the closure argument is named
-    return isNonStable(selection.candidate.version) && !isNonStable(selection.currentVersion)
-  }
-}
-
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
   suppressionFile = 'config/owasp/suppressions.xml'
 }
 
 configurations.all {
-  exclude group: 'org.framework.security', module: 'spring-security-rsa'
   exclude group: 'org.apache.groovy', module: 'groovy-json'
   exclude group: 'org.apache.groovy', module: 'groovy'
   exclude group: 'org.apache.groovy', module: 'groovy-xml'
@@ -224,15 +211,6 @@ ext.libraries = [
     "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
   ]
 ]
-
-
-def withoutStuff = {
-  exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
-  exclude group: 'com.vaadin.external.google', module: 'android-json'
-  exclude group: 'org.springframework.boot', module: 'spring-boot-starter-security'
-  exclude group: 'org.springframework.boot', module: 'spring-boot-starter-test'
-  exclude group: 'com.github.hmcts.java-logging', module: 'logging-spring'
-}
 
 dependencies {
   annotationProcessor 'org.projectlombok:lombok:1.18.26'
@@ -285,11 +263,12 @@ dependencies {
   testImplementation group: 'org.pitest', name: 'pitest', version: '1.11.4'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
 
-  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
+  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.3.0'
 
   contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
-  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
+  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.3.0'
+
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-junit5', version: '4.0.10'
