@@ -26,14 +26,11 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
     @Value("${toggle.cronjob}")
     private boolean enableCronjob;
 
-    @Autowired
-    private TelemetryClient client;
-
     static int secondsToAllowFlushingOfLogs = 200;
-
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+        var client = new TelemetryClient();
 
         client.trackEvent("HRS Ingestor invoked");
         LOGGER.info("HRS Ingestor invoked");
@@ -46,12 +43,8 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
             TelemetryContext context = client.getContext();
             ConcurrentMap<String, String> tags = context.getTags();
             tags.forEach((s, s2) -> LOGGER.info(s + ": " + s2));
-            LOGGER.info("context.getSession(): {}", context.getSession().getId());
-            LOGGER.info("context..getUserAgent(): {}", context.getUser().getUserAgent());
-            LOGGER.info("context.getOperation(): {}}", context.getOperation().getName());
+            LOGGER.info("context.getSession(): {}", context.getSession().toString());
             LOGGER.info("context.getLocation(): {}", context.getLocation().toString());
-
-
         } else {
             LOGGER.info("No Application Insights Key");
         }
@@ -62,7 +55,7 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
                 LOGGER.info("Application Started {}\n...About to Ingest", event);
                 defaultIngestorService.ingest();
             } catch (Exception e) {
-                flushLogs();
+                flushLogs(client);
                 LOGGER.error("Unhandled Exception during Ingestion - Aborted ... {}");
                 throw new IngestorExecutionException("Error Intialising or Running Ingestor", e);
             }
@@ -71,12 +64,11 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
         } else {
             LOGGER.info("Application Not Starting as ENABLE_CRONJOB is false");
         }
-        flushLogs();
+        flushLogs(client);
         System.exit(0);
-
     }
 
-    private void flushLogs() {
+    private void flushLogs(TelemetryClient client) {
         client.flush();
         try {
             TimeUnit.SECONDS.sleep(secondsToAllowFlushingOfLogs);
