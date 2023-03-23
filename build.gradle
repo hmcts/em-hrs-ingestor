@@ -185,6 +185,11 @@ dependencyManagement {
     dependencySet(group: 'commons-fileupload', version: '1.5') {
       entry 'commons-fileupload'
     }
+
+    //CVE-2022-1471
+    dependencySet(group: 'org.yaml', version: '2.0') {
+      entry 'snakeyaml'
+    }
   }
 }
 
