@@ -33,7 +33,11 @@ public class AzureStorageConfiguration {
                  Starting Up
         ****************************""");
         LOGGER.info("cvp connection string(60): {}", StringUtils.left(connectionString, 60));
-        LOGGER.info("cvp container name: {}, useAdForSourceBlobStorage:{}", cvpContainerName, useAdForSourceBlobStorage);
+        LOGGER.info(
+            "cvp container name: {}, useAdForSourceBlobStorage:{}",
+            cvpContainerName,
+            useAdForSourceBlobStorage
+        );
 
         //connectionstring is overloaded and used as endpoint when connecting to cvp, and connection string against
         // CFT/HRS test storage accounts
