@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.dto.ParsedFilenameDto;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.parse.FilenameParser;
 
@@ -77,6 +78,7 @@ public class MetadataResolverImpl implements MetadataResolver {
             fragments.getFilenameSuffix(),
             parsedDataDto.getRecordingDateTime(),
             parsedDataDto.getCaseID(),
+            HearingSource.CVP,
             fragments.getRoomNumber(),
             parsedDataDto.getJurisdiction(),
             parsedDataDto.getLocationCode(),

@@ -21,7 +21,10 @@ public class AzureStorageConfiguration {
     private String connectionString;
 
     @Value("${azure.storage.cvp-storage-container-name}")
-    private String containerReference;
+    private String cvpContainerName;
+
+    @Value("${azure.storage.use-ad-auth-for-source}")
+    private boolean useAdForSourceBlobStorage;
 
     @Bean
     BlobContainerClient provideBlobContainerClient() {
@@ -30,14 +33,11 @@ public class AzureStorageConfiguration {
                  Starting Up
         ****************************""");
         LOGGER.info("cvp connection string(60): {}", StringUtils.left(connectionString, 60));
-        LOGGER.info("cvp container name: {}", containerReference);
+        LOGGER.info("cvp container name: {}, useAdForSourceBlobStorage:{}", cvpContainerName, useAdForSourceBlobStorage);
 
         //connectionstring is overloaded and used as endpoint when connecting to cvp, and connection string against
         // CFT/HRS test storage accounts
-        boolean isACvpEndpointUrl =
-            connectionString.contains("cvprecordings") && !connectionString.contains("AccountName");
-
-        if (isACvpEndpointUrl) {
+        if (useAdForSourceBlobStorage) {
             LOGGER.info("****************************");
 
             LOGGER.info(
@@ -46,7 +46,7 @@ public class AzureStorageConfiguration {
             LOGGER.info("****************************");
             BlobContainerClientBuilder clientBuilder = new BlobContainerClientBuilder()
                 .endpoint(connectionString)
-                .containerName(containerReference);
+                .containerName(cvpContainerName);
 
             DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
             clientBuilder.credential(credential);
@@ -55,7 +55,7 @@ public class AzureStorageConfiguration {
 
         BlobContainerClientBuilder clientBuilder = new BlobContainerClientBuilder()
             .connectionString(connectionString)
-            .containerName(containerReference);
+            .containerName(cvpContainerName);
 
 
         BlobContainerClient blobContainerClient = clientBuilder.buildClient();
