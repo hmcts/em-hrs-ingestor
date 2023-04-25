@@ -25,6 +25,8 @@ job:
           alias: CVP_STORAGE_CONNECTION_STRING
         - name: cvp-storage-container-name
           alias: CVP_STORAGE_CONTAINER_NAME
+        - name: cvp-storage-container-name
+          alias: VH_STORAGE_CONTAINER_NAME
   environment:
     S2S_BASE_URI: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     HRS_API_BASE_URI: http://em-hrs-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal

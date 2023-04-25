@@ -23,19 +23,28 @@ public class AzureStorageConfiguration {
     @Value("${azure.storage.cvp-storage-container-name}")
     private String cvpContainerName;
 
+    @Value("${azure.storage.vh-storage-container-name}")
+    private String vhContainerName;
+
     @Value("${azure.storage.use-ad-auth-for-source}")
     private boolean useAdForSourceBlobStorage;
 
-    @Bean
-    BlobContainerClient provideBlobContainerClient() {
-        LOGGER.info("""
-        ****************************
-                 Starting Up
-        ****************************""");
-        LOGGER.info("cvp connection string(60): {}", StringUtils.left(connectionString, 60));
+    @Bean("cvpBlobContainerClient")
+    BlobContainerClient cvpBlobContainerClient() {
+        return getBlobClient(cvpContainerName);
+    }
+
+    @Bean("vhBlobContainerClient")
+    BlobContainerClient vhBlobContainerClient() {
+        return getBlobClient(vhContainerName);
+    }
+
+    private BlobContainerClient getBlobClient(String containerName) {
+        LOGGER.info("creating blob client");
+        LOGGER.info("connectionString : {}", StringUtils.left(connectionString, 60));
         LOGGER.info(
-            "cvp container name: {}, useAdForSourceBlobStorage:{}",
-            cvpContainerName,
+            "container name: {}, useAdForSourceBlobStorage:{}",
+            containerName,
             useAdForSourceBlobStorage
         );
 
@@ -50,7 +59,7 @@ public class AzureStorageConfiguration {
             LOGGER.info("****************************");
             BlobContainerClientBuilder clientBuilder = new BlobContainerClientBuilder()
                 .endpoint(connectionString)
-                .containerName(cvpContainerName);
+                .containerName(containerName);
 
             DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
             clientBuilder.credential(credential);
@@ -59,7 +68,7 @@ public class AzureStorageConfiguration {
 
         BlobContainerClientBuilder clientBuilder = new BlobContainerClientBuilder()
             .connectionString(connectionString)
-            .containerName(cvpContainerName);
+            .containerName(containerName);
 
 
         BlobContainerClient blobContainerClient = clientBuilder.buildClient();

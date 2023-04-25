@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
@@ -34,7 +35,9 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
     private int processBackToDay;
 
     @Autowired
-    public CvpBlobstoreClientImpl(final BlobContainerClient blobContainerClient) {
+    public CvpBlobstoreClientImpl(
+        final @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient
+    ) {
         this.blobContainerClient = blobContainerClient;
     }
 

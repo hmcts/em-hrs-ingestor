@@ -76,7 +76,7 @@ class CvpBlobstoreClientImplTest {
             assertThat(x.getMd5Hash()).isEqualTo(expectedHash);
             assertThat(x.getFileUri())
                 .startsWith("http://localhost:")
-                .contains("/devstoreaccount1/hrs-test-container/one-item-folder");
+                .contains("/devstoreaccount1/cvp-test-container/one-item-folder");
         });
     }
 
