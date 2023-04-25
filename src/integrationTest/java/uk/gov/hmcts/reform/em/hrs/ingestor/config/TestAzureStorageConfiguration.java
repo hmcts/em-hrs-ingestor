@@ -55,7 +55,7 @@ public class TestAzureStorageConfiguration {
         return getBlobContainerClient(VH_CONTAINER_NAME);
     }
 
-    private BlobContainerClient getBlobContainerClient(String containerName){
+    private BlobContainerClient getBlobContainerClient(String containerName) {
         final String blobServiceUrl = String.format(
             BLOB_ENDPOINT,
             azuriteContainer.getHost(),
@@ -73,6 +73,7 @@ public class TestAzureStorageConfiguration {
 
         return blobContainerClient;
     }
+
     @PreDestroy
     void cleanUp() {
         if (azuriteContainer.isRunning()) {
