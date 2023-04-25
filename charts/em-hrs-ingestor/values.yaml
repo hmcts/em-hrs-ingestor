@@ -23,6 +23,8 @@ job:
       secrets:
         - name: cvp-storage-connection-string
           alias: CVP_STORAGE_CONNECTION_STRING
+        - name: cvp-storage-connection-string
+          alias: VH_STORAGE_CONNECTION_STRING
         - name: cvp-storage-container-name
           alias: CVP_STORAGE_CONTAINER_NAME
         - name: cvp-storage-container-name

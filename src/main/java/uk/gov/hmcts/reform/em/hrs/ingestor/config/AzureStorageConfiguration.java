@@ -16,9 +16,11 @@ public class AzureStorageConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AzureStorageConfiguration.class);
 
-
     @Value("${azure.storage.cvp-storage-connection-string}")
-    private String connectionString;
+    private String cvpConnectionString;
+
+    @Value("${azure.storage.vh-storage-connection-string}")
+    private String vhConnectionString;
 
     @Value("${azure.storage.cvp-storage-container-name}")
     private String cvpContainerName;
@@ -30,16 +32,16 @@ public class AzureStorageConfiguration {
     private boolean useAdForSourceBlobStorage;
 
     @Bean("cvpBlobContainerClient")
-    BlobContainerClient cvpBlobContainerClient() {
-        return getBlobClient(cvpContainerName);
+    public BlobContainerClient cvpBlobContainerClient() {
+        return getBlobClient(cvpConnectionString, cvpContainerName);
     }
 
     @Bean("vhBlobContainerClient")
-    BlobContainerClient vhBlobContainerClient() {
-        return getBlobClient(vhContainerName);
+    public BlobContainerClient vhBlobContainerClient() {
+        return getBlobClient(vhConnectionString, vhContainerName);
     }
 
-    private BlobContainerClient getBlobClient(String containerName) {
+    private BlobContainerClient getBlobClient(String connectionString, String containerName) {
         LOGGER.info("creating blob client");
         LOGGER.info("connectionString : {}", StringUtils.left(connectionString, 60));
         LOGGER.info(
