@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -86,13 +85,6 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
 
         return transform(blobItems);
 
-    }
-
-
-    @Override
-    public void downloadFile(final String filename, final OutputStream output) {
-        final BlockBlobClient blobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
-        blobClient.download(output);
     }
 
     private CvpItemSet transform(final PagedIterable<BlobItem> blobItems) {
