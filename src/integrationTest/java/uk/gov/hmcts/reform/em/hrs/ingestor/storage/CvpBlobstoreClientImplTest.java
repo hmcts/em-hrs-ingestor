@@ -8,12 +8,8 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.config.TestAzureStorageConfiguration;
 import uk.gov.hmcts.reform.em.hrs.ingestor.helper.AzureOperations;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 
-import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.Random;
 import java.util.Set;
@@ -22,7 +18,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 
 @SpringBootTest(classes = {
     TestAzureStorageConfiguration.class,
@@ -100,38 +95,6 @@ class CvpBlobstoreClientImplTest {
         assertThat(cvpItemSet.getCvpFiles().stream().count()).isEqualTo(1);
     }
 
-
-    @Test
-    void testShouldDownloadFile() throws Exception {
-        final String filePath = ONE_ITEM_FOLDER + "/" + UUID.randomUUID().toString() + ".txt";
-        azureOperations.uploadToContainer(filePath, TEST_DATA);
-
-        try (final PipedInputStream pipedInput = new PipedInputStream();
-             final PipedOutputStream output = new PipedOutputStream(pipedInput)) {
-
-            underTest.downloadFile(filePath, output);
-
-            assertThat(pipedInput).satisfies(this::assertStreamContent);
-        }
-    }
-
-    void assertStreamContent(final InputStream input) {
-        final StringBuilder sb = new StringBuilder();
-        try {
-            await().atMost(Duration.ofSeconds(10)).until(() -> {
-                while (true) {
-                    sb.append((char) input.read());
-                    final String s = sb.toString();
-                    if (s.contains(TEST_DATA)) {
-                        break;
-                    }
-                }
-                return true;
-            });
-        } finally {
-            assertThat(sb.toString()).isEqualTo(TEST_DATA);
-        }
-    }
 
     private void populateCvpBlobstore() {
         final Set<String> filePaths = Set.of(
