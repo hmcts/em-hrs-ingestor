@@ -33,16 +33,18 @@ public class AzureStorageConfiguration {
 
     @Bean("cvpBlobContainerClient")
     public BlobContainerClient cvpBlobContainerClient() {
+        LOGGER.info("creating CVP blob client");
         return getBlobClient(cvpConnectionString, cvpContainerName);
     }
 
     @Bean("vhBlobContainerClient")
-    public BlobContainerClient vhBlobContainerClient() {
+    public BlobContainerClient vhBlobContainerClient()
+    {
+        LOGGER.info("creating VH blob client");
         return getBlobClient(vhConnectionString, vhContainerName);
     }
 
     private BlobContainerClient getBlobClient(String connectionString, String containerName) {
-        LOGGER.info("creating blob client");
         LOGGER.info("connectionString : {}", StringUtils.left(connectionString, 60));
         LOGGER.info(
             "container name: {}, useAdForSourceBlobStorage:{}",
