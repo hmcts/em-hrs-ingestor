@@ -201,7 +201,7 @@ repositories {
 
 def versions = [
   junit              : '5.7.1',
-  junitPlatform      : '1.9.2',
+  junitPlatform      : '1.9.3',
   reformLogging      : '6.0.1',
   log4JVersion       : "2.20.0",
   pact_version       : '3.6.15',
