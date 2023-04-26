@@ -11,13 +11,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -34,7 +34,9 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
     private int processBackToDay;
 
     @Autowired
-    public CvpBlobstoreClientImpl(final BlobContainerClient blobContainerClient) {
+    public CvpBlobstoreClientImpl(
+        final @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient
+    ) {
         this.blobContainerClient = blobContainerClient;
     }
 
@@ -86,13 +88,6 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
 
         return transform(blobItems);
 
-    }
-
-
-    @Override
-    public void downloadFile(final String filename, final OutputStream output) {
-        final BlockBlobClient blobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
-        blobClient.download(output);
     }
 
     private CvpItemSet transform(final PagedIterable<BlobItem> blobItems) {

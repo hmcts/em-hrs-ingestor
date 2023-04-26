@@ -1,28 +1,22 @@
-buildscript {
-  dependencies {
-    classpath("net.serenity-bdd:serenity-gradle-plugin:2.3.13")
-    classpath("net.serenity-bdd:serenity-single-page-report:3.2.0")
-  }
-}
+
 
 plugins {
   id 'application'
   id 'checkstyle'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.0'
-  id 'org.springframework.boot' version '2.7.5'
+  id 'org.springframework.boot' version '3.0.6'
   id 'com.github.ben-manes.versions' version '0.46.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '4.0.0.2929'
-  id 'uk.gov.hmcts.java' version '0.12.41'
+  id 'uk.gov.hmcts.java' version '0.12.43'
   id 'au.com.dius.pact' version '4.3.5'
   id 'info.solidsoft.pitest' version '1.9.0'
-  id 'org.owasp.dependencycheck' version '8.1.2'
+  id 'org.owasp.dependencycheck' version '8.2.1'
 }
 
 group = 'uk.gov.hmcts.reform.em.hrs'
 version = '0.0.1'
-apply plugin: 'net.serenity-bdd.aggregator'
 
 java {
   toolchain {
@@ -105,9 +99,6 @@ task functionalPostDeploy(type: Test) {
   environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 }
 
-// Serenity Reporting
-functional.finalizedBy(aggregate)
-
 task integration(type: Test) {
   description = "Runs integration tests"
   group = "Verification"
@@ -177,54 +168,27 @@ sonarqube {
  * Dependency Management
  **********************************************************************************************************************/
 
-// before committing a change, make sure task still works
-dependencyUpdates {
-  def isNonStable = { String version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { qualifier -> version.toUpperCase().contains(qualifier) }
-    def regex = /^[0-9,.v-]+$/
-    return !stableKeyword && !(version ==~ regex)
-  }
-  rejectVersionIf { selection -> // <---- notice how the closure argument is named
-    return isNonStable(selection.candidate.version) && !isNonStable(selection.currentVersion)
-  }
-}
-
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
   suppressionFile = 'config/owasp/suppressions.xml'
 }
 
 configurations.all {
-  exclude group: 'org.springframework.security', module: 'spring-security-rsa'
+  exclude group: 'org.apache.groovy', module: 'groovy-json'
+  exclude group: 'org.apache.groovy', module: 'groovy'
+  exclude group: 'org.apache.groovy', module: 'groovy-xml'
 }
 
 dependencyManagement {
   dependencies {
-
-    //CVE-2021-29425
-    dependencySet(group: 'commons-io', version: '2.11.0') {
-      entry 'commons-io'
+    //CVE-2023-24998
+    dependencySet(group: 'commons-fileupload', version: '1.5') {
+      entry 'commons-fileupload'
     }
 
-    //CVE-2022-42889
-    dependencySet(group: 'org.apache.commons', version: '1.10.0') {
-      entry 'commons-text'
-    }
-
-    //CVE-2022-25857
-    dependencySet(group: 'org.yaml', version: '1.33') {
+    //CVE-2022-1471
+    dependencySet(group: 'org.yaml', version: '2.0') {
       entry 'snakeyaml'
-    }
-
-    // CVE-2022-31692 - CVE-2022-31690
-    dependencySet(group: 'org.springframework.security', version: '6.0.2') {
-      entry 'spring-security-crypto'
-    }
-
-    //CVE-2022-45143
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.69') {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-websocket'
     }
   }
 }
@@ -238,14 +202,9 @@ repositories {
 def versions = [
   junit              : '5.7.1',
   junitPlatform      : '1.9.2',
-  reformLogging      : '5.1.9',
-  log4JVersion       : "2.17.1",
-  springBoot         : springBoot.class.package.implementationVersion,
+  reformLogging      : '6.0.1',
+  log4JVersion       : "2.20.0",
   pact_version       : '3.6.15',
-  restAssured        : '4.2.0',
-  serenity           : '2.3.13',
-  serenityRestAssured: '2.3.4',
-  serenityreporter   : '2.3.13',
 ]
 
 ext.libraries = [
@@ -258,37 +217,19 @@ ext.libraries = [
   ]
 ]
 
-
-def withoutStuff = {
-  exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
-  exclude group: 'com.vaadin.external.google', module: 'android-json'
-  exclude group: 'org.springframework.boot', module: 'spring-boot-starter-security'
-  exclude group: 'org.springframework.boot', module: 'spring-boot-starter-test'
-  exclude group: 'com.github.hmcts.java-logging', module: 'logging-spring'
-}
-
 dependencies {
   annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
 
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.1'
 
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.5'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.5'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.2'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
-  implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
-
-  //CVE-2020-13956
-  implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
-
-  implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
-
-  implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+  implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.4.12'
 
   implementation 'org.projectlombok:lombok:1.18.26'
 
@@ -296,70 +237,44 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
 
   //azure components
-  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.21.0'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.8.0'
+  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.22.0'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.8.2'
 
   //rest clients
-  implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
-  implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.10.0'
+  implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.11.0'
+  implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.11.0'
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
 
-  implementation group: 'net.sf.jsignature.io-tools', name: 'easystream', version: '1.2.15'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
   //test implementation
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
   testImplementation 'org.projectlombok:lombok:1.18.26'
 
-
-
   testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.5.0'
 
   testImplementation libraries.junit5
 
-  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-    exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    exclude group: 'com.vaadin.external.google', module: 'android-json'
-  }
+  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.6'
-  testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.5', {
-    exclude group: 'com.google.guava', module: 'guava'
-  }
-  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.35.0'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.18.0'
+  testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.5'
+  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8-standalone', version: '2.35.0'
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
-  testImplementation group: 'org.pitest', name: 'pitest', version: '1.11.3'
+  testImplementation group: 'org.pitest', name: 'pitest', version: '1.13.0'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
   testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.3.0', classifier: 'all'
 
-  functionalTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-    exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    exclude group: 'com.vaadin.external.google', module: 'android-json'
-  }
+  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.3.0'
 
-  //smokeTest implementation
+  contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity, withoutStuff
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenityRestAssured, withoutStuff
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
-  smokeTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.3.0'
 
-  contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-    exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    exclude group: 'com.vaadin.external.google', module: 'android-json'
-  }
-
-  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
-  contractTestImplementation group: 'io.rest-assured', name: 'json-schema-validator', version: versions.restAssured
-  contractTestImplementation group: 'io.rest-assured', name: 'xml-path', version: versions.restAssured
-  contractTestImplementation group: 'io.rest-assured', name: 'json-path', version: versions.restAssured
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-junit5', version: '4.0.10'
@@ -372,17 +287,6 @@ dependencies {
 
   contractTestImplementation sourceSets.main.runtimeClasspath
   contractTestImplementation sourceSets.test.runtimeClasspath
-
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity, withoutStuff
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenityRestAssured, withoutStuff
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-
-  functionalTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-  functionalTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.2'
-  functionalTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.1'
-  functionalTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.1')
 
 /***********************************************************************************************************************
  * TEST SOURCE SETS
@@ -461,9 +365,6 @@ static def getCheckedOutGitCommitHash() {
   'git rev-parse --verify --short HEAD'.execute().text.trim()
 }
 
-serenity {
-  reports = ["single-page-html"]
-}
 
 pact {
   publish {

@@ -18,7 +18,7 @@ public class Metadata {
     private final String filenameExtension;
     private final LocalDateTime recordingDateTime;
     private final String caseRef;
-    private final String recordingSource = "CVP";
+    private final HearingSource recordingSource;
     private final int hearingRoomRef;
     private final String jurisdictionCode;
     private final String courtLocationCode;

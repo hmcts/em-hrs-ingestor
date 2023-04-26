@@ -26,9 +26,11 @@ azure:
     instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:d04b52b1-20e5-473a-8ac4-3f6859ea113c}
   storage:
     cvp-storage-connection-string: ${CVP_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1}
+    vh-storage-connection-string: ${VH_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1}
     cvp-storage-container-name: ${CVP_STORAGE_CONTAINER_NAME:cvptestcontainer}
+    vh-storage-container-name: ${VH_STORAGE_CONTAINER_NAME:cvptestcontainer}
     enabled: true
-
+    use-ad-auth-for-source: ${USE_AD_AUTH_FOR_SOURCE_BLOB_CONNECTION:false}
 app-insights:
   dev-mode: on
   request-component: on

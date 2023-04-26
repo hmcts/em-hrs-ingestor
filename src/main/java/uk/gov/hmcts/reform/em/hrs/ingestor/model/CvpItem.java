@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.model;
 
+import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.annotation.Nonnull;
 
 @Getter
 @AllArgsConstructor

@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.exception.HrsApiException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiClient;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.CvpBlobstoreClient;
@@ -61,6 +62,7 @@ class DefaultIngestorServiceTest {
         "mp4",
         LocalDateTime.now(),
         "xyz",
+        HearingSource.CVP,
         222,
         "AB",
         null,

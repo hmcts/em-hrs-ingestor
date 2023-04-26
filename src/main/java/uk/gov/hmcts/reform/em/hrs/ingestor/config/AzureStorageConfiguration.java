@@ -16,28 +16,44 @@ public class AzureStorageConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AzureStorageConfiguration.class);
 
-
     @Value("${azure.storage.cvp-storage-connection-string}")
-    private String connectionString;
+    private String cvpConnectionString;
+
+    @Value("${azure.storage.vh-storage-connection-string}")
+    private String vhConnectionString;
 
     @Value("${azure.storage.cvp-storage-container-name}")
-    private String containerReference;
+    private String cvpContainerName;
 
-    @Bean
-    BlobContainerClient provideBlobContainerClient() {
-        LOGGER.info("""
-        ****************************
-                 Starting Up
-        ****************************""");
-        LOGGER.info("cvp connection string(60): {}", StringUtils.left(connectionString, 60));
-        LOGGER.info("cvp container name: {}", containerReference);
+    @Value("${azure.storage.vh-storage-container-name}")
+    private String vhContainerName;
+
+    @Value("${azure.storage.use-ad-auth-for-source}")
+    private boolean useAdForSourceBlobStorage;
+
+    @Bean("cvpBlobContainerClient")
+    public BlobContainerClient cvpBlobContainerClient() {
+        LOGGER.info("creating CVP blob client");
+        return getBlobClient(cvpConnectionString, cvpContainerName);
+    }
+
+    @Bean("vhBlobContainerClient")
+    public BlobContainerClient vhBlobContainerClient() {
+        LOGGER.info("creating VH blob client");
+        return getBlobClient(vhConnectionString, vhContainerName);
+    }
+
+    private BlobContainerClient getBlobClient(String connectionString, String containerName) {
+        LOGGER.info("connectionString : {}", StringUtils.left(connectionString, 60));
+        LOGGER.info(
+            "container name: {}, useAdForSourceBlobStorage:{}",
+            containerName,
+            useAdForSourceBlobStorage
+        );
 
         //connectionstring is overloaded and used as endpoint when connecting to cvp, and connection string against
         // CFT/HRS test storage accounts
-        boolean isACvpEndpointUrl =
-            connectionString.contains("cvprecordings") && !connectionString.contains("AccountName");
-
-        if (isACvpEndpointUrl) {
+        if (useAdForSourceBlobStorage) {
             LOGGER.info("****************************");
 
             LOGGER.info(
@@ -46,7 +62,7 @@ public class AzureStorageConfiguration {
             LOGGER.info("****************************");
             BlobContainerClientBuilder clientBuilder = new BlobContainerClientBuilder()
                 .endpoint(connectionString)
-                .containerName(containerReference);
+                .containerName(containerName);
 
             DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
             clientBuilder.credential(credential);
@@ -55,7 +71,7 @@ public class AzureStorageConfiguration {
 
         BlobContainerClientBuilder clientBuilder = new BlobContainerClientBuilder()
             .connectionString(connectionString)
-            .containerName(containerReference);
+            .containerName(containerName);
 
 
         BlobContainerClient blobContainerClient = clientBuilder.buildClient();

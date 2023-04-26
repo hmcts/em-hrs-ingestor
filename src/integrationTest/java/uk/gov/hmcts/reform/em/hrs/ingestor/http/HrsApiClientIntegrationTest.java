@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.config.AppConfig;
 import uk.gov.hmcts.reform.em.hrs.ingestor.config.TestOkHttpClientConfig;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.HrsApiException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 
@@ -49,6 +50,7 @@ class HrsApiClientIntegrationTest {
         "mp4",
         LocalDateTime.now(),
         "xyz",
+        HearingSource.CVP,
         222,
         "AB",
         "C3",
