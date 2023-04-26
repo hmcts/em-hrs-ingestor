@@ -38,8 +38,7 @@ public class AzureStorageConfiguration {
     }
 
     @Bean("vhBlobContainerClient")
-    public BlobContainerClient vhBlobContainerClient()
-    {
+    public BlobContainerClient vhBlobContainerClient() {
         LOGGER.info("creating VH blob client");
         return getBlobClient(vhConnectionString, vhContainerName);
     }
