@@ -281,7 +281,7 @@ dependencies {
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-gradle', version: '4.0.10'
 
   contractTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-  contractTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.2'
+  contractTestImplementation 'org.junit.vintage:junit-vintage-engine:5.9.3'
   contractTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.1')
   contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.2'
 
