@@ -18,7 +18,8 @@ spring:
     import: "optional:configtree:/mnt/secrets/em-hrs-ingestor/,optional:configtree:/mnt/secrets/em-hrs-api/,optional:configtree:/mnt/secrets/rpa/"
 ingestion:
   max-files-to-process: ${MAX_FILES_TO_PROCESS:50}
-  process-back-to-day: ${PROCESS_BACK_TO_DAY:2}
+  cvp:
+    process-back-to-day: ${CVP_PROCESS_BACK_TO_DAY:2}
 
 azure:
   app_insights_key: ${APPINSIGHTS_INSTRUMENTATIONKEY:true}
