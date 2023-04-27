@@ -6,7 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.HrsApiException;
@@ -15,7 +17,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
-import uk.gov.hmcts.reform.em.hrs.ingestor.storage.CvpBlobstoreClient;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -36,7 +38,7 @@ public class DefaultIngestorService implements IngestorService {
     private static int filesToIngestCountTotal;
 
 
-    private final CvpBlobstoreClient cvpBlobstoreClient;
+    private final BlobstoreClientHelper cvpBlobstoreHelper;
     private final HrsApiClient hrsApiClient;
     private final IngestionFilterer ingestionFilterer;
     private final MetadataResolver metadataResolver;
@@ -47,11 +49,13 @@ public class DefaultIngestorService implements IngestorService {
     private Integer maxFilesToProcess = 100;
 
     @Autowired
-    public DefaultIngestorService(final CvpBlobstoreClient cvpBlobstoreClient,
-                                  final HrsApiClient hrsApiClient,
-                                  final IngestionFilterer ingestionFilterer,
-                                  final MetadataResolver metadataResolver) {
-        this.cvpBlobstoreClient = cvpBlobstoreClient;
+    public DefaultIngestorService(
+        final @Qualifier("cvpBlobstoreClientHelper") BlobstoreClientHelper cvpBlobstoreClient,
+        final HrsApiClient hrsApiClient,
+        final IngestionFilterer ingestionFilterer,
+        final MetadataResolver metadataResolver
+    ) {
+        this.cvpBlobstoreHelper = cvpBlobstoreClient;
         this.hrsApiClient = hrsApiClient;
         this.ingestionFilterer = ingestionFilterer;
         this.metadataResolver = metadataResolver;
@@ -87,13 +91,13 @@ public class DefaultIngestorService implements IngestorService {
 
     @Override
     public void ingest() {
-        ingest(maxFilesToProcess);
+        ingest(cvpBlobstoreHelper);
     }
 
-    private void ingest(Integer maxNumberOfFiles) {
+    private void ingest(BlobstoreClientHelper blobstoreHelper) {
         resetCounters();
-        LOGGER.info("Ingestion Started with BATCH PROCESSING LIMIT of {}", maxNumberOfFiles);
-        final Set<String> foldersSet = cvpBlobstoreClient.getFolders();
+        LOGGER.info("Ingestion Started with BATCH PROCESSING LIMIT of {}", maxFilesToProcess);
+        final Set<String> foldersSet = blobstoreHelper.getFolders();
         List<String> folders = foldersSet.stream().collect(Collectors.toList());
         Collections.shuffle(folders);
 
@@ -102,10 +106,10 @@ public class DefaultIngestorService implements IngestorService {
 
             LOGGER.info("--------------------------------------------");
             LOGGER.info("Inspecting folder: {}", folder);
-            final Set<CvpItem> filteredSet = getFilesToIngest(folder);
+            final Set<CvpItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
             LOGGER.debug("filterSet size: {}", filteredSet.size());
             filteredSet.forEach(file -> {
-                if (!batchProcessingLimitReached(maxNumberOfFiles)) {
+                if (!batchProcessingLimitReached()) {
                     tallyItemsAttempted();
                     resolveMetaDataAndPostFileToHrs(file);
                 }
@@ -114,8 +118,8 @@ public class DefaultIngestorService implements IngestorService {
 
         });
         LOGGER.info("Ingestion Complete");
-        if (batchProcessingLimitReached(maxNumberOfFiles)) {
-            LOGGER.info("Batch Processing Limit Reached ({})", maxNumberOfFiles);
+        if (batchProcessingLimitReached()) {
+            LOGGER.info("Batch Processing Limit Reached ({})", maxFilesToProcess);
         }
         LOGGER.info("Total files Attempted: {}", itemsAttempted);
         LOGGER.info("Total files Parsed Ok: {}", filesParsedOk);
@@ -159,18 +163,18 @@ public class DefaultIngestorService implements IngestorService {
                 "Exception processing cvpItem Filename::{}",
                 cvpItem.getFilename(),
                 e
-            ); // TODO: covered by EM-3582
+            );
         }
     }
 
-    private boolean batchProcessingLimitReached(Integer maxNumberOfFiles) {
-        return itemsAttempted >= maxNumberOfFiles;
+    private boolean batchProcessingLimitReached() {
+        return itemsAttempted >= maxFilesToProcess;
     }
 
-    private Set<CvpItem> getFilesToIngest(final String folder) {
+    private Set<CvpItem> getFilesToIngest(final String folder, BlobstoreClientHelper blobstoreHelper) {
         try {
             LOGGER.debug("Getting CVP files in folder");
-            final CvpItemSet cvpItemSet = cvpBlobstoreClient.findByFolder(folder);
+            final CvpItemSet cvpItemSet = blobstoreHelper.findByFolder(folder);
             LOGGER.debug("Getting HRS files already ingested");
             final HrsFileSet hrsFileSet = hrsApiClient.getIngestedFiles(folder);
             LOGGER.debug("Filtering out files not required from original cvp list");

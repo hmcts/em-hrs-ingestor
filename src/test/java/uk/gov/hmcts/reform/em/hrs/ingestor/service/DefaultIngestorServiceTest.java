@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
-import uk.gov.hmcts.reform.em.hrs.ingestor.storage.CvpBlobstoreClient;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -69,7 +69,7 @@ class DefaultIngestorServiceTest {
         null
     );
     @Mock
-    private CvpBlobstoreClient cvpBlobstoreClient;
+    private BlobstoreClientHelper cvpBlobstoreClient;
     @Mock
     private HrsApiClient hrsApiClient;
     @Mock

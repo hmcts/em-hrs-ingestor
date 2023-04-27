@@ -6,12 +6,17 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelperImpl;
 
 @Configuration
 public class TestAzureStorageConfiguration {
@@ -41,6 +46,14 @@ public class TestAzureStorageConfiguration {
         if (!azuriteContainer.isRunning()) {
             azuriteContainer.start();
         }
+    }
+
+    @Bean("cvpBlobstoreClientHelper")
+    public BlobstoreClientHelper cvpBlobstoreClientHelper(
+        @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient
+    ) {
+        LOGGER.info("creating CVP blob client ");
+        return new BlobstoreClientHelperImpl(blobContainerClient, 4, HearingSource.CVP);
     }
 
     @Bean("cvpBlobContainerClient")

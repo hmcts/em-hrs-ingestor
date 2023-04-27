@@ -7,9 +7,13 @@ import com.azure.storage.blob.BlobContainerClientBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelperImpl;
 
 @Configuration
 public class AzureStorageConfiguration {
@@ -30,6 +34,15 @@ public class AzureStorageConfiguration {
 
     @Value("${azure.storage.use-ad-auth-for-source}")
     private boolean useAdForSourceBlobStorage;
+
+    @Bean("cvpBlobstoreClientHelper")
+    public BlobstoreClientHelper cvpBlobstoreClientHelper(
+        @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
+        @Value("${ingestion.process-back-to-day}") int processBackToDay
+    ) {
+        LOGGER.info("creating CVP blob client ");
+        return new BlobstoreClientHelperImpl(blobContainerClient, processBackToDay, HearingSource.CVP);
+    }
 
     @Bean("cvpBlobContainerClient")
     public BlobContainerClient cvpBlobContainerClient() {
@@ -84,4 +97,5 @@ public class AzureStorageConfiguration {
 
         return blobContainerClient;
     }
+
 }

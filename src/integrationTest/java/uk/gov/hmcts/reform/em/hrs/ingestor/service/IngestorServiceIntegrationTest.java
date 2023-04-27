@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.helper.AzureOperations;
 import uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiClientImpl;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
-import uk.gov.hmcts.reform.em.hrs.ingestor.storage.CvpBlobstoreClientImpl;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelperImpl;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
@@ -30,7 +30,6 @@ import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FOLDER;
     TestOkHttpClientConfig.class,
     TestAzureStorageConfiguration.class,
     AppConfig.class,
-    CvpBlobstoreClientImpl.class,
     HrsApiClientImpl.class,
     IngestionFiltererImpl.class,
     MetadataResolverImpl.class,

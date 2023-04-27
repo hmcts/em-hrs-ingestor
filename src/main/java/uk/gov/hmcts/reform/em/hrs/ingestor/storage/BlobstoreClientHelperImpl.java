@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 
 import java.io.File;
 import java.time.Duration;
@@ -23,21 +23,24 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CvpBlobstoreClient.class);
+public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlobstoreClientHelper.class);
 
     private static final int BLOB_LIST_TIMEOUT = 30;
     private final BlobContainerClient blobContainerClient;
+    private final HearingSource hearingSource;
 
-    @Value("${ingestion.process-back-to-day}")
     private int processBackToDay;
 
     @Autowired
-    public CvpBlobstoreClientImpl(
-        final @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient
+    public BlobstoreClientHelperImpl(
+        final @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
+        int processBackToDay,
+        HearingSource hearingSource
     ) {
         this.blobContainerClient = blobContainerClient;
+        this.processBackToDay = processBackToDay;
+        this.hearingSource = hearingSource;
     }
 
     @Override
@@ -90,6 +93,11 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
 
     }
 
+    @Override
+    public HearingSource getHearingSource(){
+        return this.hearingSource;
+    }
+
     private CvpItemSet transform(final PagedIterable<BlobItem> blobItems) {
         final Set<CvpItem> files = blobItems.streamByPage()
             .flatMap(x -> x.getValue().stream().map(y -> {
@@ -108,6 +116,5 @@ public class CvpBlobstoreClientImpl implements CvpBlobstoreClient {
         final BlockBlobClient blobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
         return blobClient.getBlobUrl();
     }
-
 
 }

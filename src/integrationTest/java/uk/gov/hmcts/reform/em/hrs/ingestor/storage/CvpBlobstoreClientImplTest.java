@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
     TestAzureStorageConfiguration.class,
-    CvpBlobstoreClientImpl.class,
     AzureOperations.class
 })
 class CvpBlobstoreClientImplTest {
@@ -35,7 +34,7 @@ class CvpBlobstoreClientImplTest {
     @Autowired
     private AzureOperations azureOperations;
     @Autowired
-    private CvpBlobstoreClientImpl underTest;
+    private BlobstoreClientHelperImpl underTest;
 
     @BeforeEach
     void setup() {
