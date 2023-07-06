@@ -43,6 +43,7 @@ class HrsApiClientIntegrationTest {
         TEST_FOLDER,
         "recording-file-name",
         "recording-cvp-uri",
+        "recording-cvp-uri",
         1L,
         "I2foA30B==",
         "recording-ref",

@@ -11,6 +11,7 @@ public class Metadata {
     private final String folder;
     private final String filename;
     private final String cvpFileUrl;
+    private final String sourceBlobUrl;
     private final long fileSize;
     private final String checkSum;
     private final String recordingRef;
