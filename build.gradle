@@ -138,9 +138,9 @@ def coverageExclusionList = [
 jacocoTestReport {
   executionData(test, integration)
   reports {
-    xml.enabled = true
-    csv.enabled = false
-    xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    xml.required = true
+    csv.required = false
+    xml.outputLocation = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
   }
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
@@ -157,7 +157,7 @@ sonarqube {
     property "sonar.projectKey", "uk.gov.hmcts.reform.em.hrs:em-hrs-ingestor"
     property "sonar.exclusions", coverageExclusionList.join(", ")
     property "sonar.coverage.exclusions", coverageExclusionList.join(", ")
-    property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+    property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.outputLocation}"
     property "sonar.host.url", "https://sonar.reform.hmcts.net/"
     property "sonar.pitest.mode", "reuseReport"
     property "sonar.pitest.reportsDirectory", "build/reports/pitest"
