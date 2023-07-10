@@ -71,7 +71,6 @@ public class MetadataResolverImpl implements MetadataResolver {
             fragments.getFolder(),
             filename,
             item.getFileUri(),
-            item.getFileUri(),
             item.getContentLength(),
             item.getMd5Hash(),
             parsedDataDto.getUniqueIdentifier(),

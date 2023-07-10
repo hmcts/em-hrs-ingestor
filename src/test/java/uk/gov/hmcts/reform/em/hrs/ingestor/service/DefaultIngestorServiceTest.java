@@ -55,7 +55,6 @@ class DefaultIngestorServiceTest {
         "audiostream222",
         "recording-file-name",
         "recording-cvp-uri",
-        "recording-cvp-uri",
         1L,
         "I2foA30B==",
         null,
