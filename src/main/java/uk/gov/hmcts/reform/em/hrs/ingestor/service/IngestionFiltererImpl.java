@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.service;
 
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,10 +21,10 @@ public class IngestionFiltererImpl implements IngestionFilterer {
     };
 
     @Override
-    public Set<CvpItem> filter(final CvpItemSet cvpItemSet, final HrsFileSet hrsFileSet) {
+    public Set<SourceBlobItem> filter(final CvpItemSet cvpItemSet, final HrsFileSet hrsFileSet) {
         final Set<String> filtered = FILTER.apply(cvpItemSet.getCvpFiles()).apply(hrsFileSet.getHrsFiles());
 
-        return cvpItemSet.getCvpItems().stream()
+        return cvpItemSet.getSourceBlobItems().stream()
             .filter(x -> filtered.contains(x.getFilename()))
             .collect(Collectors.toUnmodifiableSet());
     }

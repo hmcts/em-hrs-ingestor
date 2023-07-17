@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.HrsApiException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiClient;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
 
 import java.io.IOException;
@@ -105,7 +105,7 @@ public class DefaultIngestorService implements IngestorService {
 
             LOGGER.info("--------------------------------------------");
             LOGGER.info("Inspecting folder: {}", folder);
-            final Set<CvpItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
+            final Set<SourceBlobItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
             LOGGER.debug("filterSet size: {}", filteredSet.size());
             filteredSet.forEach(file -> {
                 if (!batchProcessingLimitReached()) {
@@ -133,10 +133,10 @@ public class DefaultIngestorService implements IngestorService {
 
     }
 
-    private void resolveMetaDataAndPostFileToHrs(CvpItem cvpItem) {
+    private void resolveMetaDataAndPostFileToHrs(SourceBlobItem sourceBlobItem) {
         try {
-            LOGGER.debug("Resolving Filename {}", cvpItem.getFilename());
-            final Metadata metaData = metadataResolver.resolve(cvpItem);
+            LOGGER.debug("Resolving Filename {}", sourceBlobItem.getFilename());
+            final Metadata metaData = metadataResolver.resolve(sourceBlobItem);
             if (metaData == null) {
                 tallyItemsIgnored();
                 return;
@@ -147,7 +147,7 @@ public class DefaultIngestorService implements IngestorService {
         } catch (FilenameParsingException fp) {
             LOGGER.error(
                 "Unable to parse filename: {} => {}",
-                cvpItem.getFilename(),
+                sourceBlobItem.getFilename(),
                 fp.getMessage()
             );
         } catch (HrsApiException hrsApi) {
@@ -160,7 +160,7 @@ public class DefaultIngestorService implements IngestorService {
         } catch (Exception e) {
             LOGGER.error(
                 "Exception processing cvpItem Filename::{}",
-                cvpItem.getFilename(),
+                sourceBlobItem.getFilename(),
                 e
             );
         }
@@ -170,16 +170,16 @@ public class DefaultIngestorService implements IngestorService {
         return itemsAttempted >= maxFilesToProcess;
     }
 
-    private Set<CvpItem> getFilesToIngest(final String folder, BlobstoreClientHelper blobstoreHelper) {
+    private Set<SourceBlobItem> getFilesToIngest(final String folder, BlobstoreClientHelper blobstoreHelper) {
         try {
             LOGGER.debug("Getting CVP files in folder");
             final CvpItemSet cvpItemSet = blobstoreHelper.findByFolder(folder);
             LOGGER.debug("Getting HRS files already ingested");
             final HrsFileSet hrsFileSet = hrsApiClient.getIngestedFiles(folder);
             LOGGER.debug("Filtering out files not required from original cvp list");
-            Set<CvpItem> filesToIngest = ingestionFilterer.filter(cvpItemSet, hrsFileSet);
+            Set<SourceBlobItem> filesToIngest = ingestionFilterer.filter(cvpItemSet, hrsFileSet);
 
-            int cvpFilesCount = cvpItemSet.getCvpItems().size();
+            int cvpFilesCount = cvpItemSet.getSourceBlobItems().size();
             int hrsFileCount = hrsFileSet.getHrsFiles().size();
             int filesToIngestCount = filesToIngest.size();
 

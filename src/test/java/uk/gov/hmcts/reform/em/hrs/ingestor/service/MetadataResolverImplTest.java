@@ -3,8 +3,9 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.service;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,19 +24,20 @@ class MetadataResolverImplTest {
 
     private static final String FILENAME_NO_FOLDER = "bp-0266-hu-02785-2020_2020-07-16-10.07.31.680-UTC_X.mp4";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss.SSS");
-    private static final CvpItem CVP_ITEM = createCvpItem(FILENAME_VALID);
-    private static final CvpItem CVP_ITEM_NO_SEGMENT = createCvpItem(FILENAME_NO_SEGMENT);
-    private static final CvpItem CVP_ITEM_INVALID_SEGMENT = createCvpItem(FILENAME_INVALID_SEGMENT);
-    private static final CvpItem CVP_ITEM_NO_FOLDER = createCvpItem(FILENAME_NO_FOLDER);
+    private static final SourceBlobItem CVP_ITEM = createCvpItem(FILENAME_VALID);
+    private static final SourceBlobItem CVP_ITEM_NO_SEGMENT = createCvpItem(FILENAME_NO_SEGMENT);
+    private static final SourceBlobItem CVP_ITEM_INVALID_SEGMENT = createCvpItem(FILENAME_INVALID_SEGMENT);
+    private static final SourceBlobItem CVP_ITEM_NO_FOLDER = createCvpItem(FILENAME_NO_FOLDER);
     private final MetadataResolver underTest = new MetadataResolverImpl();
 
     @NotNull
-    private static CvpItem createCvpItem(String fileName) {
-        return new CvpItem(
+    private static SourceBlobItem createCvpItem(String fileName) {
+        return new SourceBlobItem(
             fileName,
             "file-uri",
             "a2B4==",
-            123L
+            123L,
+            HearingSource.CVP
         );
     }
 

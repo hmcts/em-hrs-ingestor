@@ -7,10 +7,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CvpItem {
+public class SourceBlobItem {
     @Nonnull
     private final String filename;
     private final String fileUri;
     private final String md5Hash;
     private final long contentLength;
+    private final HearingSource hearingSource;
 }

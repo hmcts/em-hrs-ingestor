@@ -54,7 +54,7 @@ class CvpBlobstoreClientImplTest {
     void testShouldReturnEmptySetWhenFolderDoesNotExist() {
         final CvpItemSet cvpItemSet = underTest.findByFolder(EMPTY_FOLDER);
 
-        assertThat(cvpItemSet.getCvpItems()).isEmpty();
+        assertThat(cvpItemSet.getSourceBlobItems()).isEmpty();
     }
 
     @Test
@@ -65,7 +65,7 @@ class CvpBlobstoreClientImplTest {
 
         final CvpItemSet cvpItemSet = underTest.findByFolder(ONE_ITEM_FOLDER);
 
-        assertThat(cvpItemSet.getCvpItems()).singleElement().satisfies(x -> {
+        assertThat(cvpItemSet.getSourceBlobItems()).singleElement().satisfies(x -> {
             assertThat(x.getFilename()).isEqualTo(filePath);
             assertThat(x.getMd5Hash()).isEqualTo(expectedHash);
             assertThat(x.getFileUri())

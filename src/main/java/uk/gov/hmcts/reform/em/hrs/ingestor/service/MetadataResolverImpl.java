@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.dto.ParsedFilenameDto;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.parse.FilenameParser;
 
 @Component
@@ -50,7 +49,7 @@ public class MetadataResolverImpl implements MetadataResolver {
     }
 
     @Override
-    public Metadata resolve(final CvpItem item) throws FilenameParsingException {
+    public Metadata resolve(final SourceBlobItem item) throws FilenameParsingException {
 
         String filename = item.getFilename();
         final FileLocationAndParts fragments = extractFileLocationAndParts(filename);
@@ -78,7 +77,7 @@ public class MetadataResolverImpl implements MetadataResolver {
             fragments.getFilenameSuffix(),
             parsedDataDto.getRecordingDateTime(),
             parsedDataDto.getCaseID(),
-            HearingSource.CVP,
+            item.getHearingSource(),
             fragments.getRoomNumber(),
             parsedDataDto.getJurisdiction(),
             parsedDataDto.getLocationCode(),

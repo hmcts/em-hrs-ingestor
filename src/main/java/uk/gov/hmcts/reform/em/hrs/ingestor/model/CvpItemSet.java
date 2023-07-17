@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 public class CvpItemSet {
-    private final Set<CvpItem> cvpItems;
+    private final Set<SourceBlobItem> sourceBlobItems;
 
     public Set<String> getCvpFiles() {
-        return cvpItems.stream()
-            .map(CvpItem::getFilename)
+        return sourceBlobItems.stream()
+            .map(SourceBlobItem::getFilename)
             .collect(Collectors.toUnmodifiableSet());
     }
 }

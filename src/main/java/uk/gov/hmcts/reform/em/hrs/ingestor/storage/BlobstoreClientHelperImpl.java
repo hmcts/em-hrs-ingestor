@@ -12,9 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 
 import java.io.File;
 import java.time.Duration;
@@ -88,7 +88,7 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
         final PagedIterable<BlobItem> blobItems = blobContainerClient.listBlobs(options, duration);
 
-        return transform(blobItems);
+        return transform(blobItems, hearingSource.CVP);
 
     }
 
@@ -97,14 +97,20 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
         return this.hearingSource;
     }
 
-    private CvpItemSet transform(final PagedIterable<BlobItem> blobItems) {
-        final Set<CvpItem> files = blobItems.streamByPage()
+    private CvpItemSet transform(final PagedIterable<BlobItem> blobItems, HearingSource hearingSource) {
+        final Set<SourceBlobItem> files = blobItems.streamByPage()
             .flatMap(x -> x.getValue().stream().map(y -> {
                 final BlobItemProperties blobItemProperties = y.getProperties();
                 final String md5Hash = BlobHelper.getMd5Hash(blobItemProperties.getContentMd5());
                 final String filename = y.getName();
 
-                return new CvpItem(filename, getUrl(filename), md5Hash, blobItemProperties.getContentLength());
+                return new SourceBlobItem(
+                    filename,
+                    getUrl(filename),
+                    md5Hash,
+                    blobItemProperties.getContentLength(),
+                    hearingSource
+                );
             }))
             .collect(Collectors.toUnmodifiableSet());
 

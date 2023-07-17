@@ -8,11 +8,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.HrsApiException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiClient;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
 
 import java.io.IOException;
@@ -33,10 +33,13 @@ class DefaultIngestorServiceTest {
     private static final String FOLDER_ONE = "folder-1";
     private static final String FOLDER_TWO = "folder-2";
     private static final String FOLDER_THREE = "folder-3";
-    private static final CvpItem CVP_FILE_1 = new CvpItem("f1.mp4", "uri1", "hash1", 1L);
-    private static final CvpItem CVP_FILE_2 = new CvpItem("f2.mp4", "uri2", "hash2", 1L);
-    private static final CvpItem CVP_FILE_3 = new CvpItem("f3.mp4", "uri3", "hash3", 1L);
-    private static final Set<CvpItem> CVP_FILES_1_2_3_AS_SET = Set.of(CVP_FILE_1,CVP_FILE_2,CVP_FILE_3);
+    private static final SourceBlobItem CVP_FILE_1 =
+        new SourceBlobItem("f1.mp4", "uri1", "hash1", 1L,  HearingSource.CVP);
+    private static final SourceBlobItem CVP_FILE_2 =
+        new SourceBlobItem("f2.mp4", "uri2", "hash2", 1L,  HearingSource.CVP);
+    private static final SourceBlobItem CVP_FILE_3 =
+        new SourceBlobItem("f3.mp4", "uri3", "hash3", 1L,  HearingSource.CVP);
+    private static final Set<SourceBlobItem> CVP_FILES_1_2_3_AS_SET = Set.of(CVP_FILE_1, CVP_FILE_2, CVP_FILE_3);
 
     private static final CvpItemSet CVP_ITEMSET_OF_3_FILES;
 
@@ -87,7 +90,7 @@ class DefaultIngestorServiceTest {
         doReturn(CVP_ITEMSET_OF_3_FILES).when(cvpBlobstoreClient).findByFolder(FOLDER_ONE);
         doReturn(HRS_FILESET_OF_2_FILES).when(hrsApiClient).getIngestedFiles(FOLDER_ONE);
         doReturn(Set.of(CVP_FILE_3)).when(ingestionFilterer).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        doReturn(METADATA).when(metadataResolver).resolve(any(CvpItem.class));
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
 
         underTest.ingest();
 
@@ -95,7 +98,7 @@ class DefaultIngestorServiceTest {
         verify(cvpBlobstoreClient, times(1)).findByFolder(FOLDER_ONE);
         verify(hrsApiClient, times(1)).getIngestedFiles(FOLDER_ONE);
         verify(ingestionFilterer, times(1)).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        verify(metadataResolver, times(1)).resolve(any(CvpItem.class));
+        verify(metadataResolver, times(1)).resolve(any(SourceBlobItem.class));
     }
 
     @Test
@@ -104,7 +107,7 @@ class DefaultIngestorServiceTest {
         doReturn(CVP_ITEMSET_OF_3_FILES).when(cvpBlobstoreClient).findByFolder(anyString());
         doReturn(HRS_FILESET_OF_2_FILES).when(hrsApiClient).getIngestedFiles(anyString());
         doReturn(Set.of(CVP_FILE_3)).when(ingestionFilterer).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        doReturn(METADATA).when(metadataResolver).resolve(any(CvpItem.class));
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
 
         underTest.ingest();
 
@@ -112,7 +115,7 @@ class DefaultIngestorServiceTest {
         verify(cvpBlobstoreClient, times(3)).findByFolder(anyString());
         verify(hrsApiClient, times(3)).getIngestedFiles(anyString());
         verify(ingestionFilterer, times(3)).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        verify(metadataResolver, times(3)).resolve(any(CvpItem.class));
+        verify(metadataResolver, times(3)).resolve(any(SourceBlobItem.class));
     }
 
 
@@ -129,7 +132,7 @@ class DefaultIngestorServiceTest {
         verify(cvpBlobstoreClient, times(1)).findByFolder(anyString());
         verify(hrsApiClient, times(1)).getIngestedFiles(anyString());
         verify(ingestionFilterer, never()).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        verify(metadataResolver, never()).resolve(any(CvpItem.class));
+        verify(metadataResolver, never()).resolve(any(SourceBlobItem.class));
     }
 
     @Test
@@ -145,7 +148,7 @@ class DefaultIngestorServiceTest {
         verify(cvpBlobstoreClient, times(1)).findByFolder(anyString());
         verify(hrsApiClient, times(1)).getIngestedFiles(anyString());
         verify(ingestionFilterer, never()).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        verify(metadataResolver, never()).resolve(any(CvpItem.class));
+        verify(metadataResolver, never()).resolve(any(SourceBlobItem.class));
     }
 
     @Test
@@ -154,7 +157,7 @@ class DefaultIngestorServiceTest {
         doReturn(CVP_ITEMSET_OF_3_FILES).when(cvpBlobstoreClient).findByFolder(anyString());
         doReturn(HRS_FILESET_OF_2_FILES).when(hrsApiClient).getIngestedFiles(anyString());
         doReturn(Set.of(CVP_FILE_3)).when(ingestionFilterer).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        doReturn(METADATA).when(metadataResolver).resolve(any(CvpItem.class));
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
         doThrow(HrsApiException.class).when(hrsApiClient).postFile(any(Metadata.class));
 
         underTest.ingest();
@@ -163,7 +166,7 @@ class DefaultIngestorServiceTest {
         verify(cvpBlobstoreClient, times(1)).findByFolder(anyString());
         verify(hrsApiClient, times(1)).getIngestedFiles(anyString());
         verify(ingestionFilterer, times(1)).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        verify(metadataResolver, times(1)).resolve(any(CvpItem.class));
+        verify(metadataResolver, times(1)).resolve(any(SourceBlobItem.class));
     }
 
     @Test
@@ -172,7 +175,7 @@ class DefaultIngestorServiceTest {
         doReturn(CVP_ITEMSET_OF_3_FILES).when(cvpBlobstoreClient).findByFolder(anyString());
         doReturn(HRS_FILESET_OF_2_FILES).when(hrsApiClient).getIngestedFiles(anyString());
         doReturn(Set.of(CVP_FILE_3)).when(ingestionFilterer).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
-        doThrow(FilenameParsingException.class).when(metadataResolver).resolve(any(CvpItem.class));
+        doThrow(FilenameParsingException.class).when(metadataResolver).resolve(any(SourceBlobItem.class));
 
         underTest.ingest();
 
@@ -190,7 +193,7 @@ class DefaultIngestorServiceTest {
         doReturn(CVP_ITEMSET_OF_3_FILES).when(cvpBlobstoreClient).findByFolder(FOLDER_ONE);
         doReturn(HRS_FILESET_OF_0_FILES).when(hrsApiClient).getIngestedFiles(FOLDER_ONE);
         doReturn(CVP_FILES_1_2_3_AS_SET).when(ingestionFilterer).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_0_FILES);
-        doReturn(METADATA).when(metadataResolver).resolve(any(CvpItem.class));
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
 
         underTest.ingest();
 
@@ -198,7 +201,7 @@ class DefaultIngestorServiceTest {
         verify(cvpBlobstoreClient, times(1)).findByFolder(FOLDER_ONE);
         verify(hrsApiClient, times(1)).getIngestedFiles(FOLDER_ONE);
         verify(ingestionFilterer, times(1)).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_0_FILES);
-        verify(metadataResolver, times(2)).resolve(any(CvpItem.class));
+        verify(metadataResolver, times(2)).resolve(any(SourceBlobItem.class));
     }
 
 }
