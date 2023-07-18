@@ -20,11 +20,17 @@ public class AzureOperations {
     private static final Logger LOGGER = LoggerFactory.getLogger(AzureOperations.class);
 
     private final BlobContainerClient blobContainerClient;
+    private final BlobContainerClient vhBlobContainerClient;
     private final Fairy fairy;
 
     @Autowired
-    public AzureOperations(@Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient) {
+    public AzureOperations(
+        @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
+        @Qualifier("vhBlobContainerClient") BlobContainerClient vhBlobContainerClient
+    ) {
         this.blobContainerClient = blobContainerClient;
+        this.vhBlobContainerClient = vhBlobContainerClient;
+
         fairy = Fairy.create();
     }
 
@@ -47,6 +53,17 @@ public class AzureOperations {
         final BlobClient blobClient = blobContainerClient.getBlobClient(blobName);
         blobClient.upload(new BufferedInputStream(inStream), data.length);
         LOGGER.info("Blob '{}' uploaded successfully", blobName);
+    }
+
+    public void uploadToVhContainer(final String blobName, final String content) {
+        var data = content.getBytes(StandardCharsets.UTF_8);
+
+        final InputStream inStream = new ByteArrayInputStream(data);
+
+        final BlobClient blobClient = vhBlobContainerClient.getBlobClient(blobName);
+        blobClient.upload(new BufferedInputStream(inStream), data.length);
+        LOGGER.info("Blob '{}' uploaded successfully", blobName);
+
     }
 
     //  Azure blobstore API doesn't support 'deleteBlob'.  We can only mark a blob for deletion
