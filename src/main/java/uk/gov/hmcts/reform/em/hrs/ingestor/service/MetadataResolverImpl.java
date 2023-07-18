@@ -39,7 +39,13 @@ public class MetadataResolverImpl implements MetadataResolver {
         LOGGER.debug("fileExtensionPart {}", fileExtensionPart);
 
         int roomNumber = Integer.parseInt(folder.replaceFirst(folderPrefix, ""));
-
+        LOGGER.debug(
+            "folder {}, roomNumber{}, fileNamePart {},fileExtensionPart {}",
+            folder,
+            roomNumber,
+            fileNamePart,
+            fileExtensionPart
+        );
         return new FileLocationAndParts(
             folder,
             roomNumber,
