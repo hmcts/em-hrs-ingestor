@@ -24,7 +24,8 @@ import java.util.List;
 public class VhBlobstoreClientHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(VhBlobstoreClientHelper.class);
 
-    private static final int BLOB_LIST_TIMEOUT = 30;
+    @Value("${azure.storage.vh-blob-operation-timeout-in-sec}")
+    private int timeout;
     private final BlobContainerClient vhContainerClient;
     private final HearingSource hearingSource;
     private final BlobIndexHelper blobIndexHelper;
@@ -49,7 +50,7 @@ public class VhBlobstoreClientHelper {
             .setRetrieveSnapshots(false);
         final ListBlobsOptions options = new ListBlobsOptions()
             .setDetails(blobListDetails);
-        final Duration duration = Duration.ofMinutes(BLOB_LIST_TIMEOUT);
+        final Duration duration = Duration.ofMinutes(timeout);
 
         final PagedIterable<BlobItem> blobItems = vhContainerClient.listBlobs(options, duration);
 
