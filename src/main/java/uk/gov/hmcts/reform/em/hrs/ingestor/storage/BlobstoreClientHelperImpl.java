@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
@@ -24,8 +25,8 @@ import java.util.stream.Collectors;
 
 public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobstoreClientHelper.class);
-
-    private static final int BLOB_LIST_TIMEOUT = 30;
+    @Value("${azure.storage.vh-blob-operation-timeout-in-sec}")
+    private int timeout;
     private final BlobContainerClient blobContainerClient;
     private final HearingSource hearingSource;
 
@@ -49,7 +50,7 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
             .setRetrieveSnapshots(false);
         final ListBlobsOptions options = new ListBlobsOptions()
             .setDetails(blobListDetails);
-        final Duration duration = Duration.ofMinutes(BLOB_LIST_TIMEOUT);
+        final Duration duration = Duration.ofSeconds(timeout);
 
         final PagedIterable<BlobItem> blobItems = blobContainerClient.listBlobs(options, duration);
 
@@ -84,7 +85,7 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
         final ListBlobsOptions options = new ListBlobsOptions()
             .setDetails(blobListDetails)
             .setPrefix(folderPath);
-        final Duration duration = Duration.ofMinutes(BLOB_LIST_TIMEOUT);
+        final Duration duration = Duration.ofSeconds(this.timeout);
 
         final PagedIterable<BlobItem> blobItems = blobContainerClient.listBlobs(options, duration);
 

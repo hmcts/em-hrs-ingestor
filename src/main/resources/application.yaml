@@ -35,6 +35,7 @@ azure:
     vh-leased-for-minutes: ${VH_LEASED_FOR_MINUTES:120}
     enabled: true
     use-ad-auth-for-source: ${USE_AD_AUTH_FOR_SOURCE_BLOB_CONNECTION:false}
+    vh-blob-operation-timeout-in-sec:  ${VH_BLOB_OPERATION_TIMEOUT_SEC:30}
 app-insights:
   dev-mode: on
   request-component: on

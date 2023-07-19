@@ -22,10 +22,13 @@ public class BlobIndexHelper {
 
     private final BlobContainerClient blobContainerClient;
     private final int leaseForMinutes;
+    @Value("${azure.storage.vh-blob-operation-timeout-in-sec}")
+    private int timeout;
 
     public static final String LEASE_EXPIRATION_TIME = "leaseExpirationTime";
 
     private static final Logger logger = getLogger(BlobIndexHelper.class);
+
 
     public BlobIndexHelper(
         final @Qualifier("vhBlobContainerClient") BlobContainerClient blobContainerClient,
@@ -63,7 +66,7 @@ public class BlobIndexHelper {
                 options.setRequestConditions(new BlobRequestConditions().setIfMatch("\"" + etag + "\""));
                 blobClient.setTagsWithResponse(
                     options,
-                    Duration.ofSeconds(30),
+                    Duration.ofSeconds(this.timeout),
                     Context.NONE
                 );
                 return true;
