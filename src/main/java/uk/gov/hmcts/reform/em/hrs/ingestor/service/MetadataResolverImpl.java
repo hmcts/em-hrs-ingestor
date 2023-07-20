@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.dto.ParsedFilenameDto;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
+import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.parse.FilenameParser;
@@ -31,26 +32,18 @@ public class MetadataResolverImpl implements MetadataResolver {
         LOGGER.debug("folder: {}", folder);
         final String filenameWithExtension = splitOnForwardSlash[1];
         LOGGER.debug("filenameWithExtension: {}", filenameWithExtension);
-        final int lastIndexOfPeriodCharacter = filenameWithExtension.lastIndexOf(".");
 
-        String fileNamePart = filenameWithExtension.substring(0, lastIndexOfPeriodCharacter);
-        String fileExtensionPart = filenameWithExtension.substring(lastIndexOfPeriodCharacter + 1);
-        LOGGER.debug("fileNamePart {}", fileNamePart);
-        LOGGER.debug("fileExtensionPart {}", fileExtensionPart);
+        var filePart = getFileParts(filenameWithExtension);
+
+        LOGGER.debug("fileNamePart {}", filePart.fileNamePart);
+        LOGGER.debug("fileExtensionPart {}", filePart.extension);
 
         int roomNumber = Integer.parseInt(folder.replaceFirst(folderPrefix, ""));
-        LOGGER.info(
-            "folder {}, roomNumber{}, fileNamePart {},fileExtensionPart {}",
-            folder,
-            roomNumber,
-            fileNamePart,
-            fileExtensionPart
-        );
         return new FileLocationAndParts(
             folder,
             roomNumber,
-            fileNamePart,
-            fileExtensionPart
+            filePart.fileNamePart,
+            filePart.extension
         );
     }
 
@@ -58,7 +51,13 @@ public class MetadataResolverImpl implements MetadataResolver {
     public Metadata resolve(final SourceBlobItem item) throws FilenameParsingException {
 
         String filename = item.getFilename();
-        final FileLocationAndParts fragments = extractFileLocationAndParts(filename);
+
+        FileLocationAndParts fragments;
+        if (item.getHearingSource() == HearingSource.VH) {
+            fragments = extractVhFile(filename);
+        } else {
+            fragments = extractFileLocationAndParts(filename);
+        }
         if (fragments == null) {
             throw new FilenameParsingException(
                 "Unable to extract filename and location from full path for file: " + filename);
@@ -93,6 +92,16 @@ public class MetadataResolverImpl implements MetadataResolver {
 
     }
 
+    private FileLocationAndParts extractVhFile(String filename) {
+        var filePart = getFileParts(filename);
+        return new FileLocationAndParts(
+            "VH",
+            0,
+            filePart.fileNamePart,
+            filePart.extension
+        );
+    }
+
     @AllArgsConstructor
     @Getter
     class FileLocationAndParts {
@@ -101,4 +110,18 @@ public class MetadataResolverImpl implements MetadataResolver {
         String filenamePart;
         String filenameSuffix;
     }
+
+    record FilePart(String fileNamePart, String extension) {
+    }
+
+    ;
+
+    private FilePart getFileParts(String filenameWithExtension) {
+        final int lastIndexOfPeriodCharacter = filenameWithExtension.lastIndexOf(".");
+
+        String fileNamePart = filenameWithExtension.substring(0, lastIndexOfPeriodCharacter);
+        String fileExtensionPart = filenameWithExtension.substring(lastIndexOfPeriodCharacter + 1);
+        return new FilePart(fileNamePart, fileExtensionPart);
+    }
+
 }

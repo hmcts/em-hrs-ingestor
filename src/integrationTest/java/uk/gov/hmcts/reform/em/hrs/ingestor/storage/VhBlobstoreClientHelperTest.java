@@ -44,13 +44,26 @@ public class VhBlobstoreClientHelperTest {
         final String filePath = UUID.randomUUID() + ".mp4";
         azureOperations.uploadToVhContainer(filePath, "Test data");
 
-        var itemsToProcess = underTest.getItemsToProcess();
+        var itemsToProcess = underTest.getItemsToProcess(1);
 
         assertThat(itemsToProcess).isNotEmpty();
     }
 
     @Test
-    void should_not_return_blob_if_not_had_mp() {
+    void should_limit_return_blob_if_available() {
+        final String filePath1 = "q.mp4";
+        azureOperations.uploadToVhContainer(filePath1, "Test data");
+
+        final String filePath2 = UUID.randomUUID() + ".mp4";
+        azureOperations.uploadToVhContainer(filePath2, "Test data");
+
+        var itemsToProcess = underTest.getItemsToProcess(2);
+
+        assertThat(itemsToProcess).isNotEmpty();
+    }
+
+    @Test
+    void should_filter_return_blobs() {
         // will be filtered because of ".txt"
         final String filePath1 = UUID.randomUUID() + ".txt";
         azureOperations.uploadToVhContainer(filePath1, "Test data");
@@ -76,7 +89,7 @@ public class VhBlobstoreClientHelperTest {
             .getBlobClient(filePath4)
             .setTags(Map.of("processed", "trUe"));
 
-        var itemsToProcess = underTest.getItemsToProcess();
+        var itemsToProcess = underTest.getItemsToProcess(1);
 
         assertThat(itemsToProcess).hasSize(1);
         var item = itemsToProcess.get(0);

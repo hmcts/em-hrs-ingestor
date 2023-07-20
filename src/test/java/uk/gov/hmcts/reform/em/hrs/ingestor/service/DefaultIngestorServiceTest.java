@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
@@ -14,14 +14,18 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.VhBlobstoreClientHelper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -50,6 +54,15 @@ class DefaultIngestorServiceTest {
             CVP_FILE_3
         ));
     }
+
+    private static final SourceBlobItem VH_FILE_1 =
+        new SourceBlobItem("f1.mp4", "uri1", "hash1", 1L, HearingSource.VH);
+    private static final SourceBlobItem VH_FILE_2 =
+        new SourceBlobItem("f2.mp4", "uri2", "hash2", 1L, HearingSource.VH);
+    private static final SourceBlobItem VH_FILE_3 =
+        new SourceBlobItem("f3.mp4", "uri3", "hash3", 1L, HearingSource.VH);
+
+    private static final List<SourceBlobItem> VH_FILES_1_2_3_LIST = List.of(VH_FILE_1, VH_FILE_2, VH_FILE_3);
 
     private static final HrsFileSet HRS_FILESET_OF_2_FILES = new HrsFileSet(Set.of("f1.mp4", "f2.mp4"));
     private static final HrsFileSet HRS_FILESET_OF_0_FILES = new HrsFileSet(Collections.emptySet());
@@ -80,9 +93,23 @@ class DefaultIngestorServiceTest {
     @Mock
     private MetadataResolver metadataResolver;
 
+    @Mock
+    private VhBlobstoreClientHelper vhBlobstoreClient;
 
-    @InjectMocks
     private DefaultIngestorService underTest;
+
+    @BeforeEach
+    void setup() {
+        underTest = new DefaultIngestorService(
+            cvpBlobstoreClient,
+            vhBlobstoreClient,
+            hrsApiClient,
+            ingestionFilterer,
+            metadataResolver,
+            10,
+            true
+        );
+    }
 
     @Test
     void testShouldIngestOneFolder() throws Exception {
@@ -117,7 +144,6 @@ class DefaultIngestorServiceTest {
         verify(ingestionFilterer, times(3)).filter(CVP_ITEMSET_OF_3_FILES, HRS_FILESET_OF_2_FILES);
         verify(metadataResolver, times(3)).resolve(any(SourceBlobItem.class));
     }
-
 
 
     @Test
@@ -204,4 +230,59 @@ class DefaultIngestorServiceTest {
         verify(metadataResolver, times(2)).resolve(any(SourceBlobItem.class));
     }
 
+    @Test
+    void testShouldIngestOneVhFile() throws Exception {
+        doReturn(Set.of()).when(cvpBlobstoreClient).getFolders();
+        doReturn(List.of(VH_FILE_1)).when(vhBlobstoreClient).getItemsToProcess(10);
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
+        doNothing().when(hrsApiClient).postFile(any(Metadata.class));
+        underTest.ingest();
+
+        verify(cvpBlobstoreClient, times(1)).getFolders();
+        verify(vhBlobstoreClient, times(1)).getItemsToProcess(10);
+        verify(metadataResolver, times(1)).resolve(any(SourceBlobItem.class));
+        verify(hrsApiClient, times(1)).postFile(any(Metadata.class));
+
+    }
+
+    @Test
+    void testShouldIngestMultipleVhFile() throws Exception {
+        doReturn(Set.of()).when(cvpBlobstoreClient).getFolders();
+        doReturn(VH_FILES_1_2_3_LIST).when(vhBlobstoreClient).getItemsToProcess(10);
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
+        doNothing().when(hrsApiClient).postFile(any(Metadata.class));
+        underTest.ingest();
+
+        verify(cvpBlobstoreClient, times(1)).getFolders();
+        verify(vhBlobstoreClient, times(1)).getItemsToProcess(10);
+        verify(metadataResolver, times(3)).resolve(any(SourceBlobItem.class));
+        verify(hrsApiClient, times(3)).postFile(any(Metadata.class));
+
+    }
+
+    @Test
+    void testShouldStopIngestingVHWhenBatchProcessingLimitReached() throws Exception {
+        underTest.setMaxFilesToProcess(2);
+        doReturn(Set.of()).when(cvpBlobstoreClient).getFolders();
+        doReturn(List.of(VH_FILE_1, VH_FILE_2)).when(vhBlobstoreClient).getItemsToProcess(2);
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
+        doNothing().when(hrsApiClient).postFile(any(Metadata.class));
+        underTest.ingest();
+
+        verify(cvpBlobstoreClient, times(1)).getFolders();
+        verify(vhBlobstoreClient, times(1)).getItemsToProcess(2);
+        verify(metadataResolver, times(2)).resolve(any(SourceBlobItem.class));
+        verify(hrsApiClient, times(2)).postFile(any(Metadata.class));
+    }
+
+    @Test
+    void testShouldRefuseIngestionWhenGettingFilesFromVhException() {
+        doReturn(Set.of()).when(cvpBlobstoreClient).getFolders();
+        doThrow(RuntimeException.class).when(vhBlobstoreClient).getItemsToProcess(anyInt());
+
+        underTest.ingest();
+
+        verify(cvpBlobstoreClient, times(1)).getFolders();
+        verify(vhBlobstoreClient, times(1)).getItemsToProcess(anyInt());
+    }
 }

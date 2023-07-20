@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 public class VhBlobstoreClientHelper {
@@ -44,7 +45,7 @@ public class VhBlobstoreClientHelper {
         this.hearingSource = HearingSource.VH;
     }
 
-    public List<SourceBlobItem> getItemsToProcess() {
+    public List<SourceBlobItem> getItemsToProcess(int limit) {
         final BlobListDetails blobListDetails = new BlobListDetails()
             .setRetrieveDeletedBlobs(false)
             .setRetrieveSnapshots(false);
@@ -52,29 +53,35 @@ public class VhBlobstoreClientHelper {
             .setDetails(blobListDetails);
         final Duration duration = Duration.ofMinutes(timeout);
 
-        final PagedIterable<BlobItem> blobItems = vhContainerClient.listBlobs(options, duration);
-
-
         final PagedIterable<BlobItem> vhBlobItems = vhContainerClient.listBlobs(options, duration);
 
-        var filteredBlobs = blobItems
+        var filteredBlobs = vhBlobItems
             .stream()
             .filter(blobItem -> blobItem.getName().contains(".mp"))
             .filter(blobItem -> isNewFile(blobItem))
             .filter(blobItem ->
-                        vhContainerClient
-                            .getBlobClient(blobItem.getName())
-                            .getTags()
-                            .getOrDefault("processed", "false")
-                            .equalsIgnoreCase("false")
+                        wrapFilterPredicate(
+                            () -> vhContainerClient
+                                .getBlobClient(blobItem.getName())
+                                .getTags()
+                                .getOrDefault("processed", "false")
+                                .equalsIgnoreCase("false"))
             )
-            .filter(blobItem -> blobIndexHelper.setIndexLease(blobItem.getName()))
+            .filter(blobItem -> wrapFilterPredicate(() -> blobIndexHelper.setIndexLease(blobItem.getName())))
             .map(blobItem -> transform(blobItem))
-            .limit(10)
+            .limit(limit)
             .toList();
 
         return filteredBlobs;
 
+    }
+
+    private boolean wrapFilterPredicate(Supplier<Boolean> sup) {
+        try {
+            return sup.get();
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     private boolean isNewFile(BlobItem blobItem) {

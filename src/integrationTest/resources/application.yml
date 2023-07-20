@@ -1,3 +1,7 @@
 ---
 s2s.hrs.api.url: http://localhost:8088
 
+ingestion:
+  vh:
+    process: true
+    max-blob-process-count: 200

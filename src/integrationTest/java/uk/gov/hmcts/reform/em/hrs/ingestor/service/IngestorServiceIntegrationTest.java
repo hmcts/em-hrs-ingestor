@@ -13,6 +13,8 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.helper.AzureOperations;
 import uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiClientImpl;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobIndexHelper;
+import uk.gov.hmcts.reform.em.hrs.ingestor.storage.VhBlobstoreClientHelper;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
@@ -23,6 +25,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FILE;
+import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FILE_VH;
 import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FOLDER;
 
 @SpringBootTest(classes = {
@@ -33,7 +36,9 @@ import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FOLDER;
     IngestionFiltererImpl.class,
     MetadataResolverImpl.class,
     DefaultIngestorService.class,
-    AzureOperations.class
+    AzureOperations.class,
+    VhBlobstoreClientHelper.class,
+    BlobIndexHelper.class
 })
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 class IngestorServiceIntegrationTest {
@@ -69,11 +74,11 @@ class IngestorServiceIntegrationTest {
     @Test
     void testShouldIngestFiles() throws Exception {
         setupCvpBlobstore();
-
+        setupVhBlobstore();
         underTest.ingest();
 
         wireMockServer.verify(
-            exactly(1),
+            exactly(2),
             postRequestedFor(urlEqualTo(POST_PATH))
         );
     }
@@ -81,6 +86,10 @@ class IngestorServiceIntegrationTest {
     private void setupCvpBlobstore() throws Exception {
         final byte[] data = TestUtil.getFileContent(TEST_FILE);
         azureOperations.uploadToContainer(TEST_FOLDER + "/" + TEST_FILE, data);
+    }
+
+    private void setupVhBlobstore() {
+        azureOperations.uploadToVhContainer(TEST_FILE_VH, "test data, this is data");
     }
 
 }
