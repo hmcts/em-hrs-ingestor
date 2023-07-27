@@ -196,6 +196,11 @@ dependencyManagement {
       entry 'fluent-hc'
       entry 'httpclient'
     }
+
+    //CVE-2023-3635
+    dependencySet(group: 'com.squareup.okio', version: '3.4.0') {
+      entry 'okio-jvm'
+    }
   }
 }
 
