@@ -216,7 +216,8 @@ def versions = [
   reformLogging      : '6.0.1',
   log4JVersion       : "2.20.0",
   pact_version       : '3.6.15',
-  okhttp3            : '4.11.0'
+  okhttp3            : '4.11.0',
+  springCloud        : '4.0.4'
 ]
 
 ext.libraries = [
@@ -237,8 +238,8 @@ dependencies {
 
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.1.0'
 
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.3'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.4'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: versions.springCloud
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloud
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.4.15'
