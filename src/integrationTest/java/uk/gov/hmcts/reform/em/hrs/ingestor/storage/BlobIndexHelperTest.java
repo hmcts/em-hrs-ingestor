@@ -33,17 +33,17 @@ public class BlobIndexHelperTest {
         final String filePath = UUID.randomUUID() + ".txt";
         azureOperations.uploadToVhContainer(filePath, "Test data");
 
-        var leaased = underTest.setIndexLease(filePath);
+        var leased = underTest.setIndexLease(filePath);
 
-        assertThat(leaased).isTrue();
+        assertThat(leased).isTrue();
     }
 
     @Test
     void should_not_lease_blob_if_already_leased() {
         final String filePath = UUID.randomUUID() + ".txt";
         azureOperations.uploadToVhContainer(filePath, "Test data");
-        var leaased = underTest.setIndexLease(filePath);
-        assertThat(leaased).isEqualTo(true);
+        var leased = underTest.setIndexLease(filePath);
+        assertThat(leased).isEqualTo(true);
         var secondLeaased = underTest.setIndexLease(filePath);
         assertThat(secondLeaased).isFalse();
     }
@@ -51,7 +51,7 @@ public class BlobIndexHelperTest {
     @Test
     void should_return_false_if_there_is_exception() {
         final String filePath = UUID.randomUUID() + ".txt";
-        var leaased = underTest.setIndexLease(filePath);
-        assertThat(leaased).isFalse();
+        var leased = underTest.setIndexLease(filePath);
+        assertThat(leased).isFalse();
     }
 }

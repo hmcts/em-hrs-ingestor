@@ -70,5 +70,7 @@ public class AzureOperations {
     public void clearContainer() {
         blobContainerClient.listBlobs()
             .forEach(x -> x.setDeleted(true));
+        vhBlobContainerClient.listBlobs()
+            .forEach(x -> x.setDeleted(true));
     }
 }
