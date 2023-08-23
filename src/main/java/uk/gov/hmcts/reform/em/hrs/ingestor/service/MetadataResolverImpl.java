@@ -67,6 +67,14 @@ public class MetadataResolverImpl implements MetadataResolver {
 
         String parsedSegmentNumber = parsedDataDto.getSegment();
 
+        LOGGER.info(
+            "Parsed file caseID :{}, UniqueIdentifier{} , ServiceCode{}, Jurisdiction{} ",
+            parsedDataDto.getCaseID(),
+            parsedDataDto.getUniqueIdentifier(),
+            parsedDataDto.getServiceCode(),
+            parsedDataDto.getJurisdiction()
+        );
+
         if (!NumberUtils.isParsable(parsedSegmentNumber)) {
             parsedSegmentNumber = "0";
         }
