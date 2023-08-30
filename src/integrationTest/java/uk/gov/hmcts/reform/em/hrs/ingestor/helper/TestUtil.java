@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public interface TestUtil {
     static String convertObjectToJsonString(Object object) throws IOException {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.KEBAB_CASE);
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
         return objectMapper.writeValueAsString(object);
     }
 }
