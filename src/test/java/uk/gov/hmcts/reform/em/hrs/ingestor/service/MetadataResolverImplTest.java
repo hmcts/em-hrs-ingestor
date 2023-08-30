@@ -19,7 +19,7 @@ class MetadataResolverImplTest {
         "audiostream12/bp-0266-hu-02785-2020_2020-07-16-10.07.31.680-UTC_0.mp4";
 
     private static final String VH_FILENAME_VALID =
-        "bp-0266-hu-02785-2020_2020-07-16-10.07.31.680-UTC_0.mp4";
+        "bp-0266-caseid-12-a-d-8b5dd35d-3a92-4bf3-8b6f-3196bed17014_2020-07-16-10.07.31.680-UTC_0.mp4";
     private static final String FILENAME_NO_SEGMENT =
         "audiostream12/bp-0266-hu-02785-2020_2020-07-16-10.07.31.680-UTC.mp4";
 
@@ -146,7 +146,7 @@ class MetadataResolverImplTest {
             assertThat(x.getRecordingDateTime()).isEqualTo(LocalDateTime.parse("2020-07-16-10.07.31.680", FORMATTER));
             assertThat(x.getSegment()).isZero();
             assertThat(x.getFolder()).isEqualTo("VH");
-            assertThat(x.getFilename()).isEqualTo("bp-0266-hu-02785-2020_2020-07-16-10.07.31.680-UTC_0.mp4");
+            assertThat(x.getFilename()).isEqualTo(VH_FILENAME_VALID);
             assertThat(x.getFileSize()).isEqualTo(201);
             assertThat(x.getSegment()).isEqualTo(0);
             assertThat(x.getHearingRoomRef()).isEqualTo(0);
