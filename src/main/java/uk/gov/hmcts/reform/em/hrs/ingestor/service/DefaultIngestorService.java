@@ -106,25 +106,29 @@ public class DefaultIngestorService implements IngestorService {
     private void ingest(BlobstoreClientHelper blobstoreHelper) {
         resetCounters();
         LOGGER.info("Ingestion Started with BATCH PROCESSING LIMIT of {}", maxFilesToProcess);
-        final Set<String> foldersSet = blobstoreHelper.getFolders();
-        List<String> folders = foldersSet.stream().collect(Collectors.toList());
-        Collections.shuffle(folders);
+        try {
+            final Set<String> foldersSet = blobstoreHelper.getFolders();
+            List<String> folders = foldersSet.stream().collect(Collectors.toList());
+            Collections.shuffle(folders);
 
-        LOGGER.info("Folders found in CVP {} ", folders.size());
-        folders.forEach(folder -> {
+            LOGGER.info("Folders found in CVP {} ", folders.size());
+            folders.forEach(folder -> {
 
-            LOGGER.info("--------------------------------------------");
-            LOGGER.info("Inspecting folder: {}", folder);
-            final Set<SourceBlobItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
-            LOGGER.debug("filterSet size: {}", filteredSet.size());
-            filteredSet.forEach(file -> {
-                if (!batchProcessingLimitReached()) {
-                    tallyItemsAttempted();
-                    resolveMetaDataAndPostFileToHrs(file);
-                }
+                LOGGER.info("--------------------------------------------");
+                LOGGER.info("Inspecting folder: {}", folder);
+                final Set<SourceBlobItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
+                LOGGER.debug("filterSet size: {}", filteredSet.size());
+                filteredSet.forEach(file -> {
+                    if (!batchProcessingLimitReached()) {
+                        tallyItemsAttempted();
+                        resolveMetaDataAndPostFileToHrs(file);
+                    }
+                });
+                LOGGER.info("Running Total of Files Attempted: {}", itemsAttempted);
             });
-            LOGGER.info("Running Total of Files Attempted: {}", itemsAttempted);
-        });
+        } catch (Exception ex) {
+            LOGGER.error("CVP ingestion failed.", ex);
+        }
 
         if (vhProcess && maxFilesToProcess - itemsAttempted > 0) {
             try {
