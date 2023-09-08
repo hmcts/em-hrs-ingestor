@@ -280,7 +280,7 @@ dependencies {
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.19.0'
   testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.5'
-  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8-standalone', version: '2.35.0'
+  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8-standalone', version: '3.0.1'
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
