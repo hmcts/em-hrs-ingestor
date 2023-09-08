@@ -155,8 +155,7 @@ public final class FilenameParser {
 
     }
 
-
-    private static LocalDateTime processRawDatePart(final String rawDatePart, final String timeZone) {
+    public static LocalDateTime processRawDatePart(final String rawDatePart, final String timeZone) {
 
         log.debug("The Later File Part " + rawDatePart);
         log.debug("The Time Zone Part " + timeZone);
@@ -168,4 +167,5 @@ public final class FilenameParser {
         log.debug("The value of the Formatted Date Time Object" + dateTimeObject);
         return dateTimeObject;
     }
+
 }

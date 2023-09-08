@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.parse.FilenameParser;
+import uk.gov.hmcts.reform.em.hrs.ingestor.parse.VhFileNameParser;
 
 @Component
 public class MetadataResolverImpl implements MetadataResolver {
@@ -63,9 +64,22 @@ public class MetadataResolverImpl implements MetadataResolver {
                 "Unable to extract filename and location from full path for file: " + filename);
         }
 
-        final ParsedFilenameDto parsedDataDto = FilenameParser.parseFileName(fragments.getFilenamePart());
+        ParsedFilenameDto parsedDataDto = null;
+        if (item.getHearingSource() == HearingSource.CVP) {
+            parsedDataDto = FilenameParser.parseFileName(fragments.getFilenamePart());
+        } else if (item.getHearingSource() == HearingSource.VH) {
+            parsedDataDto = VhFileNameParser.parseFileName(fragments.getFilenamePart());
+        }
 
         String parsedSegmentNumber = parsedDataDto.getSegment();
+
+        LOGGER.info(
+            "Parsed file caseID :{}, UniqueIdentifier{} , ServiceCode{}, Jurisdiction{} ",
+            parsedDataDto.getCaseID(),
+            parsedDataDto.getUniqueIdentifier(),
+            parsedDataDto.getServiceCode(),
+            parsedDataDto.getJurisdiction()
+        );
 
         if (!NumberUtils.isParsable(parsedSegmentNumber)) {
             parsedSegmentNumber = "0";
@@ -86,7 +100,8 @@ public class MetadataResolverImpl implements MetadataResolver {
             fragments.getRoomNumber(),
             parsedDataDto.getJurisdiction(),
             parsedDataDto.getLocationCode(),
-            parsedDataDto.getServiceCode()
+            parsedDataDto.getServiceCode(),
+            parsedDataDto.getInterpreter()
             );
         return metadata;
 

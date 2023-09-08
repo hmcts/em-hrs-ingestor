@@ -82,7 +82,8 @@ class DefaultIngestorServiceTest {
         222,
         "AB",
         null,
-        null
+        null,
+        "interpreter"
     );
     @Mock
     private BlobstoreClientHelper cvpBlobstoreClient;

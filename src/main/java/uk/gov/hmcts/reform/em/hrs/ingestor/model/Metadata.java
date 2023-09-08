@@ -23,4 +23,5 @@ public class Metadata {
     private final String jurisdictionCode;
     private final String courtLocationCode;
     private final String serviceCode;
+    private final String interpreter;
 }

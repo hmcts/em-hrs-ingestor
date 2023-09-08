@@ -18,4 +18,5 @@ public class ParsedFilenameDto {
     private final String uniqueIdentifier;
     private final String roomRef;
     private final String serviceCode;
+    private final String interpreter;
 }
