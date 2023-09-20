@@ -123,7 +123,7 @@ task smoke(type: Test) {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '10.4'
+  toolVersion = '10.12.3'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -237,7 +237,7 @@ ext.libraries = [
 ]
 
 dependencies {
-  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+  annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
@@ -248,9 +248,9 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloud
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
-  implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.4.16'
+  implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.4.17'
 
-  implementation 'org.projectlombok:lombok:1.18.28'
+  implementation 'org.projectlombok:lombok:1.18.30'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4JVersion
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
@@ -268,8 +268,8 @@ dependencies {
   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
 
   //test implementation
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
-  testImplementation 'org.projectlombok:lombok:1.18.28'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+  testImplementation 'org.projectlombok:lombok:1.18.30'
 
   testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.5.0'
 
@@ -299,9 +299,9 @@ dependencies {
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-junit5', version: '4.0.10'
   contractTestImplementation group: 'au.com.dius', name: 'pact-jvm-provider-gradle', version: '4.0.10'
 
-  contractTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+  contractTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
   contractTestImplementation 'org.junit.vintage:junit-vintage-engine:5.10.0'
-  contractTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.1')
+  contractTestRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.10.0')
   contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.10.0'
 
   contractTestImplementation sourceSets.main.runtimeClasspath
