@@ -217,23 +217,12 @@ repositories {
 }
 
 def versions = [
-  junit              : '5.10.0',
   junitPlatform      : '1.10.0',
   reformLogging      : '6.0.1',
   log4JVersion       : "2.20.0",
   pact_version       : '3.6.15',
   okhttp3            : '4.11.0',
   springCloud        : '4.0.4'
-]
-
-ext.libraries = [
-  junit5: [
-    "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
-    "org.junit.jupiter:junit-jupiter-engine:${versions.junit}",
-    "org.junit.jupiter:junit-jupiter-params:${versions.junit}",
-    "org.junit.platform:junit-platform-commons:${versions.junitPlatform}",
-    "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
-  ]
 ]
 
 dependencies {
