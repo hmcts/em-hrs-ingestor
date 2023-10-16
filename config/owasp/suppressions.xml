@@ -18,4 +18,11 @@
     <packageUrl regex="true">^pkg:maven/com.squareup.okhttp3/okhttp@.*$</packageUrl>
     <cve>CVE-2023-3782</cve>
   </suppress>
+  <suppress until="2024-11-24">
+   <notes><![CDATA[
+   file name: azure-identity-1.10.3.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.azure/azure\-identity@.*$</packageUrl>
+   <cve>CVE-2023-36415</cve>
+  </suppress>
 </suppressions>
