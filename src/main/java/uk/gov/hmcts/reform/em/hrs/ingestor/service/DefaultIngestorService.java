@@ -111,11 +111,11 @@ public class DefaultIngestorService implements IngestorService {
             List<String> folders = foldersSet.stream().collect(Collectors.toList());
             Collections.shuffle(folders);
 
-            LOGGER.info("Folders found in CVP {} ", folders.size());
+            LOGGER.debug("Folders found in CVP {} ", folders.size());
             folders.forEach(folder -> {
 
-                LOGGER.info("--------------------------------------------");
-                LOGGER.info("Inspecting folder: {}", folder);
+                LOGGER.debug("--------------------------------------------");
+                LOGGER.debug("Inspecting folder: {}", folder);
                 final Set<SourceBlobItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
                 LOGGER.debug("filterSet size: {}", filteredSet.size());
                 filteredSet.forEach(file -> {
@@ -145,7 +145,7 @@ public class DefaultIngestorService implements IngestorService {
                 LOGGER.error("Vh processing failed ", ex);
             }
         }
-        LOGGER.info("Ingestion Complete");
+        LOGGER.debug("Ingestion Complete");
         if (batchProcessingLimitReached()) {
             LOGGER.info("Batch Processing Limit Reached ({})", maxFilesToProcess);
         }
@@ -219,7 +219,7 @@ public class DefaultIngestorService implements IngestorService {
 
             String ingestionStatus = determineFolderStatus(filesToIngestCount);
 
-            LOGGER.info("Folder:{}, CVP Files:{}, HRS Files:{}, To Ingest:{}, FOLDER-STATUS:{}",
+            LOGGER.debug("Folder:{}, CVP Files:{}, HRS Files:{}, To Ingest:{}, FOLDER-STATUS:{}",
                         folder, cvpFilesCount, hrsFileCount, filesToIngestCount, ingestionStatus
             );
             return filesToIngest;

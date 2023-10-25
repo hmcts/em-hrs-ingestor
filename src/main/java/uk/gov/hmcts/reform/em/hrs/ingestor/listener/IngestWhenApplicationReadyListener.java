@@ -33,18 +33,18 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
         var client = new TelemetryClient();
 
         client.trackEvent("HRS Ingestor invoked");
-        LOGGER.info("HRS Ingestor invoked");
-        LOGGER.info("Enable Cronjob is set to {}", enableCronjob);
+        LOGGER.debug("HRS Ingestor invoked");
+        LOGGER.debug("Enable Cronjob is set to {}", enableCronjob);
         LOGGER.info("defaultIngestorService.maxFilesToProcess: {}", defaultIngestorService.getMaxFilesToProcess());
 
         if (client != null && client.getContext() != null) {
             String ik = client.getContext().getInstrumentationKey();
-            LOGGER.info("Application Insights Key(4) = " + StringUtils.left(ik, 4));
+            LOGGER.debug("Application Insights Key(4) = " + StringUtils.left(ik, 4));
             TelemetryContext context = client.getContext();
             ConcurrentMap<String, String> tags = context.getTags();
             tags.forEach((s, s2) -> LOGGER.info(s + ": " + s2));
-            LOGGER.info("context.getSession(): {}", context.getSession().toString());
-            LOGGER.info("context.getLocation(): {}", context.getLocation().toString());
+            LOGGER.debug("context.getSession(): {}", context.getSession().toString());
+            LOGGER.debug("context.getLocation(): {}", context.getLocation().toString());
         } else {
             LOGGER.info("No Application Insights Key");
         }
@@ -52,7 +52,7 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
 
         if (enableCronjob) {
             try {
-                LOGGER.info("Application Started {}\n...About to Ingest", event);
+                LOGGER.debug("Application Started {}\n...About to Ingest", event);
                 defaultIngestorService.ingest();
             } catch (Exception e) {
                 flushLogs(client);

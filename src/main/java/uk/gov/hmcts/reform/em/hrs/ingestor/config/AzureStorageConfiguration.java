@@ -40,25 +40,25 @@ public class AzureStorageConfiguration {
         @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
         @Value("${ingestion.cvp.process-back-to-day}") int processBackToDay
     ) {
-        LOGGER.info("creating CVP blob client ");
+        LOGGER.debug("creating CVP blob client ");
         return new BlobstoreClientHelperImpl(blobContainerClient, processBackToDay, HearingSource.CVP);
     }
 
     @Bean("cvpBlobContainerClient")
     public BlobContainerClient cvpBlobContainerClient() {
-        LOGGER.info("creating CVP blob client");
+        LOGGER.debug("creating CVP blob client");
         return getBlobClient(cvpConnectionString, cvpContainerName);
     }
 
     @Bean("vhBlobContainerClient")
     public BlobContainerClient vhBlobContainerClient() {
-        LOGGER.info("creating VH blob client");
+        LOGGER.debug("creating VH blob client");
         return getBlobClient(vhConnectionString, vhContainerName);
     }
 
     private BlobContainerClient getBlobClient(String connectionString, String containerName) {
-        LOGGER.info("connectionString : {}", StringUtils.left(connectionString, 60));
-        LOGGER.info(
+        LOGGER.debug("connectionString : {}", StringUtils.left(connectionString, 60));
+        LOGGER.debug(
             "container name: {}, useAdForSourceBlobStorage:{}",
             containerName,
             useAdForSourceBlobStorage
@@ -67,12 +67,12 @@ public class AzureStorageConfiguration {
         //connectionstring is overloaded and used as endpoint when connecting to cvp, and connection string against
         // CFT/HRS test storage accounts
         if (useAdForSourceBlobStorage) {
-            LOGGER.info("****************************");
+            LOGGER.debug("****************************");
 
-            LOGGER.info(
+            LOGGER.debug(
                 "Building client with default credential builder (will use SAS endpoint instead of attempt "
                     + "ManagedIdentityCredential");
-            LOGGER.info("****************************");
+            LOGGER.debug("****************************");
             BlobContainerClientBuilder clientBuilder = new BlobContainerClientBuilder()
                 .endpoint(connectionString)
                 .containerName(containerName);
