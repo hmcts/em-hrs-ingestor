@@ -243,7 +243,7 @@ def versions = [
   junit              : '5.7.1',
   junitPlatform      : '1.10.0',
   reformLogging      : '6.0.1',
-  log4JVersion       : "2.21.0",
+  log4JVersion       : "2.21.1",
   pact_version       : '3.6.15',
   okhttp3            : '4.12.0',
   springCloud        : '4.0.4'
