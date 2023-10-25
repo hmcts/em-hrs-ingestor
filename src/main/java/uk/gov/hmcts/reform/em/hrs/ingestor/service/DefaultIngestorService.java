@@ -111,7 +111,7 @@ public class DefaultIngestorService implements IngestorService {
             List<String> folders = foldersSet.stream().collect(Collectors.toList());
             Collections.shuffle(folders);
 
-            LOGGER.info("Folders found in CVP {} ", folders.size());
+            LOGGER.debug("Folders found in CVP {} ", folders.size());
             folders.forEach(folder -> {
 
                 LOGGER.debug("--------------------------------------------");
