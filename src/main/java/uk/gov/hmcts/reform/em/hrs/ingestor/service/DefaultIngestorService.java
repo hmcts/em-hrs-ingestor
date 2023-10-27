@@ -141,6 +141,7 @@ public class DefaultIngestorService implements IngestorService {
                     LOGGER.info("ingesting : {}", sourceBlobItem.getFileUri());
                     resolveMetaDataAndPostFileToHrs(sourceBlobItem);
                 });
+                LOGGER.info("Filtered vhBlobItems count: {}", vhItems.size());
             } catch (Exception ex) {
                 LOGGER.error("Vh processing failed ", ex);
             }
