@@ -12,7 +12,7 @@ plugins {
   id 'uk.gov.hmcts.java' version '0.12.48'
   id 'au.com.dius.pact' version '4.3.5'
   id 'info.solidsoft.pitest' version '1.9.0'
-  id 'org.owasp.dependencycheck' version '8.4.3'
+  id 'org.owasp.dependencycheck' version '9.0.1'
 }
 
 group = 'uk.gov.hmcts.reform.em.hrs'
@@ -288,7 +288,7 @@ dependencies {
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
 
-  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
 
   //test implementation
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
