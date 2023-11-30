@@ -6,13 +6,13 @@ plugins {
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.4'
   id 'org.springframework.boot' version '3.1.5'
-  id 'com.github.ben-manes.versions' version '0.49.0'// NOTE version 0.38 is suspected to be the cause of
+  id 'com.github.ben-manes.versions' version '0.50.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '4.4.1.3373'
-  id 'uk.gov.hmcts.java' version '0.12.47'
+  id 'uk.gov.hmcts.java' version '0.12.48'
   id 'au.com.dius.pact' version '4.3.5'
   id 'info.solidsoft.pitest' version '1.9.0'
-  id 'org.owasp.dependencycheck' version '8.4.0'
+  id 'org.owasp.dependencycheck' version '9.0.1'
 }
 
 group = 'uk.gov.hmcts.reform.em.hrs'
@@ -243,7 +243,7 @@ def versions = [
   junit              : '5.10.1',
   junitPlatform      : '1.10.1',
   reformLogging      : '6.0.1',
-  log4JVersion       : "2.21.1",
+  log4JVersion       : "2.22.0",
   pact_version       : '3.6.15',
   okhttp3            : '4.12.0',
   springCloud        : '4.0.4'
@@ -288,20 +288,20 @@ dependencies {
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
 
-  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
 
   //test implementation
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
   testImplementation 'org.projectlombok:lombok:1.18.30'
 
-  testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '1.5.0'
+  testImplementation group: 'com.github.gmazzo', name: 'okhttp-mock', version: '2.0.0'
 
   testImplementation libraries.junit5
 
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.19.2'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.19.3'
   testImplementation group: 'com.devskiller', name: 'jfairy', version: '0.6.5'
   testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8-standalone', version: '3.0.1'
 
