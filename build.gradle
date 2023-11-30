@@ -237,6 +237,7 @@ repositories {
   mavenLocal()
   mavenCentral()
   maven { url 'https://jitpack.io' }
+  maven { url  'https://repo.spring.io/milestone/'}
 }
 
 def versions = [
@@ -246,7 +247,7 @@ def versions = [
   log4JVersion       : "2.22.0",
   pact_version       : '3.6.15',
   okhttp3            : '4.12.0',
-  springCloud        : '4.0.4'
+  springCloud        : '4.1.0-RC1'
 ]
 
 ext.libraries = [
