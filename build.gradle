@@ -9,7 +9,7 @@ plugins {
   id 'com.github.ben-manes.versions' version '0.50.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '4.4.1.3373'
-  id 'uk.gov.hmcts.java' version '0.12.50'
+  id 'uk.gov.hmcts.java' version '0.12.51'
   id 'au.com.dius.pact' version '4.3.5'
   id 'info.solidsoft.pitest' version '1.9.0'
   id 'org.owasp.dependencycheck' version '9.0.1'
@@ -207,28 +207,10 @@ dependencyManagement {
       entry 'tomcat-embed-websocket'
       entry 'tomcat-embed-core'
     }
-
-    // CVE-2023-44487
-    dependencySet(group: 'io.netty', version: '4.1.101.Final') {
-      entry 'netty-buffer'
-      entry 'netty-codec'
-      entry 'netty-codec-dns'
-      entry 'netty-codec-http'
-      entry 'netty-codec-http2'
-      entry 'netty-codec-socks'
-      entry 'netty-common'
-      entry 'netty-handler'
-      entry 'netty-handler-proxy'
-      entry 'netty-resolver'
-      entry 'netty-resolver-dns'
-      entry 'netty-resolver-dns-classes-macos'
-      entry 'netty-resolver-dns-native-macos'
-      entry 'netty-transport'
-      entry 'netty-transport-classes-epoll'
-      entry 'netty-transport-classes-kqueue'
-      entry 'netty-transport-native-epoll'
-      entry 'netty-transport-native-kqueue'
-      entry 'netty-transport-native-unix-common'
+    // CVE-2023-6378
+    dependencySet(group: 'ch.qos.logback', version: '1.4.14') {
+      entry 'logback-classic'
+      entry 'logback-core'
     }
   }
 }
@@ -280,7 +262,7 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
 
   //azure components
-  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.25.0'
+  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.25.1'
   implementation group: 'com.azure', name: 'azure-identity', version: '1.11.1'
 
   //rest clients
