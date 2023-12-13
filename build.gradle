@@ -181,7 +181,10 @@ configurations.all {
 
 dependencyManagement {
   dependencies {
-
+    //CVE-2020-13956
+    dependencySet(group: 'org.apache.httpcomponents', version: '4.5.14') {
+      entry 'httpclient'
+    }
     // CVE-2023-6378
     dependencySet(group: 'ch.qos.logback', version: '1.4.14') {
       entry 'logback-classic'
