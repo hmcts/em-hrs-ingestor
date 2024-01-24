@@ -6,7 +6,7 @@ plugins {
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.4'
   id 'org.springframework.boot' version '3.2.1'
-  id 'com.github.ben-manes.versions' version '0.50.0'// NOTE version 0.38 is suspected to be the cause of
+  id 'com.github.ben-manes.versions' version '0.51.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '4.4.1.3373'
   id 'uk.gov.hmcts.java' version '0.12.56'
