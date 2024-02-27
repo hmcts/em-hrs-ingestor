@@ -22,7 +22,7 @@ ingestion:
     process-back-to-day: ${CVP_PROCESS_BACK_TO_DAY:2}
   vh:
     process-back-to-day: ${VH_PROCESS_BACK_TO_DAY:2}
-    max-blob-process-count: ${VH_MAX_BLOB_PROCESS_COUNT:1}
+    max-blob-process-count: ${VH_MAX_BLOB_PROCESS_COUNT:200}
     process: ${VH_PROCESS:false}
 
 
