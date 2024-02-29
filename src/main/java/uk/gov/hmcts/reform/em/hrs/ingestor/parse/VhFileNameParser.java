@@ -32,7 +32,7 @@ public class VhFileNameParser {
                     .serviceCode(matcher.group(1))
                     .caseID(matcher.group(2))
                     .recordingDateTime(processRawDatePart(matcher.group(5), matcher.group(6)))
-                    .segment(matcher.group(7))
+                    .segment(matcher.group(5))
                     .uniqueIdentifier(matcher.group(3))
                     .interpreter(matcher.group(4))
                     .build();

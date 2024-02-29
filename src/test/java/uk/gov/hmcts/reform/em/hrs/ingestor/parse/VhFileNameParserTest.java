@@ -29,7 +29,7 @@ class VhFileNameParserTest {
         assertThat(parsed.getCaseID()).isEqualTo("21-1/case-12");
         assertThat(parsed.getUniqueIdentifier()).isEqualTo("acde070d-8c4c-4f0d-9d8a-162843c10333");
         assertThat(parsed.getRecordingDateTime()).isEqualTo(dateTimeObject);
-        assertThat(parsed.getSegment()).isEqualTo("1");
+        assertThat(parsed.getSegment()).isEqualTo(dateStr);
         assertThat(parsed.getInterpreter()).isNull();
     }
 
@@ -49,7 +49,7 @@ class VhFileNameParserTest {
         assertThat(parsed.getCaseID()).isEqualTo("case-1/3");
         assertThat(parsed.getUniqueIdentifier()).isEqualTo(uniqueIdentifier.toString());
         assertThat(parsed.getRecordingDateTime()).isEqualTo(dateTimeObject);
-        assertThat(parsed.getSegment()).isEqualTo("4");
+        assertThat(parsed.getSegment()).isEqualTo(dateStr);
     }
 
     @Test
