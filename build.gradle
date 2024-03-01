@@ -9,7 +9,7 @@ plugins {
   id 'com.github.ben-manes.versions' version '0.51.0'// NOTE version 0.38 is suspected to be the cause of
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '4.4.1.3373'
-  id 'uk.gov.hmcts.java' version '0.12.56'
+  id 'uk.gov.hmcts.java' version '0.12.57'
   id 'au.com.dius.pact' version '4.3.5'
   id 'info.solidsoft.pitest' version '1.15.0'
   id 'org.owasp.dependencycheck' version '9.0.9'
