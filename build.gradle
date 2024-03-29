@@ -252,7 +252,7 @@ dependencies {
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: versions.okhttp3
   implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: versions.okhttp3
-  implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.10.0'
+  implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.11.0'
   implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.10.0'
 
   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
