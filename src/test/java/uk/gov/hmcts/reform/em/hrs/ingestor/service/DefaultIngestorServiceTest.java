@@ -108,6 +108,7 @@ class DefaultIngestorServiceTest {
             ingestionFilterer,
             metadataResolver,
             10,
+            true,
             true
         );
     }

@@ -50,6 +50,7 @@ public class DefaultIngestorService implements IngestorService {
 
     private int vhProcessCount;
     private boolean vhProcess;
+    private boolean cvpProcess;
 
     @Autowired
     public DefaultIngestorService(
@@ -59,7 +60,8 @@ public class DefaultIngestorService implements IngestorService {
         final IngestionFilterer ingestionFilterer,
         final MetadataResolver metadataResolver,
         @Value("${ingestion.vh.max-blob-process-count}") int vhProcessCount,
-        @Value("${ingestion.vh.process}") boolean vhProcess
+        @Value("${ingestion.vh.process}") boolean vhProcess,
+        @Value("${ingestion.cvp.process}") boolean cvpProcess
     ) {
         this.cvpBlobstoreHelper = cvpBlobstoreClient;
         this.vhBlobstoreClient = vhBlobstoreClient;
@@ -68,6 +70,7 @@ public class DefaultIngestorService implements IngestorService {
         this.metadataResolver = metadataResolver;
         this.vhProcessCount = vhProcessCount;
         this.vhProcess = vhProcess;
+        this.cvpProcess = cvpProcess;
     }
 
     private static void resetCounters() {
@@ -106,30 +109,32 @@ public class DefaultIngestorService implements IngestorService {
     private void ingest(BlobstoreClientHelper blobstoreHelper) {
         resetCounters();
         LOGGER.info("Ingestion Started with BATCH PROCESSING LIMIT of {}", maxFilesToProcess);
-        try {
-            final Set<String> foldersSet = blobstoreHelper.getFolders();
-            List<String> folders = foldersSet.stream().collect(Collectors.toList());
-            Collections.shuffle(folders);
+        if (cvpProcess) {
+            try {
+                final Set<String> foldersSet = blobstoreHelper.getFolders();
+                List<String> folders = foldersSet.stream().collect(Collectors.toList());
+                Collections.shuffle(folders);
 
-            LOGGER.debug("Folders found in CVP {} ", folders.size());
-            folders.forEach(folder -> {
+                LOGGER.debug("Folders found in CVP {} ", folders.size());
+                folders.forEach(folder -> {
 
-                LOGGER.debug("--------------------------------------------");
-                LOGGER.debug("Inspecting folder: {}", folder);
-                final Set<SourceBlobItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
-                LOGGER.debug("filterSet size: {}", filteredSet.size());
-                filteredSet.forEach(file -> {
-                    if (!batchProcessingLimitReached()) {
-                        tallyItemsAttempted();
-                        resolveMetaDataAndPostFileToHrs(file);
-                    }
+                    LOGGER.debug("--------------------------------------------");
+                    LOGGER.debug("Inspecting folder: {}", folder);
+                    final Set<SourceBlobItem> filteredSet = getFilesToIngest(folder, blobstoreHelper);
+                    LOGGER.debug("filterSet size: {}", filteredSet.size());
+                    filteredSet.forEach(file -> {
+                        if (!batchProcessingLimitReached()) {
+                            tallyItemsAttempted();
+                            resolveMetaDataAndPostFileToHrs(file);
+                        }
+                    });
+                    LOGGER.info("Running Total of Files Attempted: {}", itemsAttempted);
                 });
-                LOGGER.info("Running Total of Files Attempted: {}", itemsAttempted);
-            });
-        } catch (Exception ex) {
-            LOGGER.error("CVP ingestion failed.", ex);
-        }
+            } catch (Exception ex) {
+                LOGGER.error("CVP ingestion failed.", ex);
+            }
 
+        }
         if (vhProcess && maxFilesToProcess - itemsAttempted > 0) {
             try {
                 var vhItems = vhBlobstoreClient.getItemsToProcess(Math.min(
