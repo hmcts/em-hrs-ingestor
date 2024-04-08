@@ -20,6 +20,7 @@ ingestion:
   max-files-to-process: ${MAX_FILES_TO_PROCESS:50}
   cvp:
     process-back-to-day: ${CVP_PROCESS_BACK_TO_DAY:2}
+    process: ${CVP_PROCESS:true}
   vh:
     process-back-to-day: ${VH_PROCESS_BACK_TO_DAY:2}
     max-blob-process-count: ${VH_MAX_BLOB_PROCESS_COUNT:200}
