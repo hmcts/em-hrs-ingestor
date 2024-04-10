@@ -273,7 +273,7 @@ dependencies {
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.1'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
-  testImplementation group: 'org.pitest', name: 'pitest', version: '1.15.8'
+  testImplementation group: 'org.pitest', name: 'pitest', version: '1.16.0'
   testImplementation group:'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: '0.5'
   testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.1', classifier: 'all'
   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
