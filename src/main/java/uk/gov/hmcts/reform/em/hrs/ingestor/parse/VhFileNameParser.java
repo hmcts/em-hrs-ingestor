@@ -16,7 +16,7 @@ public class VhFileNameParser {
 
     private static final String FILE_NAME_REGEX
         = "^(\\w+)-(.*)-([0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12})(?:_(?i)"
-        + "(Interpreter\\d+))?_(.*)-(\\w+)_(\\d+)$";
+        + "(Interpreter_\\d+))?_(.*)-(\\w+)_(\\d+)$";
     private static final Pattern FILE_NAME_PATTERN = Pattern.compile(FILE_NAME_REGEX);
 
     private VhFileNameParser() {

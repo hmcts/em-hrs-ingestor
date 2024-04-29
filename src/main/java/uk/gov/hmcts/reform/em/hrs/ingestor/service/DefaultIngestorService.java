@@ -34,6 +34,7 @@ public class DefaultIngestorService implements IngestorService {
     private static int filesSubmittedOk;
 
     private static int cvpFilesCountTotal;
+    private static int vhFilesCountTotal;
     private static int hrsFileCountTotal;
     private static int filesToIngestCountTotal;
 
@@ -82,7 +83,7 @@ public class DefaultIngestorService implements IngestorService {
         cvpFilesCountTotal = 0;
         hrsFileCountTotal = 0;
         filesToIngestCountTotal = 0;
-
+        vhFilesCountTotal = 0;
     }
 
     private static void tallyItemsAttempted() {
@@ -145,6 +146,7 @@ public class DefaultIngestorService implements IngestorService {
                     tallyItemsAttempted();
                     LOGGER.info("ingesting : {}", sourceBlobItem.getFileUri());
                     resolveMetaDataAndPostFileToHrs(sourceBlobItem);
+                    vhFilesCountTotal++;
                 });
                 LOGGER.info("Filtered vhBlobItems count: {}", vhItems.size());
             } catch (Exception ex) {
@@ -162,8 +164,8 @@ public class DefaultIngestorService implements IngestorService {
 
 
         String ingestionStatus = determineFolderStatus(filesToIngestCountTotal);
-        LOGGER.info("VALIDATION REPORT: CVP Files:{}, HRS Files:{}, To Ingest:{}, INGESTION-STATUS:{}",
-                    cvpFilesCountTotal, hrsFileCountTotal, filesToIngestCountTotal, ingestionStatus
+        LOGGER.info("VALIDATION REPORT: CVP Files:{}, VH files: {}, HRS Files:{}, To Ingest:{}, INGESTION-STATUS:{}",
+                    cvpFilesCountTotal, vhFilesCountTotal, hrsFileCountTotal, filesToIngestCountTotal, ingestionStatus
         );
 
     }

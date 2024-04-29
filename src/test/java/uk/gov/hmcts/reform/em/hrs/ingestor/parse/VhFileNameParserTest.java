@@ -34,7 +34,7 @@ class VhFileNameParserTest {
     }
 
     @Test
-    void parse_vh_file_name_with_interpreter() throws FilenameParsingException {
+    void parse_vh_file_name_with_interpreter_incasesensitive() throws FilenameParsingException {
 
         String dateStr = "2023-10-04-14.56.39.819";
         String timeZone = "UTC";
@@ -43,13 +43,34 @@ class VhFileNameParserTest {
         LocalDateTime dateTimeObject = LocalDateTime.parse(dateStr, datePattern);
         UUID uniqueIdentifier = UUID.randomUUID();
 
-        String fileName = "AA1-case-1/3-" + uniqueIdentifier + "_inTerpreter1_" + dateStr + "-UTC_4";
+        String fileName = "AA1-case-1/3-" + uniqueIdentifier + "_inTerpreter_6586_" + dateStr + "-UTC_4";
         ParsedFilenameDto parsed = VhFileNameParser.parseFileName(fileName);
         assertThat(parsed.getServiceCode()).isEqualTo("AA1");
         assertThat(parsed.getCaseID()).isEqualTo("case-1/3");
         assertThat(parsed.getUniqueIdentifier()).isEqualTo(uniqueIdentifier.toString());
         assertThat(parsed.getRecordingDateTime()).isEqualTo(dateTimeObject);
         assertThat(parsed.getSegment()).isEqualTo("4");
+        assertThat(parsed.getInterpreter()).isEqualTo("inTerpreter_6586");
+    }
+
+    @Test
+    void parse_vh_file_name_with_Interpreter() throws FilenameParsingException {
+
+        String dateStr = "2023-10-04-14.56.39.819";
+        String timeZone = "UTC";
+        DateTimeFormatter datePattern =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss.SSS").withZone(ZoneId.of(timeZone));
+        LocalDateTime dateTimeObject = LocalDateTime.parse(dateStr, datePattern);
+        UUID uniqueIdentifier = UUID.randomUUID();
+
+        String fileName = "AA1-caseref123312-" + uniqueIdentifier + "_Interpreter_1_" + dateStr + "-UTC_1";
+        ParsedFilenameDto parsed = VhFileNameParser.parseFileName(fileName);
+        assertThat(parsed.getServiceCode()).isEqualTo("AA1");
+        assertThat(parsed.getCaseID()).isEqualTo("caseref123312");
+        assertThat(parsed.getUniqueIdentifier()).isEqualTo(uniqueIdentifier.toString());
+        assertThat(parsed.getRecordingDateTime()).isEqualTo(dateTimeObject);
+        assertThat(parsed.getSegment()).isEqualTo("1");
+        assertThat(parsed.getInterpreter()).isEqualTo("Interpreter_1");
     }
 
     @Test
