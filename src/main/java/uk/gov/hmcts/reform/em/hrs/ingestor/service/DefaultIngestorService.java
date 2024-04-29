@@ -34,7 +34,7 @@ public class DefaultIngestorService implements IngestorService {
     private static int filesSubmittedOk;
 
     private static int cvpFilesCountTotal;
-    private static int vhFilesCountTotal;
+    private int vhFilesCountTotal;
     private static int hrsFileCountTotal;
     private static int filesToIngestCountTotal;
 
@@ -83,7 +83,6 @@ public class DefaultIngestorService implements IngestorService {
         cvpFilesCountTotal = 0;
         hrsFileCountTotal = 0;
         filesToIngestCountTotal = 0;
-        vhFilesCountTotal = 0;
     }
 
     private static void tallyItemsAttempted() {
