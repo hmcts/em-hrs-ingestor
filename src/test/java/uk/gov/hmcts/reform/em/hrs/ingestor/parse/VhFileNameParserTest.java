@@ -125,6 +125,14 @@ class VhFileNameParserTest {
     }
 
     @Test
+    void isValid_vh_file_name_return_true_there_is_extension() {
+        String dateStr = "_2024-11-04-14.56.39.819";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String fileName = "AA1-caseref123312-" + uniqueIdentifier + dateStr + "-UTC_1.mp4";
+        assertThat(VhFileNameParser.isValidFileName(fileName)).isTrue();
+    }
+
+    @Test
     void isValid_vh_file_name_with_Interpreter_return_true() {
         String dateStr = "2023-10-04-14.56.39.819";
         UUID uniqueIdentifier = UUID.randomUUID();
