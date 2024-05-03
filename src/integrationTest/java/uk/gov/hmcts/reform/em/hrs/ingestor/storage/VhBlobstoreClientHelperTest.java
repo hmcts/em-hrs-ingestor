@@ -41,7 +41,8 @@ public class VhBlobstoreClientHelperTest {
 
     @Test
     void should_return_blob_if_available() {
-        final String filePath = UUID.randomUUID() + ".mp4";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String filePath = "AA1-caseref123312-" + uniqueIdentifier + "_2024-11-04-14.56.39.819-UTC_1.mp4";
         azureOperations.uploadToVhContainer(filePath, "Test data");
 
         var itemsToProcess = underTest.getItemsToProcess(1);
@@ -51,7 +52,8 @@ public class VhBlobstoreClientHelperTest {
 
     @Test
     void should_limit_return_blob_if_available() {
-        final String filePath1 = "q.mp4";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String filePath1 = "AA1-caseref123312-" + uniqueIdentifier + "_2024-11-04-14.56.39.819-UTC_1.mp4";
         azureOperations.uploadToVhContainer(filePath1, "Test data");
 
         final String filePath2 = UUID.randomUUID() + ".mp4";
@@ -79,11 +81,16 @@ public class VhBlobstoreClientHelperTest {
                 )
             );
         // will get
-        final String filePath3 = UUID.randomUUID() + ".mp3";
+        String dateStr = "_2024-11-04-14.56.39.819";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String filePath3 = "AA1-caseref123312-" + uniqueIdentifier + dateStr + "-UTC_1.mp4";
+
         azureOperations.uploadToVhContainer(filePath3, "Test data");
 
         // will be filtered already processed
-        final String filePath4 = UUID.randomUUID() + ".mp4";
+        dateStr = "_2023-11-04-14.56.39.819";
+        UUID uniqueIdentifier4 = UUID.randomUUID();
+        String filePath4 = "AA1-caseref123312-" + uniqueIdentifier4 + dateStr + "-UTC_1.mp4";
         azureOperations.uploadToVhContainer(filePath4, "Test data");
         vhBlobContainerClient
             .getBlobClient(filePath4)
