@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
+import uk.gov.hmcts.reform.em.hrs.ingestor.parse.VhFileNameParser;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -57,7 +58,8 @@ public class VhBlobstoreClientHelper {
 
         var filteredBlobs = vhBlobItems
             .stream()
-            .filter(blobItem ->  !blobItem.getName().contains("/") && blobItem.getName().contains(".mp"))
+            .filter(blobItem -> !blobItem.getName().contains("/") && blobItem.getName().contains(".mp")
+                && VhFileNameParser.isValidFileName(blobItem.getName()))
             .filter(blobItem -> isNewFile(blobItem))
             .filter(blobItem ->
                         wrapFilterPredicate(

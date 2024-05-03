@@ -115,4 +115,42 @@ class VhFileNameParserTest {
             .isThrownBy(() -> VhFileNameParser.parseFileName(fileName));
     }
 
+
+    @Test
+    void isValid_vh_file_name_return_true() {
+        String dateStr = "_2024-11-04-14.56.39.819";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String fileName = "AA1-caseref123312-" + uniqueIdentifier + dateStr + "-UTC_1";
+        assertThat(VhFileNameParser.isValidFileName(fileName)).isTrue();
+    }
+
+    @Test
+    void isValid_vh_file_name_with_Interpreter_return_true() {
+        String dateStr = "2023-10-04-14.56.39.819";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String fileName = "AA1-caseref123312-" + uniqueIdentifier + "_Interpreter_1_" + dateStr + "-UTC_1";
+        assertThat(VhFileNameParser.isValidFileName(fileName)).isTrue();
+    }
+
+    @Test
+    void isValid_vh_file_name_return_false_if_uuid_less_than_36() {
+        String fileName = "AA1-case-1/3-acde070d-8c4c-4f0d-9d8a-162843c1033_2023-11-04-14.56.32.819-UTC_1";
+        assertThat(VhFileNameParser.isValidFileName(fileName)).isFalse();
+    }
+
+    @Test
+    void isValid_vh_file_name_return_false_if_zoneMissing() {
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String fileName = "AA1-case-1/3-acde070d-" + uniqueIdentifier + "_2023-13-04-14.56.32.819_1";
+        assertThat(VhFileNameParser.isValidFileName(fileName)).isFalse();
+    }
+
+    @Test
+    void isValid_vh_file_name_return_false_if_segment_missing() {
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String fileName = "AA1-case-1/3-acde070d-" + uniqueIdentifier + "_2023-13-04-14.56.32.819-UTC";
+        assertThat(VhFileNameParser.isValidFileName(fileName)).isFalse();
+    }
+
+
 }
