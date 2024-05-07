@@ -50,7 +50,7 @@ public class VhFileNameParser {
         Matcher matcher = FILE_NAME_PATTERN.matcher(fileNameWithoutExtension);
         boolean isMatch = matcher.matches();
         if (!isMatch) {
-            log.info("Not matching file name {}", inputString);
+            log.debug("Not matching file name {}", inputString);
         }
         return isMatch;
     }
