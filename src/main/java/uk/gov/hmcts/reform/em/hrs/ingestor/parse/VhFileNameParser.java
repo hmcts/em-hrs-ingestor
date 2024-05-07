@@ -48,6 +48,10 @@ public class VhFileNameParser {
     public static boolean isValidFileName(String inputString) {
         String fileNameWithoutExtension = inputString.replaceAll("\\.(mp[^\\.]+)$", "");
         Matcher matcher = FILE_NAME_PATTERN.matcher(fileNameWithoutExtension);
-        return matcher.matches();
+        boolean isMatch = matcher.matches();
+        if (!isMatch) {
+            log.info("Not matching file name {}", inputString);
+        }
+        return isMatch;
     }
 }
