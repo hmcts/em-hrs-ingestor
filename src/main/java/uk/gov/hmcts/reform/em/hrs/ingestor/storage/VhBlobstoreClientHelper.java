@@ -58,8 +58,7 @@ public class VhBlobstoreClientHelper {
 
         var filteredBlobs = vhBlobItems
             .stream()
-            .filter(blobItem -> !blobItem.getName().contains("/") && blobItem.getName().contains(".mp")
-                && VhFileNameParser.isValidFileName(blobItem.getName()))
+            .filter(blobItem -> VhFileNameParser.isValidFileName(blobItem.getName()))
             .filter(blobItem -> isNewFile(blobItem))
             .filter(blobItem ->
                         wrapFilterPredicate(
