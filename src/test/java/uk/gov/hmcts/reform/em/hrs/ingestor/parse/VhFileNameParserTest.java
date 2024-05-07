@@ -90,6 +90,19 @@ class VhFileNameParserTest {
     }
 
     @Test
+    void parse_vh_file_name_throws_error_if_caseref_less_than_1() {
+        String dateStr = "_2024-11-04-14.56.39.819";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String fileName = "AA1--"
+            + uniqueIdentifier
+            + dateStr
+            + "-UTC_1";
+        assertThatExceptionOfType(FilenameParsingException.class)
+            .isThrownBy(() -> VhFileNameParser.parseFileName(
+                fileName));
+    }
+
+    @Test
     void parse_vh_file_name_throws_error_if_uuid_less_than_36() {
         String fileName = "AA1-case-1/3-acde070d-8c4c-4f0d-9d8a-162843c1033_2023-11-04-14.56.32.819-UTC_1";
         assertThatExceptionOfType(FilenameParsingException.class)
