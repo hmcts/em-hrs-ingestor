@@ -13,6 +13,7 @@ import static uk.gov.hmcts.reform.em.hrs.ingestor.parse.FilenameParser.processRa
 public class VhFileNameParser {
 
     private static final Logger log = LoggerFactory.getLogger(VhFileNameParser.class);
+    private static final int  MAX_FILE_NAME_LENGTH = 255;
 
     private static final String FILE_NAME_REGEX
         = "^(\\w+)-(.{1,250})-([0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12})(?:_(?i)"
@@ -46,6 +47,10 @@ public class VhFileNameParser {
     }
 
     public static boolean isValidFileName(String inputString) {
+        if (inputString.length() > MAX_FILE_NAME_LENGTH) {
+            log.warn("Long file name {}", inputString);
+            return false;
+        }
         String fileNameWithoutExtension = inputString.replaceAll("\\.(mp[^\\.]+)$", "");
         Matcher matcher = FILE_NAME_PATTERN.matcher(fileNameWithoutExtension);
         boolean isMatch = matcher.matches();

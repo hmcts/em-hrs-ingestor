@@ -210,4 +210,17 @@ class VhFileNameParserTest {
     }
 
 
+    @Test
+    void pisValid_vh_file_name_throws_error_if_filename_more_than_255() {
+        String dateStr = "_2024-11-04-14.56.39.819";
+        UUID uniqueIdentifier = UUID.randomUUID();
+        String fileName = "AA1-caseREF123456789012345678901234567890"
+            + "12345678901234567890123456789012345678901234567890123456789012345678901234567"
+            + "12345678901234567890123456789012345678901234567890123456789012345678901234567-"
+            + uniqueIdentifier
+            + dateStr
+            + "-UTC_1";
+        assertThat(VhFileNameParser.isValidFileName(fileName)).isFalse();
+    }
+
 }
