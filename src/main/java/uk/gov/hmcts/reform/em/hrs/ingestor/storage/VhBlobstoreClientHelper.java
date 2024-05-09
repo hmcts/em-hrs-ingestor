@@ -32,6 +32,7 @@ public class VhBlobstoreClientHelper {
     private final HearingSource hearingSource;
     private final BlobIndexHelper blobIndexHelper;
 
+    // minus value to process all records
     private int processBackToDay;
 
     @Autowired
@@ -87,7 +88,8 @@ public class VhBlobstoreClientHelper {
     }
 
     private boolean isNewFile(BlobItem blobItem) {
-        return OffsetDateTime.now().minusDays(processBackToDay).isBefore(blobItem.getProperties().getCreationTime());
+        return processBackToDay < 0
+            || OffsetDateTime.now().minusDays(processBackToDay).isBefore(blobItem.getProperties().getCreationTime());
     }
 
     public HearingSource getHearingSource() {
