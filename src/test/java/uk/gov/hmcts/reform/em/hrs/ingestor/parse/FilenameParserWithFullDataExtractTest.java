@@ -50,9 +50,9 @@ class FilenameParserWithFullDataExtractTest {
                                               final String caseReference) {
 
         log.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        log.debug("Input Jurisdiction Code " + jurisdictionCode);
-        log.debug("Input Location Code " + locationCode);
-        log.debug("Input Case Reference " + caseReference);
+        log.debug("Input Jurisdiction Code {}", jurisdictionCode);
+        log.debug("Input Location Code {}", locationCode);
+        log.debug("Input Case Reference {}", caseReference);
 
         if ((Objects.nonNull(jurisdictionMatch) && !jurisdictionMatch.isEmpty() && !jurisdictionMatch.isBlank()
             && jurisdictionMatch.equalsIgnoreCase("Yes"))
@@ -60,9 +60,9 @@ class FilenameParserWithFullDataExtractTest {
             && locationMatch.equalsIgnoreCase("Yes"))) {
 
             log.debug("The Complete Scenario");
-            log.debug("The value of the Mapped Jurisdiction Code" + parsedFilenameDto.getJurisdiction());
-            log.debug("The value of the Mapped Location Code" + parsedFilenameDto.getLocationCode());
-            log.debug("The value of the Mapped Case ID" + parsedFilenameDto.getCaseID());
+            log.debug("The value of the Mapped Jurisdiction Code {}", parsedFilenameDto.getJurisdiction());
+            log.debug("The value of the Mapped Location Code {}", parsedFilenameDto.getLocationCode());
+            log.debug("The value of the Mapped Case ID {}", parsedFilenameDto.getCaseID());
 
             assertTrue(jurisdictionCode.equalsIgnoreCase(parsedFilenameDto.getJurisdiction().trim()));
             assertTrue(locationCode.equalsIgnoreCase(parsedFilenameDto.getLocationCode().trim()));
@@ -77,8 +77,8 @@ class FilenameParserWithFullDataExtractTest {
                 && !locationMatch.equalsIgnoreCase("Yes"))) {
 
             log.debug("The No Location Code Scenario");
-            log.debug("The value of the Mapped Jurisdiction Code" + parsedFilenameDto.getJurisdiction());
-            log.debug("The value of the Mapped Case ID" + parsedFilenameDto.getCaseID());
+            log.debug("The value of the Mapped Jurisdiction Code {}", parsedFilenameDto.getJurisdiction());
+            log.debug("The value of the Mapped Case ID {}", parsedFilenameDto.getCaseID());
 
             assertNull(parsedFilenameDto.getLocationCode());
             assertTrue(jurisdictionCode.equalsIgnoreCase(parsedFilenameDto.getJurisdiction().trim()));

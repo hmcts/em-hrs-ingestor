@@ -85,7 +85,7 @@ public class MetadataResolverImpl implements MetadataResolver {
             parsedSegmentNumber = "0";
         }
 
-        Metadata metadata = new Metadata(
+        return new Metadata(
             fragments.getFolder(),
             filename,
             item.getFileUri(),
@@ -102,9 +102,7 @@ public class MetadataResolverImpl implements MetadataResolver {
             parsedDataDto.getLocationCode(),
             parsedDataDto.getServiceCode(),
             parsedDataDto.getInterpreter()
-            );
-        return metadata;
-
+        );
     }
 
     private FileLocationAndParts extractVhFile(String filename) {
@@ -128,8 +126,6 @@ public class MetadataResolverImpl implements MetadataResolver {
 
     record FilePart(String fileNamePart, String extension) {
     }
-
-    ;
 
     private FilePart getFileParts(String filenameWithExtension) {
         final int lastIndexOfPeriodCharacter = filenameWithExtension.lastIndexOf(".");

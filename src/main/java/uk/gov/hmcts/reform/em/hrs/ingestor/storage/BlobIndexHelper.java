@@ -72,10 +72,10 @@ public class BlobIndexHelper {
                 return true;
             } else {
                 logger.info(
-                    "Lease already acquired on file {} in container {} less than {} seconds ago. ",
+                    "Lease already acquired on file {} in container {}, existing tags: {}",
                     zipFilename,
                     containerName,
-                    tags.get(LEASE_EXPIRATION_TIME)
+                    tags
                 );
                 return false;
             }

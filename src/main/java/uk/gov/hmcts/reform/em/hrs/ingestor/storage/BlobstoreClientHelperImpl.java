@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BlobstoreClientHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlobstoreClientHelperImpl.class);
 
     private static final int BLOB_LIST_TIMEOUT = 30;
     private final BlobContainerClient blobContainerClient;
@@ -57,13 +57,12 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
         return blobItems.streamByPage()
             .flatMap(pagedResponse -> pagedResponse.getValue().stream()
                 .filter(blobItem -> blobItem.getName().contains("/"))
-                .filter(blobItem -> isNewFile(blobItem))
+                .filter(this::isNewFile)
                 .map(blobItem -> {
                     LOGGER.debug("Processing blobItem");
                     String filePath = blobItem.getName();
                     LOGGER.debug("File Path {}", filePath);
-                    String folder = BlobHelper.parseFolderFromPath(filePath);
-                    return folder;
+                    return  BlobHelper.parseFolderFromPath(filePath);
                 }))
             .collect(Collectors.toUnmodifiableSet());
     }
@@ -88,7 +87,7 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
         final PagedIterable<BlobItem> blobItems = blobContainerClient.listBlobs(options, duration);
 
-        return transform(blobItems, hearingSource.CVP);
+        return transform(blobItems, HearingSource.CVP);
 
     }
 

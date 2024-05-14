@@ -148,8 +148,8 @@ class MetadataResolverImplTest {
             assertThat(x.getFolder()).isEqualTo("VH");
             assertThat(x.getFilename()).isEqualTo(VH_FILENAME_VALID);
             assertThat(x.getFileSize()).isEqualTo(201);
-            assertThat(x.getSegment()).isEqualTo(0);
-            assertThat(x.getHearingRoomRef()).isEqualTo(0);
+            assertThat(x.getSegment()).isZero();
+            assertThat(x.getHearingRoomRef()).isZero();
             assertThat(x.getFilenameExtension()).isEqualTo("mp4");
             assertThat(x.getSourceBlobUrl()).isEqualTo("file-uri-vh");
             assertThat(x.getCheckSum()).isEqualTo("a2B423232==");

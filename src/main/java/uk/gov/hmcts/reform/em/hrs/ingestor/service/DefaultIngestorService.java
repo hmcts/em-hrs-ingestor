@@ -231,7 +231,7 @@ public class DefaultIngestorService implements IngestorService {
             );
             return filesToIngest;
         } catch (HrsApiException | IOException e) {
-            LOGGER.error("", e); // TODO: covered by EM-3582
+            LOGGER.error("CVP  getFilesToIngest failed", e);
             return Collections.emptySet();
         }
     }

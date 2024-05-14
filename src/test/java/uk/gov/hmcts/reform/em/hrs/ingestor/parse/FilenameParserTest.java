@@ -327,7 +327,7 @@ class FilenameParserTest {
         assertEquals(segment, parsedFilenameDto.getSegment());
 
         LocalDateTime localDateTime = parsedFilenameDto.getRecordingDateTime();
-        log.debug("The value of the Returned Date Time" + localDateTime);
+        log.debug("The value of the Returned Date Time {} ", localDateTime);
         assertEquals(year, localDateTime.getYear());
         assertEquals(month, localDateTime.getMonth().getValue());
         assertEquals(day, localDateTime.getDayOfMonth());

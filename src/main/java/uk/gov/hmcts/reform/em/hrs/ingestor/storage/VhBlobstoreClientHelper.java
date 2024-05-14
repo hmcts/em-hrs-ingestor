@@ -20,7 +20,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.parse.VhFileNameParser;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
 @Service
 public class VhBlobstoreClientHelper {
@@ -59,10 +59,10 @@ public class VhBlobstoreClientHelper {
 
         LOGGER.info("vhBlobItems count {}", vhBlobItems.stream().count());
 
-        var filteredBlobs = vhBlobItems
+        return vhBlobItems
             .stream()
             .filter(blobItem -> VhFileNameParser.isValidFileName(blobItem.getName()))
-            .filter(blobItem -> isNewFile(blobItem))
+            .filter(this::isNewFile)
             .filter(blobItem ->
                         wrapFilterPredicate(
                             () -> vhContainerClient
@@ -72,17 +72,14 @@ public class VhBlobstoreClientHelper {
                                 .equalsIgnoreCase("false"))
             )
             .filter(blobItem -> wrapFilterPredicate(() -> blobIndexHelper.setIndexLease(blobItem.getName())))
-            .map(blobItem -> transform(blobItem))
+            .map(this::transform)
             .limit(limit)
             .toList();
-
-        return filteredBlobs;
-
     }
 
-    private boolean wrapFilterPredicate(Supplier<Boolean> sup) {
+    private boolean wrapFilterPredicate(BooleanSupplier sup) {
         try {
-            return sup.get();
+            return sup.getAsBoolean();
         } catch (Exception ex) {
             return false;
         }
