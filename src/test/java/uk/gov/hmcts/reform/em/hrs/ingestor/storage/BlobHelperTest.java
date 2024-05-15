@@ -3,20 +3,15 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.storage;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class BlobHelperTest {
 
-    private static final Logger log = LoggerFactory.getLogger(BlobHelperTest.class);
-
-
     @Test
     void testParsesBadFoldersWithoutExceptions() {
-        BlobHelper.parseFolderFromPath("");
-        BlobHelper.parseFolderFromPath("folder");
-        BlobHelper.parseFolderFromPath("folder/");
-        BlobHelper.parseFolderFromPath("folder/with_filename.mp4");
+        Assertions.assertNotNull(BlobHelper.parseFolderFromPath(""));
+        Assertions.assertNotNull(BlobHelper.parseFolderFromPath("folder"));
+        Assertions.assertNotNull(BlobHelper.parseFolderFromPath("folder/"));
+        Assertions.assertNotNull(BlobHelper.parseFolderFromPath("folder/with_filename.mp4"));
     }
 
 
@@ -26,6 +21,5 @@ class BlobHelperTest {
         String actual = BlobHelper.getMd5Hash(null);
         Assertions.assertEquals(expected, actual);
     }
-
 
 }

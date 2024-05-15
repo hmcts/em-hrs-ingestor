@@ -1,6 +1,9 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.parse;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.dto.ParsedFilenameDto;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
 
@@ -8,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
@@ -130,31 +134,28 @@ class VhFileNameParserTest {
             .isThrownBy(() -> VhFileNameParser.parseFileName(fileName));
     }
 
-    @Test
-    void parse_vh_file_name_throws_error_if_dateTime_wrong() {
-        UUID uniqueIdentifier = UUID.randomUUID();
-
-        String fileName = "AA1-case-1/3-acde070d-" + uniqueIdentifier + "_2023-13-04-14.56.32.819-UTC_1";
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideInvalidFileNamesAndTestNames")
+    void parse_vh_file_name_throws_error_for_invalid_file_names(String testName, String fileName) {
         assertThatExceptionOfType(FilenameParsingException.class)
             .isThrownBy(() -> VhFileNameParser.parseFileName(fileName));
     }
 
-    @Test
-    void parse_vh_file_name_throws_error_if_zoneMissing() {
-        UUID uniqueIdentifier = UUID.randomUUID();
-
-        String fileName = "AA1-case-1/3-acde070d-" + uniqueIdentifier + "_2023-13-04-14.56.32.819_1";
-        assertThatExceptionOfType(FilenameParsingException.class)
-            .isThrownBy(() -> VhFileNameParser.parseFileName(fileName));
-    }
-
-    @Test
-    void parse_vh_file_name_throws_error_if_segment_missing() {
-        UUID uniqueIdentifier = UUID.randomUUID();
-
-        String fileName = "AA1-case-1/3-acde070d-" + uniqueIdentifier + "_2023-13-04-14.56.32.819-UTC";
-        assertThatExceptionOfType(FilenameParsingException.class)
-            .isThrownBy(() -> VhFileNameParser.parseFileName(fileName));
+    private static Stream<Arguments> provideInvalidFileNamesAndTestNames() {
+        return Stream.of(
+            Arguments.of(
+                "parse_vh_file_name_throws_error_if_dateTime_wrong",
+                "AA1-case-1/3-acde070d-" + UUID.randomUUID() + "_2023-13-04-14.56.32.819-UTC_1"
+            ),
+            Arguments.of(
+                "parse_vh_file_name_throws_error_if_zoneMissing",
+                "AA1-case-1/3-acde070d-" + UUID.randomUUID() + "_2023-13-04-14.56.32.819_1"
+            ),
+            Arguments.of(
+                "parse_vh_file_name_throws_error_if_segment_missing",
+                "AA1-case-1/3-acde070d-" + UUID.randomUUID() + "_2023-13-04-14.56.32.819-UTC"
+            )
+        );
     }
 
     @Test
