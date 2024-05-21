@@ -12,7 +12,7 @@ plugins {
   id 'uk.gov.hmcts.java' version '0.12.61'
   id 'au.com.dius.pact' version '4.3.5'
   id 'info.solidsoft.pitest' version '1.15.0'
-  id 'org.owasp.dependencycheck' version '9.1.0'
+  id 'org.owasp.dependencycheck' version '9.2.0'
 }
 
 group = 'uk.gov.hmcts.reform.em.hrs'
