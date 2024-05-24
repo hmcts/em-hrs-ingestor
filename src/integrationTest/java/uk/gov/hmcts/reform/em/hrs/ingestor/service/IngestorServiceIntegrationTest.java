@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.service;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.config.TestOkHttpClientConfig;
 import uk.gov.hmcts.reform.em.hrs.ingestor.helper.AzureOperations;
 import uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiClientImpl;
+import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiTokenService;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobIndexHelper;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.VhBlobstoreClientHelper;
@@ -23,6 +25,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FILE;
 import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FILE_VH;
@@ -38,7 +41,8 @@ import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FOLDER;
     DefaultIngestorService.class,
     AzureOperations.class,
     VhBlobstoreClientHelper.class,
-    BlobIndexHelper.class
+    BlobIndexHelper.class,
+    HrsApiTokenService.class
 })
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 class IngestorServiceIntegrationTest {
@@ -56,6 +60,20 @@ class IngestorServiceIntegrationTest {
     public void prepare() {
         azureOperations.clearContainer();
         wireMockServer.resetAll();
+        wireMockServer.stubFor(
+            WireMock.post(urlPathEqualTo("/o/token"))
+                .willReturn(aResponse()
+                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withBody("{\n"
+                                              + "  \"access_token\": \"test-access\","
+                                              + "  \"expires_in\": \"3600\","
+                                              + "  \"id_token\": \"test-id\","
+                                              + "  \"refresh_token\": \"test-refresh\","
+                                              + "  \"scope\": \"openid profile email\","
+                                              + "  \"token_type\": \"Bearer\""
+                                              + "}\n"))
+        );
+
         wireMockServer.stubFor(
             get(urlMatching(GET_FOLDERS_PATH))
                 .willReturn(aResponse()
