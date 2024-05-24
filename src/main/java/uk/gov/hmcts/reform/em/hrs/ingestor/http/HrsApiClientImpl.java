@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.http;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import retrofit2.Response;
@@ -20,18 +22,27 @@ public class HrsApiClientImpl implements HrsApiClient {
     private static final TypeReference<RecordingFilenameDto> TYPE_REFERENCE = new TypeReference<>() {
     };
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HrsApiClientImpl.class);
+
     private final HrsHttpClient hrsHttpClient;
     private final ObjectMapper objectMapper;
+    private HrsApiTokenService hrsApiTokenService;
 
     @Autowired
-    public HrsApiClientImpl(final HrsHttpClient hrsHttpClient, final ObjectMapper objectMapper) {
+    public HrsApiClientImpl(
+        final HrsHttpClient hrsHttpClient,
+        final ObjectMapper objectMapper,
+        HrsApiTokenService hrsApiTokenService) {
         this.hrsHttpClient = hrsHttpClient;
         this.objectMapper = objectMapper;
+        this.hrsApiTokenService = hrsApiTokenService;
     }
 
     @Override
     public HrsFileSet getIngestedFiles(String folderName) throws IOException, HrsApiException {
-        final Response<ResponseBody> response = hrsHttpClient.getFiles(folderName)
+        var bearerToken = this.hrsApiTokenService.getBearerToken();
+        LOGGER.info("getIngestedFiles bearerToken {}", bearerToken);
+        final Response<ResponseBody> response = hrsHttpClient.getFiles(folderName, bearerToken)
             .execute();
 
         if (!response.isSuccessful()) {
@@ -50,7 +61,9 @@ public class HrsApiClientImpl implements HrsApiClient {
 
     @Override
     public void postFile(final Metadata metadata) throws IOException, HrsApiException {
-        final Response<ResponseBody> response = hrsHttpClient.postFile(metadata).execute();
+        var bearerToken = this.hrsApiTokenService.getBearerToken();
+        LOGGER.info("postFile bearerToken {}", bearerToken);
+        final Response<ResponseBody> response = hrsHttpClient.postFile(metadata,bearerToken).execute();
         boolean isSuccessful = response.isSuccessful();
         if (!isSuccessful) {
             throw new HrsApiException(

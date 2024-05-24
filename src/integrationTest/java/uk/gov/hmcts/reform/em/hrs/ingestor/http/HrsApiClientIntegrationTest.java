@@ -15,6 +15,8 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
+import uk.gov.hmcts.reform.idam.client.IdamApi;
+import uk.gov.hmcts.reform.idam.client.IdamClient;
 
 import java.time.LocalDateTime;
 
@@ -32,7 +34,8 @@ import static org.assertj.core.api.Assertions.assertThatIOException;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.convertObjectToJsonString;
 
-@SpringBootTest(classes = {TestOkHttpClientConfig.class, AppConfig.class, HrsApiClientImpl.class})
+@SpringBootTest(classes = {TestOkHttpClientConfig.class, AppConfig.class, HrsApiClientImpl.class,
+    HrsApiTokenService.class, IdamClient.class, IdamApi.class})
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 class HrsApiClientIntegrationTest {
     private static final String TEST_FILE = "file.mp4";
@@ -67,21 +70,36 @@ class HrsApiClientIntegrationTest {
     @BeforeEach
     public void prepare() {
         wireMockServer.resetAll();
+        wireMockServer.stubFor(
+            WireMock.post(urlPathEqualTo("/o/token"))
+                .willReturn(aResponse()
+                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withBody("{\n"
+                                              + "  \"access_token\": \"test-access\","
+                                              + "  \"expires_in\": \"3600\","
+                                              + "  \"id_token\": \"test-id\","
+                                              + "  \"refresh_token\": \"test-refresh\","
+                                              + "  \"scope\": \"openid profile email\","
+                                              + "  \"token_type\": \"Bearer\""
+                                              + "}\n"))
+        );
     }
 
     @Test
     void testShouldGetDataSuccessfully() throws Exception {
         wireMockServer.stubFor(
             WireMock.get(urlPathEqualTo(GET_PATH))
+                .withHeader("Authorization", equalTo("Bearer test-access"))
                 .willReturn(aResponse()
                                 .withHeader("Content-Type", APPLICATION_JSON_VALUE)
                                 .withBody("{\"folder-name\":\"" + TEST_FOLDER + "\",\"filenames\":[\"file.mp4\"]}"))
         );
-
         final HrsFileSet ingestedFiles = underTest.getIngestedFiles(TEST_FOLDER);
 
         assertThat(ingestedFiles.getHrsFiles()).singleElement().isEqualTo(TEST_FILE);
-        wireMockServer.verify(exactly(1), getRequestedFor(urlEqualTo(String.format(GET_PATH, TEST_FOLDER))));
+        wireMockServer.verify(exactly(1), getRequestedFor(urlEqualTo(String.format(GET_PATH, TEST_FOLDER)))
+            .withHeader("Authorization", equalTo("Bearer test-access")));
+
     }
 
     @Test

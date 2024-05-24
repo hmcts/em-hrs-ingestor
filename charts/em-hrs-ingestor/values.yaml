@@ -19,6 +19,10 @@ job:
       secrets:
         - name: microservicekey-em-hrs-ingestor
           alias: S2S_KEY
+        - name: idam-hrs-ingestor-user-name
+          alias: IDAM_HRS_INGESTOR_USER_NAME
+        - name: idam-hrs-ingestor-password
+          alias: IDAM_HRS_INGESTOR_PASSWORD
     em-hrs-api:
       secrets:
         - name: cvp-storage-connection-string
@@ -38,5 +42,6 @@ job:
     VH_PROCESS_BACK_TO_DAY: 2
     VH_PROCESS: false
     CVP_PROCESS: true
+    IDAM_API_URL: "https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net"
 global:
   jobKind: CronJob

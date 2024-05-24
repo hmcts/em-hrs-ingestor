@@ -55,7 +55,11 @@ idam:
     url: ${S2S_BASE_URI:http://localhost:4502}
     totp_secret: ${S2S_KEY:AAAAAAAAAAAAAAAA}
     microservice: em_hrs_ingestor
-
+  hrs-ingestor:
+    user-name: ${IDAM_HRS_INGESTOR_USER_NAME:test}
+    password: ${IDAM_HRS_INGESTOR_PASSWORD:AAAAAAAAAAAAAAAA}
+  api:
+    url: ${IDAM_API_URL:http://localhost:4502}
 toggle:
   shutdown: ${ENABLE_SHUTDOWN:true}
   cronjob: ${ENABLE_CRONJOB:true}
