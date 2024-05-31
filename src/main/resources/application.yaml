@@ -56,8 +56,8 @@ idam:
     totp_secret: ${S2S_KEY:AAAAAAAAAAAAAAAA}
     microservice: em_hrs_ingestor
   hrs-ingestor:
-    user-name: ${IDAM_HRS_INGESTOR_USER_NAME:test}
-    password: ${IDAM_HRS_INGESTOR_PASSWORD:AAAAAAAAAAAAAAAA}
+    user-name: ${IDAM_HRS_INGESTOR_SYSTEM_USER_NAME:test}
+    password: ${IDAM_HRS_INGESTOR_SYSTEM_PASSWORD:AAAAAAAAAAAAAAAA}
   api:
     url: ${IDAM_API_URL:http://localhost:4502}
 toggle:

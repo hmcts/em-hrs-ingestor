@@ -7,7 +7,7 @@ ingestion:
     max-blob-process-count: 200
 idam:
   hrs-ingestor:
-    user-name: ${IDAM_HRS_INGESTOR_USER_NAME:test}
-    password: ${IDAM_HRS_INGESTOR_PASSWORD:AAAAAAAAAAAAAAAA}
+    user-name: ${IDAM_HRS_INGESTOR_SYSTEM_USER_NAME:test}
+    password: ${IDAM_HRS_INGESTOR_SYSTEM_PASSWORD:AAAAAAAAAAAAAAAA}
   api:
     url: http://localhost-idam:8090
