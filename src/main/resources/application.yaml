@@ -60,6 +60,13 @@ idam:
     password: ${IDAM_HRS_INGESTOR_SYSTEM_PASSWORD:AAAAAAAAAAAAAAAA}
   api:
     url: ${IDAM_API_URL:http://localhost:4502}
+  client:
+    id: ${OAUTH_CLIENT_ID:webshow}
+    secret: ${IDAM_CLIENT_OAUTH_SECRET:AAAAAAAAAAAAAAAA}
+    redirect_uri: ${IDAM_REDIRECT_URI:https://em-hrs-ingestor-aat.service.core-compute-aat.internal/oauth2/callback}
+    grant_type: password
+    scope: openid roles profile
+
 toggle:
   shutdown: ${ENABLE_SHUTDOWN:true}
   cronjob: ${ENABLE_CRONJOB:true}
@@ -67,3 +74,5 @@ toggle:
 logging:
   level:
     uk.gov.hmcts.reform.authorisation.filters: DEBUG
+
+
