@@ -41,7 +41,6 @@ public class HrsApiClientImpl implements HrsApiClient {
     @Override
     public HrsFileSet getIngestedFiles(String folderName) throws IOException, HrsApiException {
         var bearerToken = this.hrsApiTokenService.getBearerToken();
-        LOGGER.info("getIngestedFiles bearerToken {}", bearerToken);
         final Response<ResponseBody> response = hrsHttpClient.getFiles(folderName, bearerToken)
             .execute();
 
@@ -62,7 +61,6 @@ public class HrsApiClientImpl implements HrsApiClient {
     @Override
     public void postFile(final Metadata metadata) throws IOException, HrsApiException {
         var bearerToken = this.hrsApiTokenService.getBearerToken();
-        LOGGER.info("postFile bearerToken {}", bearerToken);
         final Response<ResponseBody> response = hrsHttpClient.postFile(metadata,bearerToken).execute();
         boolean isSuccessful = response.isSuccessful();
         if (!isSuccessful) {
