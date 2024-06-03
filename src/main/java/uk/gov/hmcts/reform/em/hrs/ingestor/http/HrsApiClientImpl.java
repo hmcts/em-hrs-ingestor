@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.http;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import retrofit2.Response;
@@ -21,8 +19,6 @@ import java.util.Set;
 public class HrsApiClientImpl implements HrsApiClient {
     private static final TypeReference<RecordingFilenameDto> TYPE_REFERENCE = new TypeReference<>() {
     };
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(HrsApiClientImpl.class);
 
     private final HrsHttpClient hrsHttpClient;
     private final ObjectMapper objectMapper;
