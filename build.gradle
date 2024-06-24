@@ -247,7 +247,7 @@ dependencies {
 
   //azure components
   implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.26.1'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.12.2'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.13.0'
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: versions.okhttp3
