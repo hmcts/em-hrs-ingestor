@@ -16,6 +16,9 @@ spring:
     name: Hearing Recordings CVP Ingestor
   config:
     import: "optional:configtree:/mnt/secrets/em-hrs-ingestor/,optional:configtree:/mnt/secrets/em-hrs-api/,optional:configtree:/mnt/secrets/rpa/"
+  cloud:
+    compatibility-verifier:
+      enabled: false
 ingestion:
   max-files-to-process: ${MAX_FILES_TO_PROCESS:50}
   cvp:
