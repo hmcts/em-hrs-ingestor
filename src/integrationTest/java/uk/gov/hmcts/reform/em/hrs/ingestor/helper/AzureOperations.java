@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.helper;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
-import com.devskiller.jfairy.Fairy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +14,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
+import static org.apache.commons.lang3.RandomStringUtils.secure;
+
 @Component
 public class AzureOperations {
     private static final Logger LOGGER = LoggerFactory.getLogger(AzureOperations.class);
 
     private final BlobContainerClient blobContainerClient;
     private final BlobContainerClient vhBlobContainerClient;
-    private final Fairy fairy;
 
     @Autowired
     public AzureOperations(
@@ -30,8 +30,6 @@ public class AzureOperations {
     ) {
         this.blobContainerClient = blobContainerClient;
         this.vhBlobContainerClient = vhBlobContainerClient;
-
-        fairy = Fairy.create();
     }
 
     public void uploadToContainer(final Set<String> blobNames) {
@@ -39,7 +37,7 @@ public class AzureOperations {
     }
 
     public void uploadToContainer(final String blobName) {
-        final String content = fairy.textProducer().sentence();
+        final String content = secure().nextAlphanumeric(5, 20);
         uploadToContainer(blobName, content);
     }
 
