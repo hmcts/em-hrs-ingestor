@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.helper;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
-import com.devskiller.jfairy.Fairy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ public class AzureOperations {
 
     private final BlobContainerClient blobContainerClient;
     private final BlobContainerClient vhBlobContainerClient;
-    private final Fairy fairy;
 
     @Autowired
     public AzureOperations(
@@ -30,8 +28,6 @@ public class AzureOperations {
     ) {
         this.blobContainerClient = blobContainerClient;
         this.vhBlobContainerClient = vhBlobContainerClient;
-
-        fairy = Fairy.create();
     }
 
     public void uploadToContainer(final Set<String> blobNames) {
@@ -39,7 +35,7 @@ public class AzureOperations {
     }
 
     public void uploadToContainer(final String blobName) {
-        final String content = fairy.textProducer().sentence();
+        final String content = "Sample content";
         uploadToContainer(blobName, content);
     }
 
