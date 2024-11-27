@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
+import static org.apache.commons.lang3.RandomStringUtils.secure;
+
 @Component
 public class AzureOperations {
     private static final Logger LOGGER = LoggerFactory.getLogger(AzureOperations.class);
@@ -35,7 +37,7 @@ public class AzureOperations {
     }
 
     public void uploadToContainer(final String blobName) {
-        final String content = "Sample content";
+        final String content = secure().nextAlphanumeric(5, 20);
         uploadToContainer(blobName, content);
     }
 
