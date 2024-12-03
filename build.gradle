@@ -256,7 +256,6 @@ dependencies {
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.2'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
-  testImplementation group: 'org.pitest', name: 'pitest', version: '1.17.2'
   testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.5', classifier: 'all'
   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
@@ -383,6 +382,7 @@ pitest {
   mainSourceSets = [sourceSets.main]
   fileExtensionsToFilter.addAll('xml', 'json')
   outputFormats = ['XML', 'HTML', 'CSV']
+  pitestVersion = '1.17.2'
   mutationThreshold = 0
   coverageThreshold = 0
   jvmArgs = ['-Xms1G', '-Xmx3G']
