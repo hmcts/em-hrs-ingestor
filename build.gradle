@@ -270,7 +270,6 @@ dependencies {
 
   contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
 
-  contractTestImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit
   contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
 
