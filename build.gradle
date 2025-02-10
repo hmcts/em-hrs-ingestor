@@ -192,7 +192,7 @@ repositories {
 def versions = [
   junit              : '5.11.4',
   junitPlatform      : '1.11.4',
-  reformLogging      : '6.1.7',
+  reformLogging      : '6.1.8',
   log4JVersion       : "2.24.3",
   pact_version       : '4.6.16',
   okhttp3            : '4.12.0'
@@ -230,7 +230,7 @@ dependencies {
 
   //azure components
   implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.29.0'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.15.0'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.15.1'
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: versions.okhttp3
