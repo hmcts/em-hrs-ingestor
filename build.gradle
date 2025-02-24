@@ -190,8 +190,8 @@ repositories {
 }
 
 def versions = [
-  junit              : '5.11.4',
-  junitPlatform      : '1.11.4',
+  junit              : '5.12.0',
+  junitPlatform      : '1.12.0',
   reformLogging      : '6.1.8',
   log4JVersion       : "2.24.3",
   pact_version       : '4.6.17',
@@ -273,7 +273,7 @@ dependencies {
   contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
 
-  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.11.4'
+  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.12.0'
 
   contractTestImplementation sourceSets.main.runtimeClasspath
   contractTestImplementation sourceSets.test.runtimeClasspath
