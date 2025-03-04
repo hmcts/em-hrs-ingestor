@@ -16,13 +16,10 @@ public final class FilenameParser {
 
     private static final Logger log = LoggerFactory.getLogger(FilenameParser.class);
 
-    private static final String ROYAL_COURTS_OF_JUSTICE_FILE_WITH_LOCATION_FORMAT_REGEX
-        = "^([A-Z][A-Z][A-Z]\\d)-(0372|0266)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_(\\d+)$";
-    private static final String CIVIL_AND_FAMILY_FILE_FORMAT_REGEX
-        = "^([A-Z][A-Z][A-Z]\\d)-(\\d{3,4})-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_(\\d+)$";
-    private static final String TRIBUNALS_FILE_FORMAT_REGEX
-        = "^([A-Z][A-Z][A-Z]\\d)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_(\\d+)$";
-    private static final String ROYAL_COURTS_OF_JUSTICE_FILE_WITHOUT_LOCATION_FORMAT_REGEX
+    private static final String LOCATION_BASED_FILE_FORMAT_REGEX
+        = "^([A-Z][A-Z][A-Z]\\d)-(\\d{3,4}|0372|0266)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_(\\d+)$";
+
+    private static final String WITHOUT_LOCATION_FORMAT_REGEX
         = "^([A-Z][A-Z][A-Z]\\d)-([A-Z0-9-]*)_([0-9-.]*)-([A-Z]{3})_(\\d+)$";
 
     private static final String MINIMAL_FORMAT_REGEX
@@ -40,21 +37,15 @@ public final class FilenameParser {
                 new IllegalArgumentException("The argument passed is not valid")
             );
         }
-        Matcher royalCourtsOfJusticeWithLocationMatcher
+        Matcher withLocationMatcher
             = Pattern.compile(
-            ROYAL_COURTS_OF_JUSTICE_FILE_WITH_LOCATION_FORMAT_REGEX,
+            LOCATION_BASED_FILE_FORMAT_REGEX,
             Pattern.CASE_INSENSITIVE
         ).matcher(fileName);
-        Matcher civilAndFamilyMatcher
+
+        Matcher withoutLocationMatcher
             = Pattern.compile(
-            CIVIL_AND_FAMILY_FILE_FORMAT_REGEX,
-            Pattern.CASE_INSENSITIVE
-        ).matcher(fileName);
-        Matcher tribunalsMatcher
-            = Pattern.compile(TRIBUNALS_FILE_FORMAT_REGEX, Pattern.CASE_INSENSITIVE).matcher(fileName);
-        Matcher royalCourtsOfJusticeWithoutLocationMatcher
-            = Pattern.compile(
-            ROYAL_COURTS_OF_JUSTICE_FILE_WITHOUT_LOCATION_FORMAT_REGEX,
+            WITHOUT_LOCATION_FORMAT_REGEX,
             Pattern.CASE_INSENSITIVE
         ).matcher(fileName);
         Matcher caseRefAndTimeStampOnlyMatcher
@@ -64,35 +55,24 @@ public final class FilenameParser {
         ).matcher(fileName);
 
         return processMatcher(
-            civilAndFamilyMatcher,
-            tribunalsMatcher,
-            royalCourtsOfJusticeWithLocationMatcher,
-            royalCourtsOfJusticeWithoutLocationMatcher,
+            withLocationMatcher,
+            withoutLocationMatcher,
             caseRefAndTimeStampOnlyMatcher
         );
     }
 
     private static ParsedFilenameDto processMatcher(
-        final Matcher civilAndFamilyMatcher,
-        final Matcher tribunalsMatcher,
-        final Matcher royalCourtsOfJusticeWithLocationMatcher,
-        final Matcher royalCourtsOfJusticeWithoutLocationMatcher,
+        final Matcher withLocationMatcher,
+        final Matcher withoutLocationMatcher,
         final Matcher caseRefAndTimeStampOnlyFormatMatcher
     ) throws FilenameParsingException {
 
-        if (royalCourtsOfJusticeWithLocationMatcher.matches()) {
+        if (withLocationMatcher.matches()) {
             log.debug("This is a Royal Courts of Justice Locations based match");
-            return processLocationMatcher(
-                royalCourtsOfJusticeWithLocationMatcher);
-        } else if (civilAndFamilyMatcher.matches()) {
-            log.debug("This is a Civil and Family based match");
-            return processLocationMatcher(civilAndFamilyMatcher);
-        } else if (royalCourtsOfJusticeWithoutLocationMatcher.matches()) {
+            return processLocationMatcher(withLocationMatcher);
+        } else if (withoutLocationMatcher.matches()) {
             log.debug("This is a Royal Courts of Justice Without Locations based match");
-            return processNonLocationMatcher(royalCourtsOfJusticeWithoutLocationMatcher);
-        } else if (tribunalsMatcher.matches()) {
-            log.debug("This is a Tribunals based match");
-            return processNonLocationMatcher(tribunalsMatcher);
+            return processNonLocationMatcher(withoutLocationMatcher);
         } else if (caseRefAndTimeStampOnlyFormatMatcher.matches()) {
             log.debug("Unable To match, looking for timepart and case ref");
             return processBadFormatMatcher(caseRefAndTimeStampOnlyFormatMatcher);
