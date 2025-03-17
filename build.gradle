@@ -244,7 +244,7 @@ dependencies {
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
   testImplementation 'org.projectlombok:lombok:1.18.36'
 
-  testImplementation group: 'com.github.gmazzo.okhttp.mock', name: 'mock-client', version: '2.0.0'
+  testImplementation group: 'com.github.gmazzo.okhttp.mock', name: 'mock-client', version: '2.1.0'
 
   testImplementation libraries.junit5
 
