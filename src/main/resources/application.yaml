@@ -69,7 +69,8 @@ idam:
     redirect_uri: ${IDAM_REDIRECT_URI:https://em-hrs-ingestor-aat.service.core-compute-aat.internal/oauth2/callback}
     grant_type: password
     scope: openid roles profile
-
+    cache:
+      refresh-before-expire-in-sec: 300
 toggle:
   shutdown: ${ENABLE_SHUTDOWN:true}
   cronjob: ${ENABLE_CRONJOB:true}
