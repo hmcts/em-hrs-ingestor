@@ -85,6 +85,22 @@ class HrsApiClientIntegrationTest {
                                               + "  \"token_type\": \"Bearer\""
                                               + "}\n"))
         );
+        wireMockServer.stubFor(
+            WireMock.get(urlPathEqualTo("/o/userinfo"))
+                .withHeader("Authorization", equalTo("Bearer test-access"))
+                .willReturn(aResponse()
+                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withStatus(200)
+                                .withBody("{\n"
+                                              + "  \"sub\": \"1234567890\",\n"
+                                              + "  \"name\": \"John Doe\",\n"
+                                              + "  \"email\": \"johndoe@example.com\",\n"
+                                              + "  \"preferred_username\": \"johndoe\",\n"
+                                              + "  \"given_name\": \"John\",\n"
+                                              + "  \"family_name\": \"Doe\"\n"
+                                              + "}")
+                )
+        );
     }
 
     @Test
