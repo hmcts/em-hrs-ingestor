@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.hmcts.reform.idam.client.IdamClient;
+import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.CachedIdamCredential;
+import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.IdamCachedClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -14,22 +15,22 @@ import static org.mockito.Mockito.when;
 class HrsApiTokenServiceTest {
 
     @Mock
-    private IdamClient idamClient;
+    private IdamCachedClient idamClient;
 
     private HrsApiTokenService hrsApiTokenService;
 
-    private static final String USERNAME = "test-username";
-    private static final String PASSWORD = "test-password";
     private static final String EXPECTED_TOKEN = "test-token";
 
     @BeforeEach
     void setUp() {
-        hrsApiTokenService = new HrsApiTokenService(idamClient, USERNAME, PASSWORD);
+        hrsApiTokenService = new HrsApiTokenService(idamClient);
     }
 
     @Test
     void testGetBearerToken() {
-        when(idamClient.getAccessToken(USERNAME, PASSWORD)).thenReturn(EXPECTED_TOKEN);
+        CachedIdamCredential cachedIdamCredential = new CachedIdamCredential(EXPECTED_TOKEN, "test-user-id", 28800);
+        when(idamClient.getIdamCredentials()).thenReturn(cachedIdamCredential);
+        when(idamClient.getIdamCredentials()).thenReturn(cachedIdamCredential);
 
         String actualToken = hrsApiTokenService.getBearerToken();
 

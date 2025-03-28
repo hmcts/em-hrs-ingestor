@@ -11,3 +11,6 @@ idam:
     password: ${IDAM_HRS_INGESTOR_SYSTEM_PASSWORD:AAAAAAAAAAAAAAAA}
   api:
     url: http://localhost-idam:8090
+    client:
+      cache:
+        refresh-before-expire-in-sec: 300

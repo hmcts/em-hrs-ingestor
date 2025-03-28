@@ -12,6 +12,8 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.config.AppConfig;
 import uk.gov.hmcts.reform.em.hrs.ingestor.config.TestOkHttpClientConfig;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.HrsApiException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
+import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.IdamCacheExpiry;
+import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.IdamCachedClient;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
@@ -35,7 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.convertObjectToJsonString;
 
 @SpringBootTest(classes = {TestOkHttpClientConfig.class, AppConfig.class, HrsApiClientImpl.class,
-    HrsApiTokenService.class, IdamClient.class, IdamApi.class})
+    HrsApiTokenService.class, IdamCachedClient.class, IdamCacheExpiry.class, IdamClient.class, IdamApi.class})
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 class HrsApiClientIntegrationTest {
     private static final String TEST_FILE = "file.mp4";
@@ -82,6 +84,22 @@ class HrsApiClientIntegrationTest {
                                               + "  \"scope\": \"openid profile email\","
                                               + "  \"token_type\": \"Bearer\""
                                               + "}\n"))
+        );
+        wireMockServer.stubFor(
+            WireMock.get(urlPathEqualTo("/o/userinfo"))
+                .withHeader("Authorization", equalTo("Bearer test-access"))
+                .willReturn(aResponse()
+                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withStatus(200)
+                                .withBody("{\n"
+                                              + "  \"sub\": \"1234567890\",\n"
+                                              + "  \"name\": \"John Doe\",\n"
+                                              + "  \"email\": \"johndoe@example.com\",\n"
+                                              + "  \"preferred_username\": \"johndoe\",\n"
+                                              + "  \"given_name\": \"John\",\n"
+                                              + "  \"family_name\": \"Doe\"\n"
+                                              + "}")
+                )
         );
     }
 
