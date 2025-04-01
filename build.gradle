@@ -209,7 +209,7 @@ ext.libraries = [
 ]
 
 dependencies {
-  annotationProcessor 'org.projectlombok:lombok:1.18.36'
+  annotationProcessor 'org.projectlombok:lombok:1.18.38'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
@@ -223,7 +223,7 @@ dependencies {
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.1'
 
-  implementation 'org.projectlombok:lombok:1.18.36'
+  implementation 'org.projectlombok:lombok:1.18.38'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4JVersion
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
@@ -241,8 +241,8 @@ dependencies {
   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
 
   //test implementation
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
-  testImplementation 'org.projectlombok:lombok:1.18.36'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
+  testImplementation 'org.projectlombok:lombok:1.18.38'
 
   testImplementation group: 'com.github.gmazzo.okhttp.mock', name: 'mock-client', version: '2.1.0'
 
