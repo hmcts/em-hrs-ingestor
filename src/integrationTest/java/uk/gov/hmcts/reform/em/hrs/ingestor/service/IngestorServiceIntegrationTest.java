@@ -15,10 +15,13 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiClientImpl;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.HrsApiTokenService;
 import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
+import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.IdamCacheExpiry;
+import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.IdamCachedClient;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobIndexHelper;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.VhBlobstoreClientHelper;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -42,7 +45,9 @@ import static uk.gov.hmcts.reform.em.hrs.ingestor.helper.TestUtil.TEST_FOLDER;
     AzureOperations.class,
     VhBlobstoreClientHelper.class,
     BlobIndexHelper.class,
-    HrsApiTokenService.class
+    HrsApiTokenService.class,
+    IdamCachedClient.class,
+    IdamCacheExpiry.class
 })
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 class IngestorServiceIntegrationTest {
@@ -74,6 +79,22 @@ class IngestorServiceIntegrationTest {
                                               + "}\n"))
         );
 
+        wireMockServer.stubFor(
+            WireMock.get(urlPathEqualTo("/o/userinfo"))
+                .withHeader("Authorization", equalTo("Bearer test-access"))
+                .willReturn(aResponse()
+                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withStatus(200)
+                                .withBody("{\n"
+                                              + "  \"sub\": \"1234567890\",\n"
+                                              + "  \"name\": \"John Doe\",\n"
+                                              + "  \"email\": \"johndoe@example.com\",\n"
+                                              + "  \"preferred_username\": \"johndoe\",\n"
+                                              + "  \"given_name\": \"John\",\n"
+                                              + "  \"family_name\": \"Doe\"\n"
+                                              + "}")
+                )
+        );
         wireMockServer.stubFor(
             get(urlMatching(GET_FOLDERS_PATH))
                 .willReturn(aResponse()
