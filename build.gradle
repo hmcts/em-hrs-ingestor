@@ -252,7 +252,7 @@ dependencies {
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.0'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.1'
   testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.13.0'
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
