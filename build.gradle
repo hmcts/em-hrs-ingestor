@@ -182,13 +182,6 @@ dependencyManagement {
   }
 }
 
-repositories {
-  mavenLocal()
-  mavenCentral()
-  maven { url 'https://jitpack.io' }
-  maven { url  'https://repo.spring.io/milestone/'}
-}
-
 def versions = [
   junit              : '5.13.1',
   junitPlatform      : '1.13.1',
@@ -238,7 +231,7 @@ dependencies {
   implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: versions.okhttp3
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '3.0.0'
     implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '3.0.0'
-  
+
   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
 
   //test implementation
@@ -257,7 +250,7 @@ dependencies {
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
-  testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.8', classifier: 'all'
+  testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.9', classifier: 'all'
   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
