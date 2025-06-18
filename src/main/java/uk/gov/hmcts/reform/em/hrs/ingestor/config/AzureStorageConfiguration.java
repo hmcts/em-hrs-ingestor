@@ -23,14 +23,8 @@ public class AzureStorageConfiguration {
     @Value("${azure.storage.cvp-storage-connection-string}")
     private String cvpConnectionString;
 
-    @Value("${azure.storage.vh-storage-connection-string}")
-    private String vhConnectionString;
-
     @Value("${azure.storage.cvp-storage-container-name}")
     private String cvpContainerName;
-
-    @Value("${azure.storage.vh-storage-container-name}")
-    private String vhContainerName;
 
     @Value("${azure.storage.use-ad-auth-for-source}")
     private boolean useAdForSourceBlobStorage;
@@ -48,12 +42,6 @@ public class AzureStorageConfiguration {
     public BlobContainerClient cvpBlobContainerClient() {
         LOGGER.debug("creating CVP blob client");
         return getBlobClient(cvpConnectionString, cvpContainerName);
-    }
-
-    @Bean("vhBlobContainerClient")
-    public BlobContainerClient vhBlobContainerClient() {
-        LOGGER.debug("creating VH blob client");
-        return getBlobClient(vhConnectionString, vhContainerName);
     }
 
     private BlobContainerClient getBlobClient(String connectionString, String containerName) {

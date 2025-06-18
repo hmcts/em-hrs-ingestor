@@ -24,10 +24,6 @@ ingestion:
   cvp:
     process-back-to-day: ${CVP_PROCESS_BACK_TO_DAY:2}
     process: ${CVP_PROCESS:true}
-  vh:
-    process-back-to-day: ${VH_PROCESS_BACK_TO_DAY:2}
-    max-blob-process-count: ${VH_MAX_BLOB_PROCESS_COUNT:250}
-    process: ${VH_PROCESS:false}
 
 
 azure:
@@ -36,13 +32,9 @@ azure:
     instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:dummy}
   storage:
     cvp-storage-connection-string: ${CVP_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1}
-    vh-storage-connection-string: ${VH_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1}
     cvp-storage-container-name: ${CVP_STORAGE_CONTAINER_NAME:cvptestcontainer}
-    vh-storage-container-name: ${VH_STORAGE_CONTAINER_NAME:vhtestcontainer}
-    vh-leased-for-minutes: ${VH_LEASED_FOR_MINUTES:120}
     enabled: true
     use-ad-auth-for-source: ${USE_AD_AUTH_FOR_SOURCE_BLOB_CONNECTION:false}
-    vh-blob-operation-timeout-in-sec:  ${VH_BLOB_OPERATION_TIMEOUT_SEC:30}
 
 app-insights:
   dev-mode: on

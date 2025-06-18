@@ -12,7 +12,6 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.parse.FilenameParser;
-import uk.gov.hmcts.reform.em.hrs.ingestor.parse.VhFileNameParser;
 
 @Component
 public class MetadataResolverImpl implements MetadataResolver {
@@ -53,12 +52,7 @@ public class MetadataResolverImpl implements MetadataResolver {
 
         String filename = item.getFilename();
 
-        FileLocationAndParts fragments;
-        if (item.getHearingSource() == HearingSource.VH) {
-            fragments = extractVhFile(filename);
-        } else {
-            fragments = extractFileLocationAndParts(filename);
-        }
+        FileLocationAndParts fragments = extractFileLocationAndParts(filename);
         if (fragments == null) {
             throw new FilenameParsingException(
                 "Unable to extract filename and location from full path for file: " + filename);
@@ -67,8 +61,8 @@ public class MetadataResolverImpl implements MetadataResolver {
         ParsedFilenameDto parsedDataDto = null;
         if (item.getHearingSource() == HearingSource.CVP) {
             parsedDataDto = FilenameParser.parseFileName(fragments.getFilenamePart());
-        } else if (item.getHearingSource() == HearingSource.VH) {
-            parsedDataDto = VhFileNameParser.parseFileName(fragments.getFilenamePart());
+        } else {
+            throw new FilenameParsingException("Unsupported hearing source: " + item.getHearingSource());
         }
 
         String parsedSegmentNumber = parsedDataDto.getSegment();
@@ -102,16 +96,6 @@ public class MetadataResolverImpl implements MetadataResolver {
             parsedDataDto.getLocationCode(),
             parsedDataDto.getServiceCode(),
             parsedDataDto.getInterpreter()
-        );
-    }
-
-    private FileLocationAndParts extractVhFile(String filename) {
-        var filePart = getFileParts(filename);
-        return new FileLocationAndParts(
-            "VH",
-            0,
-            filePart.fileNamePart,
-            filePart.extension
         );
     }
 

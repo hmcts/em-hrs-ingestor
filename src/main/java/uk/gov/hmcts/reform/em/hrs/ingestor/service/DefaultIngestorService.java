@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
-import uk.gov.hmcts.reform.em.hrs.ingestor.storage.VhBlobstoreClientHelper;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -32,14 +31,11 @@ public class DefaultIngestorService implements IngestorService {
     private static int filesParsedOk;
     private static int itemsIgnoredOk;
     private static int filesSubmittedOk;
-
     private static int cvpFilesCountTotal;
-    private int vhFilesCountTotal;
     private static int hrsFileCountTotal;
     private static int filesToIngestCountTotal;
 
     private final BlobstoreClientHelper cvpBlobstoreHelper;
-    private final VhBlobstoreClientHelper vhBlobstoreClient;
     private final HrsApiClient hrsApiClient;
     private final IngestionFilterer ingestionFilterer;
     private final MetadataResolver metadataResolver;
@@ -49,28 +45,20 @@ public class DefaultIngestorService implements IngestorService {
     @Value("${ingestion.max-files-to-process}")
     private Integer maxFilesToProcess = 100;
 
-    private int vhProcessCount;
-    private boolean vhProcess;
     private boolean cvpProcess;
 
     @Autowired
     public DefaultIngestorService(
         final @Qualifier("cvpBlobstoreClientHelper") BlobstoreClientHelper cvpBlobstoreClient,
-        final VhBlobstoreClientHelper vhBlobstoreClient,
         final HrsApiClient hrsApiClient,
         final IngestionFilterer ingestionFilterer,
         final MetadataResolver metadataResolver,
-        @Value("${ingestion.vh.max-blob-process-count}") int vhProcessCount,
-        @Value("${ingestion.vh.process}") boolean vhProcess,
         @Value("${ingestion.cvp.process}") boolean cvpProcess
     ) {
         this.cvpBlobstoreHelper = cvpBlobstoreClient;
-        this.vhBlobstoreClient = vhBlobstoreClient;
         this.hrsApiClient = hrsApiClient;
         this.ingestionFilterer = ingestionFilterer;
         this.metadataResolver = metadataResolver;
-        this.vhProcessCount = vhProcessCount;
-        this.vhProcess = vhProcess;
         this.cvpProcess = cvpProcess;
     }
 
@@ -135,23 +123,6 @@ public class DefaultIngestorService implements IngestorService {
             }
 
         }
-        if (vhProcess && maxFilesToProcess - itemsAttempted > 0) {
-            try {
-                var vhItems = vhBlobstoreClient.getItemsToProcess(Math.min(
-                    (maxFilesToProcess - itemsAttempted),
-                    vhProcessCount
-                ));
-                vhItems.forEach(sourceBlobItem -> {
-                    tallyItemsAttempted();
-                    LOGGER.info("ingesting : {}", sourceBlobItem.getFileUri());
-                    resolveMetaDataAndPostFileToHrs(sourceBlobItem);
-                    vhFilesCountTotal++;
-                });
-                LOGGER.info("Filtered vhBlobItems count: {}", vhItems.size());
-            } catch (Exception ex) {
-                LOGGER.error("Vh processing failed ", ex);
-            }
-        }
         LOGGER.debug("Ingestion Complete");
         if (batchProcessingLimitReached()) {
             LOGGER.info("Batch Processing Limit Reached ({})", maxFilesToProcess);
@@ -163,8 +134,8 @@ public class DefaultIngestorService implements IngestorService {
 
 
         String ingestionStatus = determineFolderStatus(filesToIngestCountTotal);
-        LOGGER.info("VALIDATION REPORT: CVP Files:{}, VH files: {}, HRS Files:{}, To Ingest:{}, INGESTION-STATUS:{}",
-                    cvpFilesCountTotal, vhFilesCountTotal, hrsFileCountTotal, filesToIngestCountTotal, ingestionStatus
+        LOGGER.info("VALIDATION REPORT: CVP Files:{}, HRS Files:{}, To Ingest:{}, INGESTION-STATUS:{}",
+                    cvpFilesCountTotal, hrsFileCountTotal, filesToIngestCountTotal, ingestionStatus
         );
 
     }
