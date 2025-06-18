@@ -21,15 +21,12 @@ public class AzureOperations {
     private static final Logger LOGGER = LoggerFactory.getLogger(AzureOperations.class);
 
     private final BlobContainerClient blobContainerClient;
-    private final BlobContainerClient vhBlobContainerClient;
 
     @Autowired
     public AzureOperations(
-        @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
-        @Qualifier("vhBlobContainerClient") BlobContainerClient vhBlobContainerClient
+        @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient
     ) {
         this.blobContainerClient = blobContainerClient;
-        this.vhBlobContainerClient = vhBlobContainerClient;
     }
 
     public void uploadToContainer(final Set<String> blobNames) {
@@ -53,22 +50,9 @@ public class AzureOperations {
         LOGGER.info("Blob '{}' uploaded successfully", blobName);
     }
 
-    public void uploadToVhContainer(final String blobName, final String content) {
-        var data = content.getBytes(StandardCharsets.UTF_8);
-
-        final InputStream inStream = new ByteArrayInputStream(data);
-
-        final BlobClient blobClient = vhBlobContainerClient.getBlobClient(blobName);
-        blobClient.upload(new BufferedInputStream(inStream), data.length);
-        LOGGER.info("Blob '{}' uploaded successfully", blobName);
-
-    }
-
     //  Azure blobstore API doesn't support 'deleteBlob'.  We can only mark a blob for deletion
     public void clearContainer() {
         blobContainerClient.listBlobs()
-            .forEach(x -> x.setDeleted(true));
-        vhBlobContainerClient.listBlobs()
             .forEach(x -> x.setDeleted(true));
     }
 }
