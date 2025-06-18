@@ -111,7 +111,7 @@ class IngestorServiceIntegrationTest {
         underTest.ingest();
 
         wireMockServer.verify(
-            exactly(2),
+            exactly(1),
             postRequestedFor(urlEqualTo(POST_PATH))
         );
     }
