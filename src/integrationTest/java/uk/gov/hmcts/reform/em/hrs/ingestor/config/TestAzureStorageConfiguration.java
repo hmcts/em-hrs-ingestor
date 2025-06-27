@@ -31,7 +31,6 @@ public class TestAzureStorageConfiguration {
     private static final String AZURITE_CREDENTIALS =
         "DefaultEndpointsProtocol=http;AccountName=%s;AccountKey=%s;BlobEndpoint=%s;";
     private static final String CVP_CONTAINER_NAME = "cvp-test-container";
-    private static final String VH_CONTAINER_NAME = "vh-test-container";
 
     //docker run -p 10000:10000 mcr.microsoft.com/azure-storage/azurite azurite-blob --blobHost 0.0.0.0 --blobPort 10000
     private final GenericContainer<?> azuriteContainer = new GenericContainer<>(AZURITE_IMAGE)
@@ -59,12 +58,6 @@ public class TestAzureStorageConfiguration {
     @Primary
     public BlobContainerClient cvpBlobContainerClient() {
         return getBlobContainerClient(CVP_CONTAINER_NAME);
-    }
-
-    @Bean("vhBlobContainerClient")
-    @Primary
-    public BlobContainerClient vhBlobContainerClient() {
-        return getBlobContainerClient(VH_CONTAINER_NAME);
     }
 
     private BlobContainerClient getBlobContainerClient(String containerName) {
