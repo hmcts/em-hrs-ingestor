@@ -183,7 +183,7 @@ dependencyManagement {
 }
 
 def versions = [
-  junit              : '5.13.1',
+  junit              : '5.13.2',
   junitPlatform      : '1.13.2',
   reformLogging      : '6.1.9',
   log4JVersion       : "2.25.0",
