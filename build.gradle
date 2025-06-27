@@ -123,7 +123,7 @@ task smoke(type: Test) {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '10.25.0'
+  toolVersion = '10.26.0'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -183,8 +183,8 @@ dependencyManagement {
 }
 
 def versions = [
-  junit              : '5.13.1',
-  junitPlatform      : '1.13.1',
+  junit              : '5.13.2',
+  junitPlatform      : '1.13.2',
   reformLogging      : '6.1.9',
   log4JVersion       : "2.25.0",
   pact_version       : '4.6.17',
@@ -223,7 +223,7 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
 
   //azure components
-  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.30.0'
+  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.30.1'
   implementation group: 'com.azure', name: 'azure-identity', version: '1.16.2'
 
   //rest clients
@@ -267,7 +267,7 @@ dependencies {
   contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
 
-  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.13.1'
+  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.13.2'
 
   contractTestImplementation sourceSets.main.runtimeClasspath
   contractTestImplementation sourceSets.test.runtimeClasspath
