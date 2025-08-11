@@ -2,16 +2,21 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import uk.gov.hmcts.reform.em.hrs.ingestor.dto.ParsedFilenameDto;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.FilenameParsingException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.SourceBlobItem;
+import uk.gov.hmcts.reform.em.hrs.ingestor.parse.FilenameParser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mockStatic;
 
 class MetadataResolverImplTest {
     private static final String FILENAME_VALID =
@@ -114,4 +119,46 @@ class MetadataResolverImplTest {
 
         assertThat(fragments.getFilenameSuffix()).isEqualTo(expectedString);
     }
+
+    @Test
+    void testShouldDefaultSegmentToZeroWhenNotParsable() throws FilenameParsingException {
+        String filename = "audiostream12/bp-0266-hu-02785-2020_2020-07-16-10.07.31.680-UTC_XYZ.mp4";
+        SourceBlobItem item = createCvpItem(filename);
+
+        try (MockedStatic<FilenameParser> parserMock = mockStatic(FilenameParser.class)) {
+            parserMock.when(() -> FilenameParser.parseFileName(anyString()))
+                .thenReturn(new ParsedFilenameDto(
+                    "case-id-123",
+                    "loc-id-123",
+                    "case-id-123",
+                    LocalDateTime.now(),
+                    "nonNumeric",
+                    "uniqueIdentifier",
+                    "room-ref-1",
+                    "jurisdiction-123",
+                    "interpreter-123"
+                ));
+
+            Metadata metadata = underTest.resolve(item);
+
+            assertThat(metadata.getSegment()).isZero();
+        }
+    }
+
+    @Test
+    void testUnsupportedHearingSourceThrowsException() {
+        String filename = "audiostream12/bp-0266-hu-02785-2020_2020-07-16-10.07.31.680-UTC_1.mp4";
+        SourceBlobItem nonCvpItem = new SourceBlobItem(
+            filename,
+            "file-uri",
+            "a2B4==",
+            123L,
+            HearingSource.VH
+        );
+
+        assertThatExceptionOfType(FilenameParsingException.class)
+            .isThrownBy(() -> underTest.resolve(nonCvpItem))
+            .withMessageContaining("Unsupported hearing source");
+    }
+
 }
