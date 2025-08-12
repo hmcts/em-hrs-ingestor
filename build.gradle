@@ -62,11 +62,11 @@ sourceSets {
  * Compile & Test Task Configuration
  **********************************************************************************************************************/
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
   options.compilerArgs << "-Xlint:unchecked" << "-Werror"
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
   useJUnitPlatform()
 
   testLogging {
@@ -83,14 +83,13 @@ test {
   useJUnitPlatform()
 }
 
-task functional(type: Test) {
+tasks.register('functional', Test) {
   // This task is required for a Jenkins hook (fullFunctionalTest)
   logger.info('This task is required for a Jenkins hook (fullFunctionalTest)')
 }
 
 
-
-task functionalPostDeploy(type: Test) {
+tasks.register('functionalPostDeploy', Test) {
   group = 'Functional Tests'
   description = 'Verifies that files from functionPreDeploy step were processed following job creation in AKS'
   testClassesDirs = sourceSets.functionalTest.output.classesDirs
@@ -99,7 +98,7 @@ task functionalPostDeploy(type: Test) {
   environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 }
 
-task integration(type: Test) {
+tasks.register('integration', Test) {
   description = "Runs integration tests"
   group = "Verification"
   testClassesDirs = sourceSets.integrationTest.output.classesDirs
@@ -107,7 +106,7 @@ task integration(type: Test) {
   failFast = true
 }
 
-task smoke(type: Test) {
+tasks.register('smoke', Test) {
   description = "Runs Smoke Tests"
   group = 'Delivery pipeline'
   testClassesDirs = sourceSets.smokeTest.output.classesDirs
@@ -140,7 +139,7 @@ jacocoTestReport {
   reports {
     xml.required = true
     csv.required = false
-    xml.outputLocation = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    xml.outputLocation = layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml")
   }
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
@@ -173,7 +172,7 @@ dependencyCheck {
   suppressionFile = 'config/owasp/suppressions.xml'
 }
 
-configurations.all {
+configurations.configureEach {
   exclude group: 'org.apache.groovy', module: 'groovy-xml'
 }
 
@@ -299,7 +298,9 @@ processIntegrationTestResources {
  * Adhoc
  **********************************************************************************************************************/
 
-mainClassName = 'uk.gov.hmcts.reform.em.hrs.ingestor.Application'
+application {
+  mainClass = 'uk.gov.hmcts.reform.em.hrs.ingestor.Application'
+}
 
 bootJar {
   getArchiveFileName().set(provider {
@@ -315,7 +316,7 @@ wrapper {
   distributionType = Wrapper.DistributionType.ALL
 }
 
-task contract(type: Test) {
+tasks.register('contract', Test) {
   group = 'Delivery pipeline'
   description = 'Runs the consumer Pact tests'
   useJUnitPlatform()
@@ -326,14 +327,14 @@ task contract(type: Test) {
   environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 }
 
-task runAndPublishConsumerPactTests(type: Test){
+tasks.register('runAndPublishConsumerPactTests', Test) {
   testClassesDirs = sourceSets.contractTest.output.classesDirs
   classpath = sourceSets.contractTest.runtimeClasspath
 
 }
 
-task fortifyScan(type: JavaExec)  {
-  main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+tasks.register('fortifyScan', JavaExec) {
+  mainClass = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
   classpath += sourceSets.test.runtimeClasspath
   jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
