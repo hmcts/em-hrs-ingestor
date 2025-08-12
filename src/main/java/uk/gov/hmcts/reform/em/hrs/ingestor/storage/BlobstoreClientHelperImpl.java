@@ -7,6 +7,7 @@ import com.azure.storage.blob.models.BlobItemProperties;
 import com.azure.storage.blob.models.BlobListDetails;
 import com.azure.storage.blob.models.ListBlobsOptions;
 import com.azure.storage.blob.specialized.BlockBlobClient;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
     @Override
     public CvpItemSet findByFolder(final String folderName) {
-        boolean folderNameIncludesTrailingSlash = folderName != null && folderName.endsWith("/");
+        boolean folderNameIncludesTrailingSlash = StringUtils.endsWith(folderName, "/");
 
         final String folderPath = folderNameIncludesTrailingSlash ? folderName : folderName + File.separator;
 
