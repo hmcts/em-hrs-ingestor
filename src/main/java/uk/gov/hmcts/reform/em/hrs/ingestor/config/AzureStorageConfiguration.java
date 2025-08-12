@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelperImpl;
 
@@ -35,7 +34,7 @@ public class AzureStorageConfiguration {
         @Value("${ingestion.cvp.process-back-to-day}") int processBackToDay
     ) {
         LOGGER.debug("creating CVP blob client ");
-        return new BlobstoreClientHelperImpl(blobContainerClient, processBackToDay, HearingSource.CVP);
+        return new BlobstoreClientHelperImpl(blobContainerClient, processBackToDay);
     }
 
     @Bean("cvpBlobContainerClient")

@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Primary;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelper;
 import uk.gov.hmcts.reform.em.hrs.ingestor.storage.BlobstoreClientHelperImpl;
 
@@ -51,7 +50,7 @@ public class TestAzureStorageConfiguration {
         @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient
     ) {
         LOGGER.info("creating CVP blob client ");
-        return new BlobstoreClientHelperImpl(blobContainerClient, 4, HearingSource.CVP);
+        return new BlobstoreClientHelperImpl(blobContainerClient, 4);
     }
 
     @Bean("cvpBlobContainerClient")

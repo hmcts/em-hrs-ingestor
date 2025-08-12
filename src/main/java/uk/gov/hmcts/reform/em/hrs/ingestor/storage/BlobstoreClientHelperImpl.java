@@ -33,12 +33,11 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
     @Autowired
     public BlobstoreClientHelperImpl(
         final @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
-        int processBackToDay,
-        HearingSource hearingSource
+        int processBackToDay
     ) {
         this.blobContainerClient = blobContainerClient;
         this.processBackToDay = processBackToDay;
-        this.hearingSource = hearingSource;
+        this.hearingSource = HearingSource.CVP;
     }
 
     @Override
@@ -88,11 +87,6 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
         return transform(blobItems, HearingSource.CVP);
 
-    }
-
-    @Override
-    public HearingSource getHearingSource() {
-        return this.hearingSource;
     }
 
     private CvpItemSet transform(final PagedIterable<BlobItem> blobItems, HearingSource hearingSource) {
