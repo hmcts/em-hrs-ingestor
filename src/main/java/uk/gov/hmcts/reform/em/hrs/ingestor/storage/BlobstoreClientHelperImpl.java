@@ -26,8 +26,6 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
     private static final int BLOB_LIST_TIMEOUT = 30;
     private final BlobContainerClient blobContainerClient;
-    private final HearingSource hearingSource;
-
     private int processBackToDay;
 
     @Autowired
@@ -37,7 +35,6 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
     ) {
         this.blobContainerClient = blobContainerClient;
         this.processBackToDay = processBackToDay;
-        this.hearingSource = HearingSource.CVP;
     }
 
     @Override
