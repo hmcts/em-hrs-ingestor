@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -115,6 +116,28 @@ class BlobstoreClientHelperImplTest {
             assertThat(item.getHearingSource()).isEqualTo(HearingSource.CVP);
             assertThat(item.getFileUri()).isEqualTo("https://example.com/folderX/file1.txt");
         }
+    }
+
+
+    @Test
+    void findByFolder_shouldThrowException_whenFolderNameIsNull() {
+        assertThatThrownBy(() -> underTest.findByFolder(null))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Folder name cannot be null or empty");
+    }
+
+    @Test
+    void findByFolder_shouldThrowException_whenFolderNameIsBlank() {
+        assertThatThrownBy(() -> underTest.findByFolder("   "))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Folder name cannot be null or empty");
+    }
+
+    @Test
+    void findByFolder_shouldThrowException_whenFolderNameIsEmpty() {
+        assertThatThrownBy(() -> underTest.findByFolder(""))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Folder name cannot be null or empty");
     }
 
     private BlobItem mockBlobItem(String name, OffsetDateTime creationTime) {

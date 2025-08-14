@@ -69,8 +69,10 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
     @Override
     public CvpItemSet findByFolder(final String folderName) {
-        boolean folderNameIncludesTrailingSlash = StringUtils.endsWith(folderName, "/");
-
+        if (StringUtils.isBlank(folderName)) {
+            throw new IllegalArgumentException("Folder name cannot be null or empty");
+        }
+        boolean folderNameIncludesTrailingSlash = folderName.endsWith("/");
         final String folderPath = folderNameIncludesTrailingSlash ? folderName : folderName + File.separator;
 
         final BlobListDetails blobListDetails = new BlobListDetails()
