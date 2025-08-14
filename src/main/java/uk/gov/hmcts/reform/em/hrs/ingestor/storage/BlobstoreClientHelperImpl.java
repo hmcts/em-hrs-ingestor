@@ -27,19 +27,15 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
     private static final int BLOB_LIST_TIMEOUT = 30;
     private final BlobContainerClient blobContainerClient;
-    private final HearingSource hearingSource;
-
     private int processBackToDay;
 
     @Autowired
     public BlobstoreClientHelperImpl(
         final @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
-        int processBackToDay,
-        HearingSource hearingSource
+        int processBackToDay
     ) {
         this.blobContainerClient = blobContainerClient;
         this.processBackToDay = processBackToDay;
-        this.hearingSource = hearingSource;
     }
 
     @Override
@@ -73,8 +69,10 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
     @Override
     public CvpItemSet findByFolder(final String folderName) {
-        boolean folderNameIncludesTrailingSlash = StringUtils.endsWith(folderName, "/");
-
+        if (StringUtils.isBlank(folderName)) {
+            throw new IllegalArgumentException("Folder name cannot be null or empty");
+        }
+        boolean folderNameIncludesTrailingSlash = folderName.endsWith("/");
         final String folderPath = folderNameIncludesTrailingSlash ? folderName : folderName + File.separator;
 
         final BlobListDetails blobListDetails = new BlobListDetails()
@@ -89,11 +87,6 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
 
         return transform(blobItems, HearingSource.CVP);
 
-    }
-
-    @Override
-    public HearingSource getHearingSource() {
-        return this.hearingSource;
     }
 
     private CvpItemSet transform(final PagedIterable<BlobItem> blobItems, HearingSource hearingSource) {

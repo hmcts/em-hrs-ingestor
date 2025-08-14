@@ -213,4 +213,55 @@ class DefaultIngestorServiceTest {
         verify(metadataResolver, times(2)).resolve(any(SourceBlobItem.class));
     }
 
+    @Test
+    void testIngestShouldNotRunWhenCvpProcessFalse() {
+        DefaultIngestorService service = new DefaultIngestorService(
+            cvpBlobstoreClient,
+            hrsApiClient,
+            ingestionFilterer,
+            metadataResolver,
+            false // cvpProcess off
+        );
+
+        service.ingest();
+        verify(cvpBlobstoreClient, never()).getFolders();
+    }
+
+    @Test
+    void testIngestHandlesGenericExceptionFromGetFolders() {
+        doThrow(new RuntimeException("boom")).when(cvpBlobstoreClient).getFolders();
+
+        underTest.ingest();
+        verify(cvpBlobstoreClient, times(1)).getFolders();
+    }
+
+    @Test
+    void testResolveMetaDataAndPostFileToHrsHandlesNullMetadata() throws Exception {
+        doReturn(null).when(metadataResolver).resolve(any(SourceBlobItem.class));
+
+        // Call private method via reflection since it's not public
+        var method = DefaultIngestorService.class
+            .getDeclaredMethod("resolveMetaDataAndPostFileToHrs", SourceBlobItem.class);
+        method.setAccessible(true);
+        method.invoke(underTest, CVP_FILE_1);
+
+        verify(metadataResolver, times(1)).resolve(CVP_FILE_1);
+        verify(hrsApiClient, never()).postFile(any(Metadata.class));
+    }
+
+    @Test
+    void testResolveMetaDataAndPostFileToHrsHandlesUnexpectedException() throws Exception {
+        doReturn(METADATA).when(metadataResolver).resolve(any(SourceBlobItem.class));
+        doThrow(new RuntimeException("unexpected")).when(hrsApiClient).postFile(any(Metadata.class));
+
+        var method = DefaultIngestorService.class
+            .getDeclaredMethod("resolveMetaDataAndPostFileToHrs", SourceBlobItem.class);
+        method.setAccessible(true);
+        method.invoke(underTest, CVP_FILE_1);
+
+        verify(metadataResolver, times(1)).resolve(CVP_FILE_1);
+        verify(hrsApiClient, times(1)).postFile(METADATA);
+    }
+
+
 }
