@@ -254,12 +254,12 @@ dependencies {
   testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
 
-  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.5'
+  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.6'
 
 
   contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
-  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.5'
+  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.6'
 
   contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
 
