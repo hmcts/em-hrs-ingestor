@@ -10,7 +10,6 @@ plugins {
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '6.3.0.5676'
   id 'uk.gov.hmcts.java' version '0.12.67'
-  id 'au.com.dius.pact' version '4.6.17'
   id 'info.solidsoft.pitest' version '1.19.0-rc.1'
   id 'org.owasp.dependencycheck' version '12.1.3'
 }
@@ -37,13 +36,6 @@ sourceSets {
   }
 
   integrationTest {
-    java {
-      compileClasspath += main.output
-      runtimeClasspath += main.output
-    }
-  }
-
-  contractTest {
     java {
       compileClasspath += main.output
       runtimeClasspath += main.output
@@ -186,7 +178,6 @@ def versions = [
   junitPlatform      : '1.13.4',
   reformLogging      : '6.1.9',
   log4JVersion       : "2.25.1",
-  pact_version       : '4.6.17',
   okhttp3            : '5.1.0'
 ]
 
@@ -256,21 +247,6 @@ dependencies {
 
   smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.6'
 
-
-  contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
-
-  contractTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.6'
-
-  contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
-
-  contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
-  contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
-
-  contractTestImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.13.4'
-
-  contractTestImplementation sourceSets.main.runtimeClasspath
-  contractTestImplementation sourceSets.test.runtimeClasspath
-
 /***********************************************************************************************************************
  * TEST SOURCE SETS
  **********************************************************************************************************************/
@@ -316,52 +292,16 @@ wrapper {
   distributionType = Wrapper.DistributionType.ALL
 }
 
-tasks.register('contract', Test) {
-  group = 'Delivery pipeline'
-  description = 'Runs the consumer Pact tests'
-  useJUnitPlatform()
-  testClassesDirs = sourceSets.contractTest.output.classesDirs
-  classpath = sourceSets.contractTest.runtimeClasspath
-  include "uk/gov/hmcts/reform/em/hrs/consumer/**"
-  systemProperty 'pact.rootDir', "pacts"
-  environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
-}
-
-tasks.register('runAndPublishConsumerPactTests', Test) {
-  testClassesDirs = sourceSets.contractTest.output.classesDirs
-  classpath = sourceSets.contractTest.runtimeClasspath
-
-}
-
 tasks.register('fortifyScan', JavaExec) {
   mainClass = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
   classpath += sourceSets.test.runtimeClasspath
   jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
-}
-runAndPublishConsumerPactTests.dependsOn contract
-
-runAndPublishConsumerPactTests.finalizedBy pactPublish
-
-project.ext {
-  pactVersion = getCheckedOutGitCommitHash()
 }
 
 static def getCheckedOutGitCommitHash() {
   'git rev-parse --verify --short HEAD'.execute().text.trim()
 }
 
-
-pact {
-  publish {
-    pactDirectory = 'pacts'
-    pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
-    version = project.pactVersion
-  }
-}
-
-pactPublish {
-  pactPublish = project.pact.publish
-}
 
 compileJava.dependsOn processResources
 
