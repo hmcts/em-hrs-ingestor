@@ -222,7 +222,7 @@ dependencies {
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '3.0.0'
     implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '3.0.0'
 
-  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.19.0'
 
   //test implementation
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.42'
