@@ -10,7 +10,7 @@ plugins {
                                                      // the intermittant failure with module metadata. TO BE CONFIRMED!!
   id 'org.sonarqube' version '6.3.1.5724'
   id 'uk.gov.hmcts.java' version '0.12.67'
-  id 'info.solidsoft.pitest' version '1.19.0-rc.1'
+  id 'info.solidsoft.pitest' version '1.19.0-rc.2'
   id 'org.owasp.dependencycheck' version '12.1.6'
 }
 
@@ -174,8 +174,8 @@ dependencyManagement {
 }
 
 def versions = [
-  junit              : '5.13.4',
-  junitPlatform      : '1.13.4',
+  junit              : '5.14.0',
+  junitPlatform      : '1.14.0',
   reformLogging      : '6.1.9',
   log4JVersion       : "2.25.2",
   okhttp3            : '5.1.0'
