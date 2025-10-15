@@ -9,10 +9,11 @@ import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.TokenResponse;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
+import java.time.Duration;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -94,7 +95,7 @@ class IdamCachedClientTest {
     }
 
     @Test
-    void should_create_token_when_cache_is_expired() throws InterruptedException {
+    void should_create_token_when_cache_is_expired() {
 
         IdamCachedClient idamCachedClientQuickExpiry = new IdamCachedClient(
             idamApi,
@@ -114,7 +115,7 @@ class IdamCachedClientTest {
             idamCachedClientQuickExpiry.getIdamCredentials();
 
         //2 seconds expiry, wait expiry
-        TimeUnit.SECONDS.sleep(3);
+        await().atLeast(Duration.ofSeconds(2));
 
         CachedIdamCredential cachedIdamCredential2 =
             idamCachedClientQuickExpiry.getIdamCredentials();
