@@ -96,7 +96,6 @@ class IdamCachedClientTest {
 
     @Test
     void should_create_token_when_cache_is_expired() {
-
         IdamCachedClient idamCachedClientQuickExpiry = new IdamCachedClient(
             idamApi,
             USERNAME,
@@ -104,21 +103,26 @@ class IdamCachedClientTest {
             new IdamCacheExpiry(28798)
         );
 
-        given(idamApi.getAccessTokenResponse(USERNAME, PASSWORD)).willReturn(TOKEN_RESPONSE_1, TOKEN_RESPONSE_2);
+        given(idamApi.getAccessTokenResponse(USERNAME, PASSWORD))
+            .willReturn(TOKEN_RESPONSE_1, TOKEN_RESPONSE_2);
 
         UserInfo expectedUserDetails1 = USER_INFO;
         given(idamApi.getUserInfo(JWT_WITH_BEARER_1)).willReturn(expectedUserDetails1);
         UserInfo expectedUserDetails2 = new UserInfo("12", "a8da9s8", "q@a.com", "", "", null);
         given(idamApi.getUserInfo(JWT_WITH_BEARER_2)).willReturn(expectedUserDetails2);
 
-        CachedIdamCredential cachedIdamCredential1 =
-            idamCachedClientQuickExpiry.getIdamCredentials();
+        CachedIdamCredential cachedIdamCredential1 = idamCachedClientQuickExpiry.getIdamCredentials();
 
-        //2 seconds expiry, wait expiry
-        await().atLeast(Duration.ofSeconds(2));
+        // Wait until cache expires and a new token is generated
+        await()
+            .pollInterval(Duration.ofSeconds(2))
+            .atMost(Duration.ofSeconds(5))
+            .until(() -> {
+                CachedIdamCredential newCredential = idamCachedClientQuickExpiry.getIdamCredentials();
+                return !newCredential.accessToken.equals(cachedIdamCredential1.accessToken);
+            });
 
-        CachedIdamCredential cachedIdamCredential2 =
-            idamCachedClientQuickExpiry.getIdamCredentials();
+        CachedIdamCredential cachedIdamCredential2 = idamCachedClientQuickExpiry.getIdamCredentials();
 
         assertThat(cachedIdamCredential1.accessToken).isEqualTo(JWT_WITH_BEARER_1);
         assertThat(cachedIdamCredential1.userId).isEqualTo(expectedUserDetails1.getUid());
