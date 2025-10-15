@@ -4,7 +4,6 @@ import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,7 +43,6 @@ public class AzureStorageConfiguration {
     }
 
     private BlobContainerClient getBlobClient(String connectionString, String containerName) {
-        LOGGER.debug("connectionString : {}", StringUtils.left(connectionString, 60));
         LOGGER.debug(
             "container name: {}, useAdForSourceBlobStorage:{}",
             containerName,

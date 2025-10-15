@@ -5,21 +5,24 @@ import okhttp3.ResponseBody;
 
 @Getter
 public class HrsApiException extends Exception {
-    private int code;
-    private String message;
-    private String body;
+    private final int code;
+    private final String message;
+    private final String body;
 
     public HrsApiException(String message) {
-        super(message);
+        this(0, message, null);
     }
 
     public HrsApiException(String message, Throwable cause) {
         super(message, cause);
+        this.code = 0;
+        this.message = message;
+        this.body = null;
     }
 
     public HrsApiException(int code, String message, ResponseBody body) {
         this.code = code;
         this.message = message;
-        this.body = body.toString();
+        this.body = body != null ? body.toString() : null;
     }
 }

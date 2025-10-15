@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.em.hrs.ingestor.listener;
 
 import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.TelemetryContext;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,31 +19,32 @@ import java.util.concurrent.TimeUnit;
 public class IngestWhenApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IngestWhenApplicationReadyListener.class);
 
-    @Autowired
-    private DefaultIngestorService defaultIngestorService;
+    private final DefaultIngestorService defaultIngestorService;
 
-    @Value("${toggle.cronjob}")
-    private boolean enableCronjob;
+    private final boolean enableCronjob;
 
     static int secondsToAllowFlushingOfLogs = 200;
+
+    @Autowired
+    public IngestWhenApplicationReadyListener(DefaultIngestorService defaultIngestorService,
+                                              @Value("${toggle.cronjob}") boolean enableCronjob
+    ) {
+        this.defaultIngestorService = defaultIngestorService;
+        this.enableCronjob = enableCronjob;
+    }
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         var client = new TelemetryClient();
 
         client.trackEvent("HRS Ingestor invoked");
-        LOGGER.debug("HRS Ingestor invoked");
         LOGGER.debug("Enable Cronjob is set to {}", enableCronjob);
         LOGGER.info("defaultIngestorService.maxFilesToProcess: {}", defaultIngestorService.getMaxFilesToProcess());
 
-        if (client != null && client.getContext() != null) {
-            String ik = client.getContext().getInstrumentationKey();
-            LOGGER.debug("Application Insights Key(4) = " + StringUtils.left(ik, 4));
+        if (client.getContext() != null) {
             TelemetryContext context = client.getContext();
             ConcurrentMap<String, String> tags = context.getTags();
-            tags.forEach((s, s2) -> LOGGER.info(s + ": " + s2));
-            LOGGER.debug("context.getSession(): {}", context.getSession().toString());
-            LOGGER.debug("context.getLocation(): {}", context.getLocation().toString());
+            tags.forEach((s, s2) -> LOGGER.info("{}:{} ", s, s2));
         } else {
             LOGGER.info("No Application Insights Key");
         }
@@ -56,10 +56,9 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
                 defaultIngestorService.ingest();
             } catch (Exception e) {
                 flushLogs(client);
-                LOGGER.error("Unhandled Exception during Ingestion - Aborted ... {}");
                 throw new IngestorExecutionException("Error Intialising or Running Ingestor", e);
             }
-            LOGGER.info("Initial Ingestion Complete", event);
+            LOGGER.info("Initial Ingestion Complete {}", event);
 
         } else {
             LOGGER.info("Application Not Starting as ENABLE_CRONJOB is false");
@@ -73,7 +72,8 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
         try {
             TimeUnit.SECONDS.sleep(secondsToAllowFlushingOfLogs);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("Waiting Flush logs failed ", e);
+            Thread.currentThread().interrupt();
         }
     }
 }
