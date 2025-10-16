@@ -8,7 +8,6 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.config.TestAzureStorageConfiguration;
 import uk.gov.hmcts.reform.em.hrs.ingestor.helper.AzureOperations;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 
-import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -70,7 +69,7 @@ class CvpBlobstoreClientImplTest {
 
     @Test
     void testShouldReturnASetContainingOneWhenFolderContainsOneItem() throws NoSuchAlgorithmException {
-        final String filePath = ONE_ITEM_FOLDER + File.pathSeparator + UUID.randomUUID() + ".txt";
+        final String filePath = getFolderPath(ONE_ITEM_FOLDER) + UUID.randomUUID() + ".txt";
         final String expectedHash = generateMd5Hash(TEST_DATA);
         azureOperations.uploadToContainer(filePath, TEST_DATA);
 
@@ -108,9 +107,9 @@ class CvpBlobstoreClientImplTest {
 
     private void populateCvpBlobstore() {
         final Set<String> filePaths = Set.of(
-            FOLDER_ONE + File.pathSeparator + UUID.randomUUID().toString() + ".txt",
-            FOLDER_TWO + File.pathSeparator + UUID.randomUUID().toString() + ".txt",
-            FOLDER_THREE + File.pathSeparator + UUID.randomUUID().toString() + ".txt"
+            getFolderPath(FOLDER_ONE) + UUID.randomUUID() + ".txt",
+            getFolderPath(FOLDER_TWO) + UUID.randomUUID() + ".txt",
+            getFolderPath(FOLDER_THREE) + UUID.randomUUID() + ".txt"
         );
         azureOperations.uploadToContainer(filePaths);
     }
@@ -139,5 +138,9 @@ class CvpBlobstoreClientImplTest {
         md.update(testData.getBytes());
         final byte[] digest = md.digest();
         return Base64.getEncoder().encodeToString(digest);
+    }
+
+    private String getFolderPath(String folderName) {
+        return folderName + "/";
     }
 }
