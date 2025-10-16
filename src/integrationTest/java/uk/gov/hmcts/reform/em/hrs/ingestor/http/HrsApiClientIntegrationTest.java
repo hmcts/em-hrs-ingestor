@@ -63,9 +63,9 @@ class HrsApiClientIntegrationTest {
         "AAA1",
         "interpreter"
     );
-    public static final String TEST_ACCESS = "Bearer test-access";
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String CONTENT_TYPE = "Content-Type";
+    private static final String TEST_ACCESS = "Bearer test-access";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String CONTENT_TYPE = "Content-Type";
 
     private WireMockServer wireMockServer;
     private HrsApiClientImpl underTest;

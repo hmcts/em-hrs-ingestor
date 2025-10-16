@@ -52,7 +52,7 @@ class IngestorServiceIntegrationTest {
     private static final String GET_FOLDERS_PATH = "/folders/([a-zA-Z0-9_.-]*)";
     private static final String POST_PATH = "/segments";
     private static final String DUMMY_FOLDER = "dummy-folder";
-    public static final String CONTENT_TYPE = "Content-Type";
+    private static final String CONTENT_TYPE = "Content-Type";
     private WireMockServer wireMockServer;
     private AzureOperations azureOperations;
     private DefaultIngestorService underTest;
