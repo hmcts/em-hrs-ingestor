@@ -8,8 +8,10 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.config.TestAzureStorageConfiguration;
 import uk.gov.hmcts.reform.em.hrs.ingestor.helper.AzureOperations;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Random;
 import java.util.Set;
@@ -31,10 +33,19 @@ class CvpBlobstoreClientImplTest {
     private static final String ONE_ITEM_FOLDER = "one-item-folder";
     private static final String MANY_ITEMS_FOLDER = "many-items-folder";
     private static final String TEST_DATA = "Hello World!";
-    @Autowired
+    private final Random random = new SecureRandom();
+
     private AzureOperations azureOperations;
-    @Autowired
     private BlobstoreClientHelperImpl underTest;
+
+    @Autowired
+    public CvpBlobstoreClientImplTest(
+        AzureOperations azureOperations,
+        BlobstoreClientHelperImpl underTest
+    ) {
+        this.azureOperations = azureOperations;
+        this.underTest = underTest;
+    }
 
     @BeforeEach
     void setup() {
@@ -58,8 +69,8 @@ class CvpBlobstoreClientImplTest {
     }
 
     @Test
-    void testShouldReturnASetContainingOneWhenFolderContainsOneItem() throws Exception {
-        final String filePath = ONE_ITEM_FOLDER + "/" + UUID.randomUUID().toString() + ".txt";
+    void testShouldReturnASetContainingOneWhenFolderContainsOneItem() throws NoSuchAlgorithmException {
+        final String filePath = ONE_ITEM_FOLDER + File.pathSeparator + UUID.randomUUID() + ".txt";
         final String expectedHash = generateMd5Hash(TEST_DATA);
         azureOperations.uploadToContainer(filePath, TEST_DATA);
 
@@ -97,9 +108,9 @@ class CvpBlobstoreClientImplTest {
 
     private void populateCvpBlobstore() {
         final Set<String> filePaths = Set.of(
-            FOLDER_ONE + "/" + UUID.randomUUID().toString() + ".txt",
-            FOLDER_TWO + "/" + UUID.randomUUID().toString() + ".txt",
-            FOLDER_THREE + "/" + UUID.randomUUID().toString() + ".txt"
+            FOLDER_ONE + File.pathSeparator + UUID.randomUUID().toString() + ".txt",
+            FOLDER_TWO + File.pathSeparator + UUID.randomUUID().toString() + ".txt",
+            FOLDER_THREE + File.pathSeparator + UUID.randomUUID().toString() + ".txt"
         );
         azureOperations.uploadToContainer(filePaths);
     }
@@ -113,9 +124,8 @@ class CvpBlobstoreClientImplTest {
         azureOperations.uploadToContainer(filePaths);
     }
 
-
     private Set<String> generateFilePaths() {
-        final Random random = new Random();
+
         final int number = random.nextInt(8) + 2;
 
         return IntStream.rangeClosed(1, number)
@@ -123,6 +133,7 @@ class CvpBlobstoreClientImplTest {
             .collect(Collectors.toUnmodifiableSet());
     }
 
+    @SuppressWarnings("java:S4790") // Safe: only used in tests
     private String generateMd5Hash(String testData) throws NoSuchAlgorithmException {
         final MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(testData.getBytes());

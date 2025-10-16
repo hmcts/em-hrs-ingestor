@@ -18,6 +18,9 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.http.mock.WireMockInitializer;
 import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.IdamCacheExpiry;
 import uk.gov.hmcts.reform.em.hrs.ingestor.idam.cache.IdamCachedClient;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
@@ -49,12 +52,21 @@ class IngestorServiceIntegrationTest {
     private static final String GET_FOLDERS_PATH = "/folders/([a-zA-Z0-9_.-]*)";
     private static final String POST_PATH = "/segments";
     private static final String DUMMY_FOLDER = "dummy-folder";
-    @Autowired
+    public static final String CONTENT_TYPE = "Content-Type";
     private WireMockServer wireMockServer;
-    @Autowired
     private AzureOperations azureOperations;
-    @Autowired
     private DefaultIngestorService underTest;
+
+    @Autowired
+    public IngestorServiceIntegrationTest(
+        WireMockServer wireMockServer,
+        AzureOperations azureOperations,
+        DefaultIngestorService underTest
+    ) {
+        this.wireMockServer = wireMockServer;
+        this.azureOperations = azureOperations;
+        this.underTest = underTest;
+    }
 
     @BeforeEach
     public void prepare() {
@@ -63,38 +75,41 @@ class IngestorServiceIntegrationTest {
         wireMockServer.stubFor(
             WireMock.post(urlPathEqualTo("/o/token"))
                 .willReturn(aResponse()
-                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                .withBody("{\n"
-                                              + "  \"access_token\": \"test-access\","
-                                              + "  \"expires_in\": \"3600\","
-                                              + "  \"id_token\": \"test-id\","
-                                              + "  \"refresh_token\": \"test-refresh\","
-                                              + "  \"scope\": \"openid profile email\","
-                                              + "  \"token_type\": \"Bearer\""
-                                              + "}\n"))
+                                .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                                .withBody("""
+                                              {
+                                                "access_token": "test-access",
+                                                "expires_in": "3600",
+                                                "id_token": "test-id",
+                                                "refresh_token": "test-refresh",
+                                                "scope": "openid profile email",
+                                                "token_type": "Bearer"
+                                              }
+                                              """))
         );
 
         wireMockServer.stubFor(
             WireMock.get(urlPathEqualTo("/o/userinfo"))
                 .withHeader("Authorization", equalTo("Bearer test-access"))
                 .willReturn(aResponse()
-                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                                 .withStatus(200)
-                                .withBody("{\n"
-                                              + "  \"sub\": \"1234567890\",\n"
-                                              + "  \"name\": \"John Doe\",\n"
-                                              + "  \"email\": \"johndoe@example.com\",\n"
-                                              + "  \"preferred_username\": \"johndoe\",\n"
-                                              + "  \"given_name\": \"John\",\n"
-                                              + "  \"family_name\": \"Doe\"\n"
-                                              + "}")
-                )
+                                .withBody("""
+                                              {
+                                                "sub": "1234567890",
+                                                "name": "John Doe",
+                                                "email": "johndoe@example.com",
+                                                "preferred_username": "johndoe",
+                                                "given_name": "John",
+                                                "family_name": "Doe"
+                                              }
+                                              """))
         );
         wireMockServer.stubFor(
             get(urlMatching(GET_FOLDERS_PATH))
                 .willReturn(aResponse()
                     .withStatus(200)
-                    .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                    .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                     .withBody("{\"folder-name\":\"" + DUMMY_FOLDER + "\",\"filenames\":[]}"))
         );
 
@@ -106,7 +121,7 @@ class IngestorServiceIntegrationTest {
     }
 
     @Test
-    void testShouldIngestFiles() throws Exception {
+    void testShouldIngestFiles() throws URISyntaxException, IOException {
         setupCvpBlobstore();
         underTest.ingest();
 
@@ -116,7 +131,7 @@ class IngestorServiceIntegrationTest {
         );
     }
 
-    private void setupCvpBlobstore() throws Exception {
+    private void setupCvpBlobstore() throws URISyntaxException, IOException {
         final byte[] data = TestUtil.getFileContent(TEST_FILE);
         azureOperations.uploadToContainer(TEST_FOLDER + "/" + TEST_FILE, data);
     }

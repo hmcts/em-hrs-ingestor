@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -62,61 +63,76 @@ class HrsApiClientIntegrationTest {
         "AAA1",
         "interpreter"
     );
+    public static final String TEST_ACCESS = "Bearer test-access";
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String CONTENT_TYPE = "Content-Type";
 
-    @Autowired
     private WireMockServer wireMockServer;
+    private HrsApiClientImpl underTest;
 
     @Autowired
-    private HrsApiClientImpl underTest;
+    public HrsApiClientIntegrationTest(
+        WireMockServer wireMockServer,
+        HrsApiClientImpl underTest
+    ) {
+        this.wireMockServer = wireMockServer;
+        this.underTest = underTest;
+    }
 
     @BeforeEach
     public void prepare() {
         wireMockServer.resetAll();
+
         wireMockServer.stubFor(
             WireMock.post(urlPathEqualTo("/o/token"))
                 .willReturn(aResponse()
-                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                .withBody("{\n"
-                                              + "  \"access_token\": \"test-access\","
-                                              + "  \"expires_in\": \"3600\","
-                                              + "  \"id_token\": \"test-id\","
-                                              + "  \"refresh_token\": \"test-refresh\","
-                                              + "  \"scope\": \"openid profile email\","
-                                              + "  \"token_type\": \"Bearer\""
-                                              + "}\n"))
+                                .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                                .withBody("""
+                    {
+                      "access_token": "test-access",
+                      "expires_in": "3600",
+                      "id_token": "test-id",
+                      "refresh_token": "test-refresh",
+                      "scope": "openid profile email",
+                      "token_type": "Bearer"
+                    }
+                    """))
         );
+
         wireMockServer.stubFor(
             WireMock.get(urlPathEqualTo("/o/userinfo"))
-                .withHeader("Authorization", equalTo("Bearer test-access"))
+                .withHeader(AUTHORIZATION, equalTo(TEST_ACCESS))
                 .willReturn(aResponse()
-                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                                 .withStatus(200)
-                                .withBody("{\n"
-                                              + "  \"sub\": \"1234567890\",\n"
-                                              + "  \"name\": \"John Doe\",\n"
-                                              + "  \"email\": \"johndoe@example.com\",\n"
-                                              + "  \"preferred_username\": \"johndoe\",\n"
-                                              + "  \"given_name\": \"John\",\n"
-                                              + "  \"family_name\": \"Doe\"\n"
-                                              + "}")
-                )
+                                .withBody("""
+                    {
+                      "sub": "1234567890",
+                      "name": "John Doe",
+                      "email": "johndoe@example.com",
+                      "preferred_username": "johndoe",
+                      "given_name": "John",
+                      "family_name": "Doe"
+                    }
+                    """))
         );
     }
 
+
     @Test
-    void testShouldGetDataSuccessfully() throws Exception {
+    void testShouldGetDataSuccessfully() throws IOException, HrsApiException {
         wireMockServer.stubFor(
             WireMock.get(urlPathEqualTo(GET_PATH))
-                .withHeader("Authorization", equalTo("Bearer test-access"))
+                .withHeader(AUTHORIZATION, equalTo(TEST_ACCESS))
                 .willReturn(aResponse()
-                                .withHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                                 .withBody("{\"folder-name\":\"" + TEST_FOLDER + "\",\"filenames\":[\"file.mp4\"]}"))
         );
         final HrsFileSet ingestedFiles = underTest.getIngestedFiles(TEST_FOLDER);
 
         assertThat(ingestedFiles.getHrsFiles()).singleElement().isEqualTo(TEST_FILE);
         wireMockServer.verify(exactly(1), getRequestedFor(urlEqualTo(String.format(GET_PATH, TEST_FOLDER)))
-            .withHeader("Authorization", equalTo("Bearer test-access")));
+            .withHeader(AUTHORIZATION, equalTo(TEST_ACCESS)));
 
     }
 
@@ -191,7 +207,7 @@ class HrsApiClientIntegrationTest {
     }
 
     @Test
-    void testShouldPostDataSuccessfully() throws Exception {
+    void testShouldPostDataSuccessfully() throws IOException, HrsApiException {
         final String expectedPayload = convertObjectToJsonString(METADATA);
         wireMockServer.stubFor(
             WireMock.post(urlPathEqualTo(POST_PATH))
