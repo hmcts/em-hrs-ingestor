@@ -114,7 +114,7 @@ tasks.register('smoke', Test) {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '12.1.1'
+  toolVersion = '12.1.2'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -178,7 +178,7 @@ def versions = [
   junitPlatform      : '6.0.1',
   reformLogging      : '6.1.9',
   log4JVersion       : "2.25.2",
-  okhttp3            : '5.3.0'
+  okhttp3            : '5.3.1'
 ]
 
 ext.libraries = [
@@ -222,7 +222,7 @@ dependencies {
   implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '3.0.0'
     implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '3.0.0'
 
-  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.19.0'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0'
 
   //test implementation
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.42'
@@ -236,7 +236,7 @@ dependencies {
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.6'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.3'
-  testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.13.1'
+  testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.13.2'
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
   testImplementation group :'info.solidsoft.gradle.pitest', name : 'gradle-pitest-plugin',version: '1.6.0'
