@@ -177,7 +177,7 @@ def versions = [
   junit              : '6.0.1',
   junitPlatform      : '6.0.1',
   reformLogging      : '6.1.9',
-  log4JVersion       : "2.25.2",
+  log4JVersion       : "2.25.3",
   okhttp3            : '5.3.2'
 ]
 
@@ -235,7 +235,7 @@ dependencies {
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.6'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.3'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.4'
   testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.13.2'
 
   testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
