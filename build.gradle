@@ -176,7 +176,7 @@ dependencyManagement {
 def versions = [
   junit              : '6.0.2',
   junitPlatform      : '6.0.2',
-  reformLogging      : '6.1.9',
+  reformLogging      : '7.0.0',
   log4JVersion       : "2.25.3",
   okhttp3            : '5.3.2'
 ]
