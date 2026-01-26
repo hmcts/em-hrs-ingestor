@@ -214,7 +214,7 @@ dependencies {
 
   //azure components
   implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.33.0'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.18.1'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.18.2'
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: versions.okhttp3
@@ -234,7 +234,7 @@ dependencies {
 
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
-  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.6'
+  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.7'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.4'
   testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.13.2'
 
