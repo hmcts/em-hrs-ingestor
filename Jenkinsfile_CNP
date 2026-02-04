@@ -79,6 +79,9 @@ withPipeline(type, product, component) {
   }
 
   enableFortifyScan('em-hrs-ingestor-aat')
+  afterAlways('fortify-scan') {
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+  }
 
   afterAlways('test') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/**/*'
