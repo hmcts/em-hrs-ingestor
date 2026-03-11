@@ -1,16 +1,6 @@
 server:
   port: 8090
 
-management:
-  endpoint:
-    health:
-      show-details: "always"
-  endpoints:
-    web:
-      base-path: /
-      exposure:
-        include: health, info, prometheus
-
 spring:
   application:
     name: Hearing Recordings CVP Ingestor
