@@ -42,7 +42,7 @@ sonarqube:
 for first time use you will need to be logged into the Azure Container repo's using these commands:
 
 az login
-az acr login --name hmctspublic && az acr login --name hmctsprivate
+az acr login --name hmctsprod
 
 
 You need to have HRS-API running (and its dependencies!) before running this application
