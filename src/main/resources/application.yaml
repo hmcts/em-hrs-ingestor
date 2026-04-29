@@ -32,19 +32,19 @@ app-insights:
   telemetry-component: on
 
 s2s.hrs.api:
-  url: ${HRS_API_BASE_URI:http://localhost:8080}
+  url: ${HRS_API_BASE_URI:http://localhost:8081}
 
 
 idam:
   s2s-auth:
-    url: ${S2S_BASE_URI:http://localhost:4502}
+    url: ${S2S_BASE_URI:http://localhost:8489}
     totp_secret: ${S2S_KEY:AAAAAAAAAAAAAAAA}
     microservice: em_hrs_ingestor
   hrs-ingestor:
-    user-name: ${IDAM_HRS_INGESTOR_SYSTEM_USER_NAME:test}
+    user-name: ${IDAM_HRS_INGESTOR_SYSTEM_USER_NAME:hrs.tester@hmcts.net}
     password: ${IDAM_HRS_INGESTOR_SYSTEM_PASSWORD:AAAAAAAAAAAAAAAA}
   api:
-    url: ${IDAM_API_URL:http://localhost:4502}
+    url: ${IDAM_API_URL:http://localhost:5062}
   client:
     id: ${OAUTH_CLIENT_ID:webshow}
     secret: ${IDAM_CLIENT_OAUTH_SECRET:AAAAAAAAAAAAAAAA}
