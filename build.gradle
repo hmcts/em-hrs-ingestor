@@ -114,7 +114,7 @@ tasks.register('smoke', Test) {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '13.4.0'
+  toolVersion = '13.4.2'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -204,7 +204,7 @@ dependencies {
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.8'
-  implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.3'
+  implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.4'
 
   implementation 'org.projectlombok:lombok:1.18.46'
 
@@ -213,7 +213,7 @@ dependencies {
 
   //azure components
   implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.33.3'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.18.2'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.18.3'
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: versions.okhttp3
