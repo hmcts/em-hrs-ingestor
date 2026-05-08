@@ -1,181 +1,147 @@
 =======
 # Hearing Recording Service - Ingestor
 
-# Overview
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- Lists folders in source azure storage bucket (CVP Blobstore)
-- Asks HRS-API which files it already has / is currently ingesting
-- Parses filenames of files to be ingested, to create metadata
-- Sends Metadata and filename source to HRS-API to ingest
+Hearing Recording Service (HRS) Ingestor is a backend service responsible for retrieving and ingesting files from a source Azure storage bucket (CVP Blobstore).
 
+Its primary functions include:
+* Listing folders in the source Azure storage bucket (CVP Blobstore).
+* Asking the HRS-API which files it already has or is currently ingesting.
+* Parsing filenames of files to be ingested to create metadata.
+* Sending metadata and filename sources to the HRS-API to ingest.
 
+## Prerequisites
 
-#Local Dev
+Before setting up the project, ensure you have the following installed:
 
-##First Time Build (If you wish to use sonarqube)
+- **Java** - Required for building and running the application
+- **Docker & Docker Compose** - Required for running local dependencies and containers
+- **Azure CLI** - Required for authenticating and pulling images from ACR
+- **Make** - Required for executing project lifecycle commands
 
-You'll need to get sonarqube docker image if you do not have it already, and initialise it and change the password to adminnew
+## Quickstart
 
-to fetch the latest image, run it and open the browser
-run:
-- make sonarqube-fetch-and-run-sonarqube-latest-with-password-as-admin
-- make report-sonarqube
+#### To clone repo and prepare the environment:
+```bash
+git clone https://github.com/hmcts/em-hrs-ingestor.git
+cd em-hrs-ingestor
+```
 
-in the browser, log in as admin (password=admin), go to http://localhost:9000/account/security/ and change password to adminnew
+#### Clean and build the application:
+```bash
+./gradlew clean
+./gradlew build
+```
 
+Create the application image (optional):
+```bash
+./gradlew assemble
+docker-compose build
+```
 
-##Subsequent Builds (these must all pass before raising a PR)
+## Running the Application Locally
 
-This will run all the major checks, and open the jacoco test report in your browser:
+**Important**: You must have `em-hrs-api` running (along with its dependencies) before running this application.
 
-- make check-all
+### 1. Start the HRS-API
+Follow the `em-hrs-api` README to get it running.
 
+### 2. Start the HRS-Ingestor
 
-To show the sonarcube analysis (master branch only?)
-sonarqube:
-- make sonarqube-run-local-sonarqube-server
-- make sonarqube-run-tests-with-password-as-adminnew
-
-
-#Smoketest:
-
-for first time use you will need to be logged into the Azure Container repo's using these commands:
-
+First, ensure you are logged into Azure to pull the necessary ACR container images:
+```bash
 az login
 az acr login --name hmctsprod
-
-
-You need to have HRS-API running (and its dependencies!) before running this application
-
-#HRS-API
-
-Please fully read the HRS-API readme and work through it, and validate you can run a smoke test.
-
-For convenience, the basic steps are listed here for reference when you are familiar with them
-
-Open a new terminal..
-go to the root of hrs-api project,
-- cd ../em-hrs-api
-then get hrs-api dependencies running
-- ./docker/dependencies/start-local-environment.sh
-then when the dependencies are showing "ccd-data-store-api_1    | 2021-04-11T10:54:38.861 INFO  [main] o.s.d.r.c.DeferredRepositoryInitializationListener Spring Data repositories initialized"
-- make app-run
-then prime the CCD via the functional tests with
-- make test-functional
-finally, smoke test it with:
-- make app-smoke-test
-
-#HRS-Ingestor
-Now then in this terminal, get the ingestor dependencies running
-
-This will fire up depencies AND prime the CVP blbo store with a file
-- ./docker/dependencies/start-local-environment.sh
-
-running the appliction will immediately invoke the ingest method, so will attempt to send the file
-to hrs api
-
-- make app-run
-
-
-
-
-#Idea Setup
-
-Increase import star to 200 to avoid conflicts with checkstyle
-https://intellij-support.jetbrains.com/hc/en-us/community/posts/206203659-Turn-off-Wildcard-imports-
-
-Auto import of non ambiguous imports
-https://mkyong.com/intellij/eclipse-ctrl-shift-o-in-intellij-idea/#:~:text=In%20Eclipse%2C%20you%20press%20CTRL,imports%2C%20never%20imports%20any%20package.
-
-Import the checkstyle code scheme into the java code settings
-
-Reverse the import layout settings / modify until the checkstyle passes
-Uncheck "Comment at first column"
-
-
-
-
-
-
-
-NOTE THE BELOW IS NOT YET TESTED!!!
-NOTE THE BELOW IS NOT YET TESTED!!!
-NOTE THE BELOW IS NOT YET TESTED!!!
-NOTE THE BELOW IS NOT YET TESTED!!!
-NOTE THE BELOW IS NOT YET TESTED!!!
-NOTE THE BELOW IS NOT YET TESTED!!!
-
-
-
-
-
-
-
-
-## Setup
-
-Simply run the following script to start all application dependencies.
-
-```bash
-  ./docker/dependencies/start-local-environment.sh
 ```
 
-## Building and deploying the application
-
-### Building the application
-
-To build the project execute the following command:
-
+Next, fire up the ingestor dependencies. This will start the required services and prime the CVP blob store with test files:
 ```bash
-  ./gradlew build
+./docker/dependencies/start-local-environment.sh
 ```
 
-### Running the application
-
-Create the image of the application by executing the following command:
-
+Finally, run the application. Running the app will immediately invoke the ingest method, attempting to send the primed file to the HRS-API:
 ```bash
-  ./gradlew assemble
+make app-run
 ```
+*(Alternatively, you can run the application in docker using `docker-compose up`)*
 
-Create docker image:
+### Verifying the Application
 
+To test if the application is up, you can call its health endpoint (port `8090`):
 ```bash
-  docker-compose build
+curl http://localhost:8090/health
 ```
-
-Run the applicaiton in docker by executing the following command:
-
-```bash
-  docker-compose up
-```
-
-This will start the API container exposing the application's port [8090]
-
-In order to test if the application is up, you can call its health endpoint:
-
-```bash
-  curl http://localhost:8090/health
-```
-
 You should get a response similar to this:
-
+```json
+{"status":"UP","diskSpace":{"status":"UP","total":249644974080,"free":137188298752,"threshold":10485760}}
 ```
-  {"status":"UP","diskSpace":{"status":"UP","total":249644974080,"free":137188298752,"threshold":10485760}}
+
+**Expected Log Output:**
+After running `make app-run`, you should see ingestion logs similar to this:
+```text
+2021-09-30 15:40:11.253  INFO 23274 --- [main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Ingestion Complete
+2021-09-30 15:40:11.254  INFO 23274 --- [main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Attempted: 0
+2021-09-30 15:40:11.254  INFO 23274 --- [main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Parsed Ok: 0
+2021-09-30 15:40:11.254  INFO 23274 --- [main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Ignored Ok: 0
+2021-09-30 15:40:11.254  INFO 23274 --- [main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Submitted Ok: 0
+2021-09-30 15:40:11.254  INFO 23274 --- [main] u.g.h.r.e.h.i.s.DefaultIngestorService   : VALIDATION REPORT: CVP Files:27, HRS Files:27, To Ingest:0, INGESTION-STATUS:COMPLETE
+2021-09-30 15:40:11.254  INFO 23274 --- [main] h.i.l.IngestWhenApplicationReadyListener : Initial Ingestion Complete
 ```
 
-After running make app-run, you should a response similar to this:
+## Testing
 
+*Note: This project does not contain functional tests.*
+
+### Unit Tests
+Run standard unit tests:
+```bash
+./gradlew test
 ```
-2021-09-30 15:40:11.253  INFO 23274 --- [           main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Ingestion Complete
-2021-09-30 15:40:11.254  INFO 23274 --- [           main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Attempted: 0
-2021-09-30 15:40:11.254  INFO 23274 --- [           main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Parsed Ok: 0
-2021-09-30 15:40:11.254  INFO 23274 --- [           main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Ignored Ok: 0
-2021-09-30 15:40:11.254  INFO 23274 --- [           main] u.g.h.r.e.h.i.s.DefaultIngestorService   : Total files Submitted Ok: 0
-2021-09-30 15:40:11.254  INFO 23274 --- [           main] u.g.h.r.e.h.i.s.DefaultIngestorService   : VALIDATION REPORT: CVP Files:27, HRS Files:27, To Ingest:0, INGESTION-STATUS:COMPLETE
-2021-09-30 15:40:11.254  INFO 23274 --- [           main] h.i.l.IngestWhenApplicationReadyListener : Initial Ingestion Complete
+
+### Integration Tests
+Run integration tests:
+```bash
+./gradlew integration
+```
+
+### Run All Checks
+To run all major checks (tests, checkstyle, etc.) and open the Jacoco test report in your browser:
+```bash
+make check-all
+```
+
+## Local Development & IDE Setup
+
+### IntelliJ IDEA Setup
+To avoid conflicts with Checkstyle validation:
+1. **Import limits:** Increase `import *` to `200` (Settings -> Editor -> Code Style -> Java -> Imports). [Reference](https://intellij-support.jetbrains.com/hc/en-us/community/posts/206203659-Turn-off-Wildcard-imports-)
+2. **Auto-import:** Enable auto-import of non-ambiguous imports.
+3. **Checkstyle Scheme:** Import the checkstyle code scheme into the Java code settings.
+4. **Import Layout:** Reverse the import layout settings/modify them until Checkstyle passes.
+5. **Comments:** Uncheck "Comment at first column".
+
+### Sonarqube (Optional)
+
+If you wish to use local Sonarqube for code quality analysis:
+
+#### First Time Build:
+1. Fetch the latest image, run it, and prepare the admin account:
+   ```bash
+   make sonarqube-fetch-and-run-sonarqube-latest-with-password-as-admin
+   make report-sonarqube
+   ```
+2. Open your browser to `http://localhost:9000/account/security/` and log in as `admin` (password: `admin`).
+3. Change the password to a password of your choice.
+4. Generate a User Token within the SonarQube UI.
+
+#### Subsequent Builds:
+To run the Sonarqube server and execute tests using your token, pass the token as an argument to the make command:
+```bash
+make sonarqube-run-local-sonarqube-server
+make sonarqube-run-tests-with-token SONAR_TOKEN=your_generated_token_here
 ```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

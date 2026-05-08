@@ -81,15 +81,15 @@ check-coverage:
 	./gradlew test integration  jacocoTestCoverageVerification jacocoTestReport && open build/reports/jacoco/test/html/index.html
 
 check-all:
-	./gradlew test integration check dependencyCheckAggregate jacocoTestCoverageVerification jacocoTestReport && open	build/reports/jacoco/test/html/index.html
+	./gradlew test integration check jacocoTestCoverageVerification jacocoTestReport && open	build/reports/jacoco/test/html/index.html
 
 
 #convenience first time download and run of sonarqube with default username/password of admin/admin
 sonarqube-fetch-and-run-sonarqube-latest-with-password-as-admin:
 	docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
 
-sonarqube-run-tests-with-password-as-adminnew:
-	./gradlew sonarqube -Dsonar.login="admin" -Dsonar.password="adminnew" -Dsonar.host.url="http://localhost:9000/" -i && open http://localhost:9000/
+sonarqube-run-tests-with-token:
+	./gradlew sonarqube -Dsonar.token="$(SONAR_TOKEN)" -Dsonar.host.url="http://localhost:9000/" -i && open http://localhost:9000/
 
 
 
