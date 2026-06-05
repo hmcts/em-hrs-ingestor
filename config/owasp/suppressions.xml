@@ -13,10 +13,6 @@
         <cve>CVE-2026-42582</cve>
     </suppress>
     <suppress until="2026-07-20">
-        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib@.*$</packageUrl>
-        <cve>CVE-2020-29582</cve>
-    </suppress>
-    <suppress until="2026-07-20">
         <packageUrl regex="true">^pkg:maven/com\.azure/azure\-identity@.*$</packageUrl>
         <cve>CVE-2023-36415</cve>
         <cve>CVE-2024-35255</cve>
