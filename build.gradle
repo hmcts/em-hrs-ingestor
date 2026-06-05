@@ -170,7 +170,7 @@ configurations.configureEach {
 
 dependencyManagement {
   dependencies {
-    dependencySet(group: 'io.netty', version: '4.2.14.Final') {
+    dependencySet(group: 'io.netty', version: '4.2.15.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-codec-dns'
