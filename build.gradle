@@ -205,7 +205,7 @@ def versions = [
   junitPlatform      : '6.1.0',
   reformLogging      : '8.0.0',
   log4JVersion       : "2.26.0",
-  okhttp3            : '5.3.2'
+  okhttp3            : '5.4.0'
 ]
 
 ext.libraries = [
