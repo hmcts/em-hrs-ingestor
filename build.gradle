@@ -192,7 +192,7 @@ dependencyManagement {
       entry 'netty-transport-native-kqueue'
       entry 'netty-transport-native-unix-common'
     }
-    dependencySet(group: 'org.apache.tomcat.embed', version: '11.0.22') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: '11.0.23') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-websocket'
       entry 'tomcat-embed-el'
@@ -226,8 +226,8 @@ dependencies {
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.4'
   implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.4'
 
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.3.2'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.3.2'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.3.3'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.3.3'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.9'
