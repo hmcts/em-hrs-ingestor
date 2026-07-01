@@ -114,7 +114,7 @@ tasks.register('smoke', Test) {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '13.6.0'
+  toolVersion = '13.7.0'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -201,8 +201,8 @@ dependencyManagement {
 }
 
 def versions = [
-  junit              : '6.1.0',
-  junitPlatform      : '6.1.0',
+  junit              : '6.1.1',
+  junitPlatform      : '6.1.1',
   reformLogging      : '8.0.0',
   log4JVersion       : "2.26.0",
   okhttp3            : '5.4.0'
