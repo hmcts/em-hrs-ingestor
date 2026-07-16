@@ -114,7 +114,7 @@ tasks.register('smoke', Test) {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '13.7.0'
+  toolVersion = '13.8.0'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -170,8 +170,8 @@ configurations.configureEach {
 
 dependencyManagement {
   dependencies {
-    dependency 'org.jetbrains.kotlin:kotlin-stdlib:2.4.0'
-    dependencySet(group: 'io.netty', version: '4.2.15.Final') {
+    dependency 'org.jetbrains.kotlin:kotlin-stdlib:2.4.10'
+    dependencySet(group: 'io.netty', version: '4.2.16.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-codec-dns'
@@ -192,7 +192,7 @@ dependencyManagement {
       entry 'netty-transport-native-kqueue'
       entry 'netty-transport-native-unix-common'
     }
-    dependencySet(group: 'org.apache.tomcat.embed', version: '11.0.23') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: '11.0.24') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-websocket'
       entry 'tomcat-embed-el'
@@ -201,10 +201,10 @@ dependencyManagement {
 }
 
 def versions = [
-  junit              : '6.1.1',
-  junitPlatform      : '6.1.1',
+  junit              : '6.1.2',
+  junitPlatform      : '6.1.2',
   reformLogging      : '8.0.0',
-  log4JVersion       : "2.26.0",
+  log4JVersion       : "2.26.1",
   okhttp3            : '5.4.0'
 ]
 
@@ -271,7 +271,7 @@ dependencies {
   testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
 
-  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '6.0.0'
+  smokeTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '6.0.1'
 
 /***********************************************************************************************************************
  * TEST SOURCE SETS
