@@ -346,7 +346,8 @@ pitest {
   mainSourceSets = [sourceSets.main]
   fileExtensionsToFilter.addAll('xml', 'json')
   outputFormats = ['XML', 'HTML', 'CSV']
-  pitestVersion = '1.17.2'
+  junit5PluginVersion = '1.2.1'
+  pitestVersion = '1.22.1'
   mutationThreshold = 0
   coverageThreshold = 0
   jvmArgs = ['-Xms1G', '-Xmx3G']
