@@ -70,12 +70,6 @@ withPipeline(type, product, component) {
   disableLegacyDeployment()
   nonServiceApp()
   onMaster {
-    afterSuccess('test') {
-      sh '''
-            curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh > publish-swagger-docs.sh
-            sh ./publish-swagger-docs.sh
-             '''
-    }
     enableFortifyScan('em-hrs-ingestor-aat')
     afterAlways('fortify-scan') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
