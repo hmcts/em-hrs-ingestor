@@ -22,6 +22,10 @@ java {
     languageVersion = JavaLanguageVersion.of(25)
   }
 }
+// CVE-2026-65637, CVE-2026-65905, CVE-2026-53434, CVE-2026-55276, CVE-2026-59083, CVE-2026-59084,
+// CVE-2026-65182, CVE-2026-68525, CVE-2026-65183, CVE-2026-66422, CVE-2026-68569, CVE-2026-65927,
+// CVE-2026-68763, CVE-2026-53404, CVE-2026-73180, CVE-2026-55955, CVE-2026-55956, CVE-2026-50229
+ext['tomcat.version'] = '10.1.59'
 /***********************************************************************************************************************
  * Source Sets
  **********************************************************************************************************************/
@@ -197,11 +201,6 @@ dependencyManagement {
       entry 'netty-transport-native-epoll'
       entry 'netty-transport-native-kqueue'
       entry 'netty-transport-native-unix-common'
-    }
-    dependencySet(group: 'org.apache.tomcat.embed', version: '11.0.24') {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-websocket'
-      entry 'tomcat-embed-el'
     }
   }
 }
