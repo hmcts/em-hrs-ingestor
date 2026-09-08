@@ -22,6 +22,10 @@ java {
     languageVersion = JavaLanguageVersion.of(25)
   }
 }
+// CVE-2026-65637, CVE-2026-65905, CVE-2026-53434, CVE-2026-55276, CVE-2026-59083, CVE-2026-59084,
+// CVE-2026-65182, CVE-2026-68525, CVE-2026-65183, CVE-2026-66422, CVE-2026-68569, CVE-2026-65927,
+// CVE-2026-68763, CVE-2026-53404, CVE-2026-73180, CVE-2026-55955, CVE-2026-55956, CVE-2026-50229
+ext['tomcat.version'] = '10.1.59'
 /***********************************************************************************************************************
  * Source Sets
  **********************************************************************************************************************/
@@ -202,7 +206,7 @@ ext.libraries = [
 ]
 
 dependencies {
-  annotationProcessor 'org.projectlombok:lombok:1.18.46'
+  annotationProcessor 'org.projectlombok:lombok:1.18.48'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webmvc'
   implementation group: 'org.springframework.boot', name: 'spring-boot-jackson2'
@@ -217,14 +221,14 @@ dependencies {
   implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.9'
   implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.4'
 
-  implementation 'org.projectlombok:lombok:1.18.46'
+  implementation 'org.projectlombok:lombok:1.18.48'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4JVersion
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4JVersion
 
   //azure components
-  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.35.0'
-  implementation group: 'com.azure', name: 'azure-identity', version: '1.18.4'
+  implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.35.1'
+  implementation group: 'com.azure', name: 'azure-identity', version: '1.18.6'
 
   //rest clients
   implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: versions.okhttp3
@@ -235,8 +239,8 @@ dependencies {
   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0'
 
   //test implementation
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
-  testImplementation 'org.projectlombok:lombok:1.18.46'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.48'
+  testImplementation 'org.projectlombok:lombok:1.18.48'
 
   testImplementation group: 'com.github.gmazzo.okhttp.mock', name: 'mock-client', version: '2.1.0'
 
