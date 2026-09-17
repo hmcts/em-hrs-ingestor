@@ -17,6 +17,11 @@ public class AppConfig {
     @Value("${s2s.hrs.api.url}")
     private String hrsApiBaseUrl;
 
+    /**
+     * Jackson 2 mapper for Retrofit HRS API calls (kebab-case, NON_NULL).
+     * Boot 4 defaults to Jackson 3; retrofit converter-jackson 3.0.0 still requires
+     * com.fasterxml.jackson. Remove this bean when Retrofit ships a Jackson 3 converter.
+     */
     @Bean
     public ObjectMapper provideObjectMapper() {
         final ObjectMapper objectMapper = new ObjectMapper()
