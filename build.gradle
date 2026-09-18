@@ -177,7 +177,7 @@ configurations.configureEach {
 dependencyManagement {
   dependencies {
     dependency 'org.jetbrains.kotlin:kotlin-stdlib:2.4.20'
-    dependencySet(group: 'io.netty', version: '4.2.17.Final') {
+    dependencySet(group: 'io.netty', version: '4.2.18.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-codec-base'
