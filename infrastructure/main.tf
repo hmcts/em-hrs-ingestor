@@ -14,7 +14,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "key-vault" {
-  source                       = "git@github.com:hmcts/cnp-module-key-vault?ref=DTSPO-31965/remove-jenkins-ptl-access"
+  source                       = "git@github.com:hmcts/cnp-module-key-vault"
   product                      = local.app_full_name
   env                          = var.env
   tenant_id                    = var.tenant_id
