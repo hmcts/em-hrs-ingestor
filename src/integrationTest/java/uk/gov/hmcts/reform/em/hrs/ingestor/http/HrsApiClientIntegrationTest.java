@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.moreThanOrExactly;
+import static com.github.tomakehurst.wiremock.client.WireMock.notContaining;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -218,7 +220,12 @@ class HrsApiClientIntegrationTest {
         underTest.postFile(METADATA);
 
         wireMockServer.verify(exactly(1), postRequestedFor(urlEqualTo(POST_PATH))
-            .withRequestBody(equalTo(expectedPayload)));
+            .withRequestBody(equalTo(expectedPayload))
+            .withRequestBody(containing("\"source-blob-url\""))
+            .withRequestBody(containing("\"recording-date-time\""))
+            .withRequestBody(containing("\"recording-source\""))
+            .withRequestBody(notContaining("\"sourceBlobUrl\""))
+            .withRequestBody(notContaining("\"recordingDateTime\"")));
     }
 
     @Test
