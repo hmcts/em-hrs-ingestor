@@ -1,12 +1,11 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.http;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.reform.em.hrs.ingestor.config.AppConfig;
 import uk.gov.hmcts.reform.em.hrs.ingestor.dto.RecordingFilenameDto;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HearingSource;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.Metadata;
@@ -18,8 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * Golden round-trips for the Jackson 2 HRS Retrofit mapper (kebab-case).
- * Proves Boot 4 dual-stack does not silently reshape HRS payloads.
+ * Golden round-trips for the production Jackson 2 HRS Retrofit mapper (kebab-case).
+ * Builds the mapper via {@link AppConfig#hrsApiObjectMapper()} — the same factory method
+ * registered as the {@code hrsApiObjectMapper} bean — rather than a hand-rolled duplicate.
  */
 class HrsApiJacksonRoundTripTest {
 
@@ -47,10 +47,7 @@ class HrsApiJacksonRoundTripTest {
 
     @BeforeEach
     void setUp() {
-        hrsApiObjectMapper = new ObjectMapper()
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        hrsApiObjectMapper.findAndRegisterModules();
-        hrsApiObjectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
+        hrsApiObjectMapper = new AppConfig().hrsApiObjectMapper();
     }
 
     @Test
