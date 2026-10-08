@@ -9,6 +9,11 @@ spring:
   cloud:
     compatibility-verifier:
       enabled: false
+  # Jackson ownership (Boot 4 dual-stack):
+  # - HRS Retrofit uses dedicated bean hrsApiObjectMapper (Jackson 2, kebab-case).
+  # - Feign/IDAM must keep Boot's default Jackson 3 HTTP converters.
+  # Do not set spring.http.converters.preferred-json-mapper: jackson2 — that would
+  # cross-wire the kebab-case Retrofit mapper into Feign and corrupt IDAM JSON.
 ingestion:
   max-files-to-process: ${MAX_FILES_TO_PROCESS:50}
   cvp:

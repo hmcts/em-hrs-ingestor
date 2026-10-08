@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import retrofit2.Response;
+import uk.gov.hmcts.reform.em.hrs.ingestor.config.AppConfig;
 import uk.gov.hmcts.reform.em.hrs.ingestor.dto.RecordingFilenameDto;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.HrsApiException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.HrsFileSet;
@@ -27,7 +29,7 @@ public class HrsApiClientImpl implements HrsApiClient {
     @Autowired
     public HrsApiClientImpl(
         final HrsHttpClient hrsHttpClient,
-        final ObjectMapper objectMapper,
+        @Qualifier(AppConfig.HRS_API_OBJECT_MAPPER) final ObjectMapper objectMapper,
         HrsApiTokenService hrsApiTokenService) {
         this.hrsHttpClient = hrsHttpClient;
         this.objectMapper = objectMapper;
