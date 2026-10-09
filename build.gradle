@@ -213,7 +213,7 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webmvc'
   implementation group: 'org.springframework.boot', name: 'spring-boot-jackson2'
 
-  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '6.1.0'
+  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '6.1.2'
   implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '4.0.0'
 
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
