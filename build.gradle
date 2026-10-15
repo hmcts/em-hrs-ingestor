@@ -324,7 +324,6 @@ def getCheckedOutGitCommitHash() {
 }
 
 
-
 compileJava.dependsOn processResources
 
 pitest {
