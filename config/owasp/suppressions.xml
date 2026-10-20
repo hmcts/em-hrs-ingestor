@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-    <suppress until="2026-10-20">
+    <suppress until="2027-01-31">
         <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/applicationinsights\-core@.*$</packageUrl>
         <cve>CVE-2025-21199</cve>
     </suppress>
-    <suppress until="2026-10-20">
+    <suppress until="2027-01-31">
         <packageUrl regex="true">^pkg:maven/com\.azure/.*@.*$</packageUrl>
         <cve>CVE-2026-33117</cve>
     </suppress>
-    <suppress until="2026-10-20">
+    <suppress until="2027-01-31">
         <packageUrl regex="true">^pkg:maven/com\.azure/azure\-identity@.*$</packageUrl>
         <cve>CVE-2023-36415</cve>
         <cve>CVE-2024-35255</cve>
     </suppress>
-    <suppress until="2026-10-20">
+    <suppress until="2027-01-31">
         <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/msal4j@.*$</packageUrl>
         <cve>CVE-2024-35255</cve>
-    </suppress>
-    <suppress until="2026-10-30Z">
-      <notes>CVE-2026-53914 affects kotlin-stdlib 2.4.0 (pinned to avoid CVE-2020-29582 on older versions).
-        No patched release is available yet. Suppress until a fixed version is published.</notes>
-      <gav regex="true">^org\.jetbrains\.kotlin:kotlin-stdlib:.*$</gav>
-      <cve>CVE-2026-53914</cve>
-    </suppress>
-    <suppress until="2026-10-07Z">
-      <gav regex="true">^org\.apache\.httpcomponents:httpcore:.*$</gav>
-      <cve>CVE-2026-54399</cve>
-      <cve>CVE-2026-54428</cve>
     </suppress>
     <suppress until="2027-01-31Z">
         <notes>CVE-2026-44891, CVE-2026-55831, CVE-2026-55833 were fixed in io.netty 4.2.16.Final per the Netty
@@ -37,10 +26,6 @@
         <cve>CVE-2026-55831</cve>
         <cve>CVE-2026-55833</cve>
     </suppress>
-  <suppress until="2026-10-07Z">
-    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-(core|websocket)@.*$</packageUrl>
-    <cve>CVE-2026-66299</cve>
-  </suppress>
   <suppress until="2027-01-10Z">
     <notes>Spring Framework 6.2.x is EOL with no public fix for these CVEs. Fixed in Spring Framework 7.0.9
       (Spring Boot 4.0.8+). Upgrading to Spring Boot 4.x is required for a public OSS fix.
