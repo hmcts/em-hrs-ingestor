@@ -17,8 +17,4 @@
         <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/msal4j@.*$</packageUrl>
         <cve>CVE-2024-35255</cve>
     </suppress>
-  <suppress until="2027-01-10Z">
-    <packageUrl regex="true">^pkg:maven/io\.projectreactor\.netty/reactor-netty-(core|http)@.*$</packageUrl>
-    <cve>CVE-2026-47874</cve>
-  </suppress>
 </suppressions>
