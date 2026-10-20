@@ -17,15 +17,6 @@
         <packageUrl regex="true">^pkg:maven/com\.microsoft\.azure/msal4j@.*$</packageUrl>
         <cve>CVE-2024-35255</cve>
     </suppress>
-    <suppress until="2027-01-31Z">
-        <notes>CVE-2026-44891, CVE-2026-55831, CVE-2026-55833 were fixed in io.netty 4.2.16.Final per the Netty
-          security release notes (https://netty.io/news/2026/07/06/4-2-16-Final.html). This is a false positive
-          caused by NVD not yet reflecting the patched version range. Re-evaluate when NVD data is updated.</notes>
-        <packageUrl regex="true">^pkg:maven/io\.netty/.*@.*$</packageUrl>
-        <cve>CVE-2026-44891</cve>
-        <cve>CVE-2026-55831</cve>
-        <cve>CVE-2026-55833</cve>
-    </suppress>
   <suppress until="2027-01-10Z">
     <packageUrl regex="true">^pkg:maven/io\.projectreactor\.netty/reactor-netty-(core|http)@.*$</packageUrl>
     <cve>CVE-2026-47874</cve>
