@@ -8,8 +8,6 @@ import com.azure.storage.blob.models.BlobListDetails;
 import com.azure.storage.blob.models.ListBlobsOptions;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.hmcts.reform.em.hrs.ingestor.model.CvpItemSet;
@@ -23,11 +21,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BlobstoreClientHelperImpl.class);
 
     private static final int BLOB_LIST_TIMEOUT = 30;
     private final BlobContainerClient blobContainerClient;
-    private int processBackToDay;
+    private final int processBackToDay;
 
     @Autowired
     public BlobstoreClientHelperImpl(
@@ -55,9 +52,7 @@ public class BlobstoreClientHelperImpl implements BlobstoreClientHelper {
                 .filter(blobItem -> blobItem.getName().contains("/"))
                 .filter(this::isNewFile)
                 .map(blobItem -> {
-                    LOGGER.debug("Processing blobItem");
                     String filePath = blobItem.getName();
-                    LOGGER.debug("File Path {}", filePath);
                     return  BlobHelper.parseFolderFromPath(filePath);
                 }))
             .collect(Collectors.toUnmodifiableSet());
