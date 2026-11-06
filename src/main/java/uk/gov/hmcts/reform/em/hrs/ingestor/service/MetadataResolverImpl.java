@@ -19,11 +19,9 @@ public class MetadataResolverImpl implements MetadataResolver {
 
     @Override
     public FileLocationAndParts extractFileLocationAndParts(String filenameWithPath) {
-        LOGGER.debug("resolving filenameWithPath {}", filenameWithPath);
         final String folderPrefix = "^audiostream";
         final String[] splitOnForwardSlash = filenameWithPath.split("/");
         int fileNameAndFolderPartsCount = splitOnForwardSlash.length;
-        LOGGER.debug("fileNameAndFolderPartsCount length: {}", fileNameAndFolderPartsCount);
         if (fileNameAndFolderPartsCount != 2) {
             LOGGER.warn("not valid filepath (required: folder/filename) for filename: {}", filenameWithPath);
             return null;
