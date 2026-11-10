@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.em.hrs.ingestor.listener;
 
 import com.microsoft.applicationinsights.TelemetryClient;
-import com.microsoft.applicationinsights.telemetry.TelemetryContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.em.hrs.ingestor.exception.IngestorExecutionException;
 import uk.gov.hmcts.reform.em.hrs.ingestor.service.DefaultIngestorService;
 
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -38,21 +36,19 @@ public class IngestWhenApplicationReadyListener implements ApplicationListener<A
         var client = new TelemetryClient();
 
         client.trackEvent("HRS Ingestor invoked");
-        LOGGER.debug("Enable Cronjob is set to {}", enableCronjob);
-        LOGGER.info("defaultIngestorService.maxFilesToProcess: {}", defaultIngestorService.getMaxFilesToProcess());
+        LOGGER.debug(
+            "Enable Cronjob is set to {}, maxFilesToProcess {}",
+            enableCronjob,
+            defaultIngestorService.getMaxFilesToProcess()
+        );
 
-        if (client.getContext() != null) {
-            TelemetryContext context = client.getContext();
-            ConcurrentMap<String, String> tags = context.getTags();
-            tags.forEach((s, s2) -> LOGGER.info("{}:{} ", s, s2));
-        } else {
-            LOGGER.info("No Application Insights Key");
+        if (client.getContext() == null) {
+            LOGGER.info("No Application Insights context");
         }
 
 
         if (enableCronjob) {
             try {
-                LOGGER.debug("Application Started {}\n...About to Ingest", event);
                 defaultIngestorService.ingest();
             } catch (Exception e) {
                 flushLogs(client);

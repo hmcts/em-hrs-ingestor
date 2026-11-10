@@ -32,13 +32,11 @@ public class AzureStorageConfiguration {
         @Qualifier("cvpBlobContainerClient") BlobContainerClient blobContainerClient,
         @Value("${ingestion.cvp.process-back-to-day}") int processBackToDay
     ) {
-        LOGGER.debug("creating CVP blob client ");
         return new BlobstoreClientHelperImpl(blobContainerClient, processBackToDay);
     }
 
     @Bean("cvpBlobContainerClient")
     public BlobContainerClient cvpBlobContainerClient() {
-        LOGGER.debug("creating CVP blob client");
         return getBlobClient(cvpConnectionString, cvpContainerName);
     }
 
